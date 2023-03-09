@@ -1,20 +1,17 @@
-import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
 
-import 'DrawerScreen.dart';
-
-class ProductScreen extends StatefulWidget {
-  const ProductScreen({Key? key}) : super(key: key);
+class OrderHistoryScreen extends StatefulWidget {
+  const OrderHistoryScreen({Key? key}) : super(key: key);
 
   @override
-  State<ProductScreen> createState() => _ProductScreenState();
+  State<OrderHistoryScreen> createState() => _OrderHistoryScreenState();
 }
 
-class _ProductScreenState extends State<ProductScreen> {
+class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
   TextEditingController search = TextEditingController();
   bool SearchButton = false;
   Icon CustomSearch = const Icon(Icons.search);
-  Widget CustomText = Text("Product Screen");
+  Widget CustomText = Text("Order History Screen");
   List<dynamic> SearchItems = [];
   bool ListEmptyBool = false;
   List<dynamic> ProductData = [
@@ -119,11 +116,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    FavoriteButton(
-                                      iconSize: 20,
-                                      isFavorite: false,
-                                      valueChanged: (_isFavorite) {},
-                                    ),
+                                    Text('Order Place Date:- 06-03-2023',style: TextStyle(fontSize: 10),)
                                   ],
                                 ),
                                 Text(
@@ -146,7 +139,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                 ),
                                 ElevatedButton(
                                     onPressed: () {},
-                                    child: Text('Add To Cart'))
+                                    child: Text('Re Order'))
                               ],
                             ),
                           ),
@@ -165,7 +158,6 @@ class _ProductScreenState extends State<ProductScreen> {
         itemBuilder: (context, index) {
           return Card(
             elevation: 6,
-            // color: Colors.red,
             child: Padding(
               padding: const EdgeInsets.all(15),
               child: Column(
@@ -191,13 +183,7 @@ class _ProductScreenState extends State<ProductScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                FavoriteButton(
-                                  iconSize: 20,
-                                  isFavorite: false,
-                                  valueChanged: (_isFavorite) {
-                                    // print('Is Favorite : $_isFavorite');
-                                  },
-                                ),
+                                Text('Order Place Date:- 06-03-2023',style: TextStyle(fontSize: 10),)
                               ],
                             ),
                             Text(
@@ -216,7 +202,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                             ElevatedButton(
-                                onPressed: () {}, child: Text('Add To Cart'))
+                                onPressed: () {}, child: Text('Re Order'))
                           ],
                         ),
                       ),
@@ -227,6 +213,7 @@ class _ProductScreenState extends State<ProductScreen> {
             ),
           );
         },
+
         itemCount: ProductData.length);
   }
 
@@ -234,7 +221,6 @@ class _ProductScreenState extends State<ProductScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      drawer: MyDrawer(),
       appBar: AppBar(
         title: CustomText,
         leading: SearchButton
@@ -243,16 +229,11 @@ class _ProductScreenState extends State<ProductScreen> {
                   setState(() {
                     SearchButton = false;
                     CustomSearch = const Icon(Icons.search);
-                    CustomText = const Text("Product Screen");
+                    CustomText = const Text("Order History Screen");
                   });
                 },
                 icon: const Icon(Icons.arrow_back_outlined))
-            : Builder(builder: (context) {
-                return IconButton(
-                  onPressed: () => Scaffold.of(context).openDrawer(),
-                  icon: Icon(Icons.menu),
-                );
-              }),
+            : Container(),
         actions: ([
           IconButton(
               icon: CustomSearch,

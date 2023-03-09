@@ -42,17 +42,20 @@ class _SplashState extends State<Splash> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            AnimatedOpacity(
-              opacity: Opacity1 ? 1:0,
-              duration: Duration(seconds: 1),
-              child: Image(
-                image: AssetImage('assets/SplashImage.jpg'),
-              ),
-            )
-          ],
+        child: Container(
+          padding: EdgeInsets.all(50.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AnimatedOpacity(
+                opacity: Opacity1 ? 1:0,
+                duration: Duration(seconds: 1),
+                child: Image(
+                  image: AssetImage('assets/SplashImage.jpg'),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

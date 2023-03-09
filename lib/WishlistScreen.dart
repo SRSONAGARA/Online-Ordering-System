@@ -1,20 +1,18 @@
 import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
-
-import 'DrawerScreen.dart';
-
-class ProductScreen extends StatefulWidget {
-  const ProductScreen({Key? key}) : super(key: key);
+class WishlistScreen extends StatefulWidget {
+  const WishlistScreen({Key? key}) : super(key: key);
 
   @override
-  State<ProductScreen> createState() => _ProductScreenState();
+  State<WishlistScreen> createState() => _WishlistScreenState();
 }
 
-class _ProductScreenState extends State<ProductScreen> {
+class _WishlistScreenState extends State<WishlistScreen> {
+
   TextEditingController search = TextEditingController();
   bool SearchButton = false;
   Icon CustomSearch = const Icon(Icons.search);
-  Widget CustomText = Text("Product Screen");
+  Widget CustomText = Text("Wishlist Screen");
   List<dynamic> SearchItems = [];
   bool ListEmptyBool = false;
   List<dynamic> ProductData = [
@@ -85,79 +83,75 @@ class _ProductScreenState extends State<ProductScreen> {
   Widget CustomProduct() {
     return ListEmptyBool
         ? const Center(
-            child: Text(
-              "No items match your search...",
-              style: TextStyle(fontSize: 15),
-            ),
-          )
+      child: Text(
+        "No items match your search...",
+        style: TextStyle(fontSize: 15),
+      ),
+    )
         : ListView.builder(
-            itemBuilder: (context, index) {
-              return Card(
-                elevation: 6,
-                child: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Column(
+        itemBuilder: (context, index) {
+          return Card(
+            elevation: 6,
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: Column(
+                children: [
+                  Row(
                     children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Column(
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Image(
+                              image: AssetImage(SearchItems[index].ImgLink),
+                              height: 100,
+                              width: 100,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Image(
-                                  image: AssetImage(SearchItems[index].ImgLink),
-                                  height: 100,
-                                  width: 100,
+                                FavoriteButton(
+                                  iconSize: 20,
+                                  isFavorite: false,
+                                  valueChanged: (_isFavorite) {},
                                 ),
                               ],
                             ),
-                          ),
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    FavoriteButton(
-                                      iconSize: 20,
-                                      isFavorite: false,
-                                      valueChanged: (_isFavorite) {},
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  SearchItems[index].ProductName.toString(),
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                Text(
-                                  SearchItems[index]
-                                      .ShortDescription
-                                      .toString(),
-                                  style: TextStyle(fontSize: 15),
-                                ),
-                                Text(
-                                  SearchItems[index].Price.toString(),
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                ElevatedButton(
-                                    onPressed: () {},
-                                    child: Text('Add To Cart'))
-                              ],
+                            Text(
+                              SearchItems[index].ProductName.toString(),
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
                             ),
-                          ),
-                        ],
-                      )
+                            Text(
+                              SearchItems[index].ShortDescription.toString(),
+                              style: TextStyle(fontSize: 15),
+                            ),
+                            Text(
+                              SearchItems[index].Price.toString(),
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            ElevatedButton(
+                                onPressed: () {}, child: Text('Add To Cart'))
+                          ],
+                        ),
+                      ),
                     ],
-                  ),
-                ),
-              );
-            },
-            itemCount: SearchItems.length);
+                  )
+                ],
+              ),
+            ),
+          );
+        },
+        itemCount: SearchItems.length);
   }
 
   ListView AllProduct() {
@@ -165,7 +159,6 @@ class _ProductScreenState extends State<ProductScreen> {
         itemBuilder: (context, index) {
           return Card(
             elevation: 6,
-            // color: Colors.red,
             child: Padding(
               padding: const EdgeInsets.all(15),
               child: Column(
@@ -234,25 +227,19 @@ class _ProductScreenState extends State<ProductScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      drawer: MyDrawer(),
       appBar: AppBar(
         title: CustomText,
         leading: SearchButton
             ? IconButton(
-                onPressed: () {
-                  setState(() {
-                    SearchButton = false;
-                    CustomSearch = const Icon(Icons.search);
-                    CustomText = const Text("Product Screen");
-                  });
-                },
-                icon: const Icon(Icons.arrow_back_outlined))
-            : Builder(builder: (context) {
-                return IconButton(
-                  onPressed: () => Scaffold.of(context).openDrawer(),
-                  icon: Icon(Icons.menu),
-                );
-              }),
+            onPressed: () {
+              setState(() {
+                SearchButton = false;
+                CustomSearch = const Icon(Icons.search);
+                CustomText = const Text("Wishlist Screen");
+              });
+            },
+            icon: const Icon(Icons.arrow_back_outlined))
+            : Container(),
         actions: ([
           IconButton(
               icon: CustomSearch,
@@ -280,7 +267,7 @@ class _ProductScreenState extends State<ProductScreen> {
               }),
           !SearchButton
               ? IconButton(
-                  onPressed: () {}, icon: Icon(Icons.filter_alt_outlined))
+              onPressed: () {}, icon: Icon(Icons.filter_alt_outlined))
               : SizedBox(),
         ]),
       ),
