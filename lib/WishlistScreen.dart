@@ -1,5 +1,7 @@
 import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
+
+import 'DrawerScreen.dart';
 class WishlistScreen extends StatefulWidget {
   const WishlistScreen({Key? key}) : super(key: key);
 
@@ -227,6 +229,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      drawer: MyDrawer(),
       appBar: AppBar(
         title: CustomText,
         leading: SearchButton
@@ -239,7 +242,12 @@ class _WishlistScreenState extends State<WishlistScreen> {
               });
             },
             icon: const Icon(Icons.arrow_back_outlined))
-            : Container(),
+            : Builder(builder: (context) {
+          return IconButton(
+            onPressed: () => Scaffold.of(context).openDrawer(),
+            icon: Icon(Icons.menu),
+          );
+        }),
         actions: ([
           IconButton(
               icon: CustomSearch,

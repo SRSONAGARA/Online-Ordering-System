@@ -1,5 +1,7 @@
 import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
+
+import 'DrawerScreen.dart';
 class CartScreen extends StatefulWidget {
   const CartScreen({Key? key}) : super(key: key);
 
@@ -257,6 +259,7 @@ class _CartScreenState extends State<CartScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      drawer: MyDrawer(),
       appBar: AppBar(
         title: CustomText,
         leading: SearchButton
@@ -269,7 +272,12 @@ class _CartScreenState extends State<CartScreen> {
               });
             },
             icon: const Icon(Icons.arrow_back_outlined))
-            : Container(),
+            : Builder(builder: (context) {
+          return IconButton(
+            onPressed: () => Scaffold.of(context).openDrawer(),
+            icon: Icon(Icons.menu),
+          );
+        }),
         actions: ([
           IconButton(
               icon: CustomSearch,

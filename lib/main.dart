@@ -26,9 +26,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      // home:Splash(),
+      home:Splash(),
       // home: LoginScreen(),
-      home: HomeScreen(),
+      // home: HomeScreen(),
       // home: AccountScreen(),
       routes: {
         '/welcome-screen':(context)=>WelcomeScreen(),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'DrawerScreen.dart';
+
 class OrderHistoryScreen extends StatefulWidget {
   const OrderHistoryScreen({Key? key}) : super(key: key);
 
@@ -221,6 +223,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+        drawer: MyDrawer(),
       appBar: AppBar(
         title: CustomText,
         leading: SearchButton
@@ -233,7 +236,12 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                   });
                 },
                 icon: const Icon(Icons.arrow_back_outlined))
-            : Container(),
+            : Builder(builder: (context) {
+          return IconButton(
+            onPressed: () => Scaffold.of(context).openDrawer(),
+            icon: Icon(Icons.menu),
+          );
+        }),
         actions: ([
           IconButton(
               icon: CustomSearch,
