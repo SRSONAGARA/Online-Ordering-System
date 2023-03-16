@@ -1,7 +1,14 @@
 import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
+import 'package:badges/badges.dart' as Badge;
+import 'package:oline_ordering_system/provider/cart_provider.dart';
+import 'package:oline_ordering_system/provider/favourite_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 import 'DrawerScreen.dart';
+import 'models/MainData.dart';
+import 'models/product.dart';
 
 class ProductScreen extends StatefulWidget {
   const ProductScreen({Key? key}) : super(key: key);
@@ -17,42 +24,48 @@ class _ProductScreenState extends State<ProductScreen> {
   Widget CustomText = Text("Product Screen");
   List<dynamic> SearchItems = [];
   bool ListEmptyBool = false;
-  List<dynamic> ProductData = [
-    Product(
-      ImgLink: 'assets/ProductImage.jpg',
-      ProductName: 'Iphone 11 pro max',
-      ShortDescription: 'Deep Purple',
-      Price: '₹110000',
+  final List<dynamic> ProductData = [
+    MainData(
+      productId: '1001',
+      imgLink: 'assets/ProductImage.jpg',
+      productName: 'Iphone 11 pro max',
+      shortDescription: 'Deep Purple',
+      price: '₹110000',
     ),
-    Product(
-      ImgLink: 'assets/ProductImage.jpg',
-      ProductName: 'Iphone 12 pro max',
-      ShortDescription: 'Deep Purple',
-      Price: '₹120000',
+    MainData(
+      productId: '1002',
+      imgLink: 'assets/ProductImage.jpg',
+      productName: 'Iphone 12 pro max',
+      shortDescription: 'Deep Purple',
+      price: '₹120000',
     ),
-    Product(
-      ImgLink: 'assets/ProductImage.jpg',
-      ProductName: 'Iphone 13 pro max',
-      ShortDescription: 'Deep Purple',
-      Price: '₹130000',
+    MainData(
+      productId: '1003',
+      imgLink: 'assets/ProductImage.jpg',
+      productName: 'Iphone 13 pro max',
+      shortDescription: 'Deep Purple',
+      price: '₹130000',
     ),
-    Product(
-      ImgLink: 'assets/ProductImage.jpg',
-      ProductName: 'Iphone 11 pro max',
-      ShortDescription: 'Deep Purple',
-      Price: '₹110000',
+    MainData(
+      productId: '1004',
+      imgLink: 'assets/ProductImage.jpg',
+      productName: 'Iphone 14 pro max',
+      shortDescription: 'Deep Purple',
+      price: '₹110000',
     ),
-    Product(
-      ImgLink: 'assets/ProductImage.jpg',
-      ProductName: 'Iphone 12 pro max',
-      ShortDescription: 'Deep Purple',
-      Price: '₹120000',
+    MainData(
+      productId: '1005',
+      imgLink: 'assets/ProductImage.jpg',
+      productName: 'Iphone 15 pro max',
+      shortDescription: 'Deep Purple',
+      price: '₹120000',
     ),
-    Product(
-      ImgLink: 'assets/ProductImage.jpg',
-      ProductName: 'Iphone 13 pro max',
-      ShortDescription: 'Deep Purple',
-      Price: '₹130000',
+    MainData(
+      productId: '1006',
+      imgLink: 'assets/ProductImage.jpg',
+      productName: 'Iphone 16 pro max',
+      shortDescription: 'Deep Purple',
+      price: '₹130000',
     ),
   ];
 
@@ -67,7 +80,8 @@ class _ProductScreenState extends State<ProductScreen> {
     if (text.isEmpty) {
       results = ProductData;
     } else {
-      results = ProductData.where((element) => element.ProductName.toString()
+      results = ProductData.where((element) => element.productName
+          .toString()
           .toLowerCase()
           .contains(text.toString())).toList();
     }
@@ -83,6 +97,7 @@ class _ProductScreenState extends State<ProductScreen> {
   }
 
   Widget CustomProduct() {
+    final favouriteProvider = Provider.of<FavouriteProvider>(context);
     return ListEmptyBool
         ? const Center(
             child: Text(
@@ -92,6 +107,8 @@ class _ProductScreenState extends State<ProductScreen> {
           )
         : ListView.builder(
             itemBuilder: (context, index) {
+              bool isFavourite = favouriteProvider.FavItems.any((element) =>
+                  element.productId.contains(ProductData[index].productId));
               return Card(
                 elevation: 6,
                 child: Padding(
@@ -104,7 +121,7 @@ class _ProductScreenState extends State<ProductScreen> {
                             child: Column(
                               children: [
                                 Image(
-                                  image: AssetImage(SearchItems[index].ImgLink),
+                                  image: AssetImage(SearchItems[index].imgLink),
                                   height: 100,
                                   width: 100,
                                 ),
@@ -116,30 +133,62 @@ class _ProductScreenState extends State<ProductScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    FavoriteButton(
-                                      iconSize: 20,
-                                      isFavorite: false,
-                                      valueChanged: (_isFavorite) {},
-                                    ),
-                                  ],
-                                ),
+                                Consumer<FavouriteProvider>(
+                                    builder: (context, value, child) {
+                                  return Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Container(
+                                        child: InkWell(
+                                          onTap: () {
+                                            if (isFavourite == true) {
+                                              value.removeItem(
+                                                  value.FavItems[index]);
+                                            } else {
+                                              value.addItem(MainData(
+                                                  productId: ProductData[index]
+                                                      .productId,
+                                                  productName:
+                                                      ProductData[index]
+                                                          .productName,
+                                                  shortDescription:
+                                                      ProductData[index]
+                                                          .shortDescription,
+                                                  price:
+                                                      ProductData[index].price,
+                                                  imgLink: ProductData[index]
+                                                      .imgLink));
+                                              // print(value.FavItems[index].productName);
+                                            }
+                                          },
+                                          child: isFavourite
+                                              ? const Icon(
+                                                  Icons.favorite,
+                                                  color: Colors.red,
+                                                  size: 20,
+                                                )
+                                              : const Icon(
+                                                  Icons.favorite_outline,
+                                                  size: 20),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }),
                                 Text(
-                                  SearchItems[index].ProductName.toString(),
+                                  SearchItems[index].productName.toString(),
                                   style: TextStyle(
                                     fontSize: 20,
                                   ),
                                 ),
                                 Text(
                                   SearchItems[index]
-                                      .ShortDescription
+                                      .shortDescription
                                       .toString(),
                                   style: TextStyle(fontSize: 15),
                                 ),
                                 Text(
-                                  SearchItems[index].Price.toString(),
+                                  SearchItems[index].price.toString(),
                                   style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold),
@@ -161,8 +210,17 @@ class _ProductScreenState extends State<ProductScreen> {
   }
 
   ListView AllProduct() {
+    // print('object');
+    final favouriteProvider = Provider.of<FavouriteProvider>(context);
+    final cartProvider = Provider.of<CartProvider>(context);
+
     return ListView.builder(
         itemBuilder: (context, index) {
+          bool isFavourite = favouriteProvider.FavItems.any((element) =>
+              element.productId.contains(ProductData[index].productId));
+          bool itemAddedToCart = cartProvider.CartItems.any((element) =>
+              element.productId.contains(ProductData[index].productId));
+
           return Card(
             elevation: 6,
             // color: Colors.red,
@@ -176,7 +234,7 @@ class _ProductScreenState extends State<ProductScreen> {
                         child: Column(
                           children: [
                             Image(
-                              image: AssetImage(ProductData[index].ImgLink),
+                              image: AssetImage(ProductData[index].imgLink),
                               height: 100,
                               width: 100,
                             ),
@@ -188,35 +246,80 @@ class _ProductScreenState extends State<ProductScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                FavoriteButton(
-                                  iconSize: 20,
-                                  isFavorite: false,
-                                  valueChanged: (_isFavorite) {
-                                    // print('Is Favorite : $_isFavorite');
-                                  },
-                                ),
-                              ],
-                            ),
+                            Consumer<FavouriteProvider>(
+                                builder: (context, value, child) {
+                              return Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      if (isFavourite == true) {
+                                        value.removeItem(value.FavItems[index]);
+                                      } else {
+                                        value.addItem(MainData(
+                                            productId:
+                                                ProductData[index].productId,
+                                            productName:
+                                                ProductData[index].productName,
+                                            shortDescription: ProductData[index]
+                                                .shortDescription,
+                                            price: ProductData[index].price,
+                                            imgLink:
+                                                ProductData[index].imgLink));
+                                        // print(value.FavItems[index].productName);
+                                      }
+                                    },
+                                    child: isFavourite
+                                        ? const Icon(
+                                            Icons.favorite,
+                                            color: Colors.red,
+                                            size: 20,
+                                          )
+                                        : const Icon(Icons.favorite_outline,
+                                            size: 20),
+                                  ),
+                                ],
+                              );
+                            }),
                             Text(
-                              ProductData[index].ProductName.toString(),
+                              ProductData[index].productName.toString(),
                               style: TextStyle(
                                 fontSize: 20,
                               ),
                             ),
                             Text(
-                              ProductData[index].ShortDescription.toString(),
+                              ProductData[index].shortDescription.toString(),
                               style: TextStyle(fontSize: 15),
                             ),
                             Text(
-                              ProductData[index].Price.toString(),
+                              ProductData[index].price.toString(),
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             ),
-                            ElevatedButton(
-                                onPressed: () {}, child: Text('Add To Cart'))
+                            Consumer<CartProvider>(
+                                builder: (context, value, child) {
+                              return ElevatedButton(
+                                  onPressed: () {
+                                    print(value.CartItems.length);
+                                    if (itemAddedToCart == true) {
+                                      // value.removeItem(value.CartItems[index]);
+                                    } else {
+                                      value.addItem(MainData(
+                                          productId:
+                                              ProductData[index].productId,
+                                          productName:
+                                              ProductData[index].productName,
+                                          shortDescription: ProductData[index]
+                                              .shortDescription,
+                                          price: ProductData[index].price,
+                                          imgLink: ProductData[index].imgLink));
+                                    }
+
+                                  },
+                                  style: ElevatedButton.styleFrom( primary: itemAddedToCart ? Colors.red[200]: Colors.blue),
+                                  child: itemAddedToCart? Text('Item is already Added')
+                                      : Text('Add To Cart'));
+                            })
                           ],
                         ),
                       ),
@@ -282,23 +385,23 @@ class _ProductScreenState extends State<ProductScreen> {
               ? IconButton(
                   onPressed: () {}, icon: Icon(Icons.filter_alt_outlined))
               : SizedBox(),
+          !SearchButton
+              ? const Center(
+                  child: Badge.Badge(
+                    badgeContent: Text(
+                      '0',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    child: Icon(Icons.shopping_cart),
+                  ),
+                )
+              : SizedBox(),
+          SizedBox(
+            width: 20,
+          )
         ]),
       ),
       body: !SearchButton ? AllProduct() : CustomProduct(),
     );
   }
-}
-
-class Product {
-  String ImgLink;
-  String ProductName;
-  String ShortDescription;
-  String Price;
-
-  Product({
-    required this.ImgLink,
-    required this.ProductName,
-    required this.ShortDescription,
-    required this.Price,
-  });
 }

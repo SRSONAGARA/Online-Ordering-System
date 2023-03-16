@@ -1,7 +1,10 @@
 import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
+import 'package:oline_ordering_system/provider/cart_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'DrawerScreen.dart';
+import 'models/MainData.dart';
 class CartScreen extends StatefulWidget {
   const CartScreen({Key? key}) : super(key: key);
 
@@ -23,41 +26,47 @@ class _CartScreenState extends State<CartScreen> {
   int counter=0;
 
   List<dynamic> ProductData = [
-    Product(
-      ImgLink: 'assets/ProductImage.jpg',
-      ProductName: 'Iphone 11 pro max',
-      ShortDescription: 'Deep Purple',
-      Price: '₹110000',
+    MainData(
+      productId: '1001',
+      imgLink: 'assets/ProductImage.jpg',
+      productName: 'Iphone 11 pro max',
+      shortDescription: 'Deep Purple',
+      price: '₹110000',
     ),
-    Product(
-      ImgLink: 'assets/ProductImage.jpg',
-      ProductName: 'Iphone 12 pro max',
-      ShortDescription: 'Deep Purple',
-      Price: '₹120000',
+    MainData(
+      productId: '1002',
+      imgLink: 'assets/ProductImage.jpg',
+      productName: 'Iphone 12 pro max',
+      shortDescription: 'Deep Purple',
+      price: '₹120000',
     ),
-    Product(
-      ImgLink: 'assets/ProductImage.jpg',
-      ProductName: 'Iphone 13 pro max',
-      ShortDescription: 'Deep Purple',
-      Price: '₹130000',
+    MainData(
+      productId: '1003',
+      imgLink: 'assets/ProductImage.jpg',
+      productName: 'Iphone 13 pro max',
+      shortDescription: 'Deep Purple',
+      price: '₹130000',
     ),
-    Product(
-      ImgLink: 'assets/ProductImage.jpg',
-      ProductName: 'Iphone 11 pro max',
-      ShortDescription: 'Deep Purple',
-      Price: '₹110000',
+    MainData(
+      productId: '1004',
+      imgLink: 'assets/ProductImage.jpg',
+      productName: 'Iphone 14 pro max',
+      shortDescription: 'Deep Purple',
+      price: '₹110000',
     ),
-    Product(
-      ImgLink: 'assets/ProductImage.jpg',
-      ProductName: 'Iphone 12 pro max',
-      ShortDescription: 'Deep Purple',
-      Price: '₹120000',
+    MainData(
+      productId: '1005',
+      imgLink: 'assets/ProductImage.jpg',
+      productName: 'Iphone 15 pro max',
+      shortDescription: 'Deep Purple',
+      price: '₹120000',
     ),
-    Product(
-      ImgLink: 'assets/ProductImage.jpg',
-      ProductName: 'Iphone 13 pro max',
-      ShortDescription: 'Deep Purple',
-      Price: '₹130000',
+    MainData(
+      productId: '1006',
+      imgLink: 'assets/ProductImage.jpg',
+      productName: 'Iphone 16 pro max',
+      shortDescription: 'Deep Purple',
+      price: '₹130000',
     ),
   ];
 
@@ -161,9 +170,21 @@ class _CartScreenState extends State<CartScreen> {
         itemCount: SearchItems.length);
   }
 
-  ListView AllProduct() {
-    return ListView.builder(
+  Widget AllProduct() {
+    final cartProvider=Provider.of<CartProvider>(context);
+    return cartProvider.CartItems.isEmpty?Center(child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(child: Image.asset('assets/cartEmpty.png'),),
+        SizedBox(height: 20,),
+        Text('Oops...!',style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold,fontSize: 20),),
+        Text('Your Cart list is currently empty')
+      ],
+    )):
+
+      ListView.builder(
         itemBuilder: (context, index) {
+
           return Card(
             elevation: 6,
             child: Padding(
@@ -176,7 +197,7 @@ class _CartScreenState extends State<CartScreen> {
                         child: Column(
                           children: [
                             Image(
-                              image: AssetImage(ProductData[index].ImgLink),
+                              image: AssetImage(cartProvider.CartItems[index].imgLink),
                               height: 100,
                               width: 100,
                             ),
@@ -219,26 +240,36 @@ class _CartScreenState extends State<CartScreen> {
                               ],
                             ),
                             Text(
-                              ProductData[index].ProductName.toString(),
+                              cartProvider.CartItems[index].productName.toString(),
                               style: TextStyle(
                                 fontSize: 20,
                               ),
                             ),
                             Text(
-                              ProductData[index].ShortDescription.toString(),
+                              cartProvider.CartItems[index].shortDescription.toString(),
                               style: TextStyle(fontSize: 15),
                             ),
                             Text(
-                              ProductData[index].Price.toString(),
+                              cartProvider.CartItems[index].price.toString(),
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                             Row(
                               children: [
-                                Icon(Icons.delete_forever),
+                                Consumer<CartProvider>(builder: (context, vlaue,child){
+                                  return InkWell(
+                                    child: Icon(Icons.delete_forever),
+                                    onTap: (){
+                                      cartProvider.removeItem(cartProvider.CartItems[index]);
+                                    },
+                                  );
+                                }),
+
                                 SizedBox(width: 15,),
                                 ElevatedButton(
-                                    onPressed: () {}, child: Text('Add To Cart'))
+                                    onPressed: () {
+
+                                    }, child: Text('Place Order'))
                               ],
                             )
 
@@ -252,7 +283,7 @@ class _CartScreenState extends State<CartScreen> {
             ),
           );
         },
-        itemCount: ProductData.length);
+        itemCount: cartProvider.CartItems.length);
   }
 
   @override
@@ -310,20 +341,7 @@ class _CartScreenState extends State<CartScreen> {
         ]),
       ),
       body: !SearchButton ? AllProduct() : CustomProduct(),
+      // body: AllProduct(),
     );
   }
-}
-
-class Product {
-  String ImgLink;
-  String ProductName;
-  String ShortDescription;
-  String Price;
-
-  Product({
-    required this.ImgLink,
-    required this.ProductName,
-    required this.ShortDescription,
-    required this.Price,
-  });
 }

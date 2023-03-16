@@ -32,8 +32,8 @@ class _AccountScreenState extends State<AccountScreen> {
               // mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                    height: 200,
-                    width: 200,
+                    height: 100,
+                    width: 100,
                     child: Image(
                       image: AssetImage('assets/LoginImage.png'),
                     )),
@@ -126,13 +126,9 @@ class _AccountScreenState extends State<AccountScreen> {
                           shadowColor: Colors.transparent),
                       onPressed: (){},child:Text('Save the Data') ),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
                 TextButton(onPressed: (){
                   Navigator.pushNamed(context, '/resetpsw-screen');
                 }, child: Text('Reset Password')),
-                SizedBox(height: 20,),
                 Container(
                   height: 30,
                   decoration: BoxDecoration(

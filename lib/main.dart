@@ -1,4 +1,3 @@
-import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:oline_ordering_system/AccountScreen.dart';
 import 'package:oline_ordering_system/CartScreen.dart';
@@ -10,6 +9,9 @@ import 'package:oline_ordering_system/ProductScreen.dart';
 import 'package:oline_ordering_system/Registration%20Screen.dart';
 import 'package:oline_ordering_system/ResetPswScreen.dart';
 import 'package:oline_ordering_system/Splash%20Screen.dart';
+import 'package:oline_ordering_system/provider/cart_provider.dart';
+import 'package:oline_ordering_system/provider/favourite_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'Welcome Screen.dart';
 import 'WishlistScreen.dart';
@@ -21,14 +23,18 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MultiProvider(providers: [
+      ChangeNotifierProvider(create: (_)=>FavouriteProvider()),
+      ChangeNotifierProvider(create: (_)=>CartProvider()),
+
+    ],
+        child: MaterialApp(
       debugShowCheckedModeBanner: false,
-      home:Splash(),
+      // home:Splash(),
       // home: LoginScreen(),
-      // home: HomeScreen(),
+      home: HomeScreen(),
       // home: AccountScreen(),
       routes: {
         '/welcome-screen':(context)=>WelcomeScreen(),
@@ -44,6 +50,6 @@ class MyApp extends StatelessWidget {
         '/account-screen':(context)=>AccountScreen(),
 
       },
-    );
+    ));
   }
 }

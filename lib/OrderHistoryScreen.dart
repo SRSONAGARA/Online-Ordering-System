@@ -37,19 +37,19 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
     ),
     Product(
       ImgLink: 'assets/ProductImage.jpg',
-      ProductName: 'Iphone 11 pro max',
+      ProductName: 'Iphone 14 pro max',
       ShortDescription: 'Deep Purple',
       Price: '₹110000',
     ),
     Product(
       ImgLink: 'assets/ProductImage.jpg',
-      ProductName: 'Iphone 12 pro max',
+      ProductName: 'Iphone 15 pro max',
       ShortDescription: 'Deep Purple',
       Price: '₹120000',
     ),
     Product(
       ImgLink: 'assets/ProductImage.jpg',
-      ProductName: 'Iphone 13 pro max',
+      ProductName: 'Iphone 16 pro max',
       ShortDescription: 'Deep Purple',
       Price: '₹130000',
     ),
