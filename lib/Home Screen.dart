@@ -28,20 +28,6 @@ class _HomeScreenState extends State<HomeScreen> {
     // Size size = MediaQuery.of(context).size;
     return Scaffold(
 
-      // appBar: AppBar(title: Text('Product Screen'),),
-      // drawer: Drawer(
-      //   backgroundColor: Colors.pinkAccent,
-      //   child: SingleChildScrollView(
-      //     child: Container(
-      //       child: Column(
-      //         children: [
-      //           MyHeaderDrawer(),
-      //           MyDrawerList()
-      //         ],
-      //       ),
-      //     ),
-      //   ),
-      // ),
       body: screens[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Colors.blue,
@@ -79,7 +65,3 @@ class _HomeScreenState extends State<HomeScreen> {
 
   }
 }
-// Widget MyDrawerList(){
-//   return Container();
-// }
-

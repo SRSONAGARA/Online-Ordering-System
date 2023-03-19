@@ -8,7 +8,6 @@ import 'package:velocity_x/velocity_x.dart';
 
 import 'DrawerScreen.dart';
 import 'models/MainData.dart';
-import 'models/product.dart';
 
 class ProductScreen extends StatefulWidget {
   const ProductScreen({Key? key}) : super(key: key);
@@ -30,42 +29,42 @@ class _ProductScreenState extends State<ProductScreen> {
       imgLink: 'assets/ProductImage.jpg',
       productName: 'Iphone 11 pro max',
       shortDescription: 'Deep Purple',
-      price: '₹110000',
+      price: 110000,
     ),
     MainData(
       productId: '1002',
       imgLink: 'assets/ProductImage.jpg',
       productName: 'Iphone 12 pro max',
       shortDescription: 'Deep Purple',
-      price: '₹120000',
+      price:120000,
     ),
     MainData(
       productId: '1003',
       imgLink: 'assets/ProductImage.jpg',
       productName: 'Iphone 13 pro max',
       shortDescription: 'Deep Purple',
-      price: '₹130000',
+      price: 130000,
     ),
     MainData(
       productId: '1004',
       imgLink: 'assets/ProductImage.jpg',
       productName: 'Iphone 14 pro max',
       shortDescription: 'Deep Purple',
-      price: '₹110000',
+      price: 110000,
     ),
     MainData(
       productId: '1005',
       imgLink: 'assets/ProductImage.jpg',
       productName: 'Iphone 15 pro max',
       shortDescription: 'Deep Purple',
-      price: '₹120000',
+      price: 120000,
     ),
     MainData(
       productId: '1006',
       imgLink: 'assets/ProductImage.jpg',
       productName: 'Iphone 16 pro max',
       shortDescription: 'Deep Purple',
-      price: '₹130000',
+      price: 130000,
     ),
   ];
 
@@ -187,8 +186,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                       .toString(),
                                   style: TextStyle(fontSize: 15),
                                 ),
-                                Text(
-                                  SearchItems[index].price.toString(),
+                                Text('₹${SearchItems[index].price}',
                                   style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold),
@@ -291,8 +289,7 @@ class _ProductScreenState extends State<ProductScreen> {
                               ProductData[index].shortDescription.toString(),
                               style: TextStyle(fontSize: 15),
                             ),
-                            Text(
-                              ProductData[index].price.toString(),
+                            Text('₹${ProductData[index].price}',
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             ),
@@ -312,7 +309,9 @@ class _ProductScreenState extends State<ProductScreen> {
                                           shortDescription: ProductData[index]
                                               .shortDescription,
                                           price: ProductData[index].price,
-                                          imgLink: ProductData[index].imgLink));
+                                          imgLink: ProductData[index].imgLink,
+                                          // quantity: 1
+                                      ));
                                     }
 
                                   },
@@ -335,6 +334,7 @@ class _ProductScreenState extends State<ProductScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final cartProvider = Provider.of<CartProvider>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       drawer: MyDrawer(),
@@ -386,15 +386,20 @@ class _ProductScreenState extends State<ProductScreen> {
                   onPressed: () {}, icon: Icon(Icons.filter_alt_outlined))
               : SizedBox(),
           !SearchButton
-              ? const Center(
-                  child: Badge.Badge(
-                    badgeContent: Text(
-                      '0',
-                      style: TextStyle(color: Colors.white),
+              ? InkWell(
+                child:  Center(
+                    child: Badge.Badge(
+                      badgeContent: Text(
+                        cartProvider.CartItems.length.toString(),
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      child: Icon(Icons.shopping_cart_outlined),
                     ),
-                    child: Icon(Icons.shopping_cart),
                   ),
-                )
+              onTap: (){
+                Navigator.pushNamed(context, '/cart-screen');
+              }
+              )
               : SizedBox(),
           SizedBox(
             width: 20,

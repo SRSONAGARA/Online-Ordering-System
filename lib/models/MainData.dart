@@ -3,8 +3,9 @@ class MainData {
   final String productId;
   final String productName;
   final String shortDescription;
-  final String price;
+  final int price;
   final String imgLink;
+  int quantity;
   // bool isFavorite;
 
   MainData({
@@ -14,6 +15,7 @@ class MainData {
     required this.shortDescription,
     required this.price,
     required this.imgLink,
+    this.quantity = 1,
     // this.isFavorite=false
   });
 }

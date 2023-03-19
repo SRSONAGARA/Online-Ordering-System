@@ -11,6 +11,7 @@ import 'package:oline_ordering_system/ResetPswScreen.dart';
 import 'package:oline_ordering_system/Splash%20Screen.dart';
 import 'package:oline_ordering_system/provider/cart_provider.dart';
 import 'package:oline_ordering_system/provider/favourite_provider.dart';
+import 'package:oline_ordering_system/provider/placeOrder_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'Welcome Screen.dart';
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(providers: [
       ChangeNotifierProvider(create: (_)=>FavouriteProvider()),
       ChangeNotifierProvider(create: (_)=>CartProvider()),
-
+      ChangeNotifierProvider(create: (_)=>PlaceOrderProvider())
     ],
         child: MaterialApp(
       debugShowCheckedModeBanner: false,

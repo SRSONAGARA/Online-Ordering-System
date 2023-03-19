@@ -1,10 +1,15 @@
+import 'package:badges/badges.dart' as Badge;
 import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
+import 'package:oline_ordering_system/models/PlaceOrderData.dart';
 import 'package:oline_ordering_system/provider/cart_provider.dart';
+import 'package:oline_ordering_system/provider/favourite_provider.dart';
+import 'package:oline_ordering_system/provider/placeOrder_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'DrawerScreen.dart';
 import 'models/MainData.dart';
+
 class CartScreen extends StatefulWidget {
   const CartScreen({Key? key}) : super(key: key);
 
@@ -16,14 +21,15 @@ class _CartScreenState extends State<CartScreen> {
   TextEditingController search = TextEditingController();
   bool SearchButton = false;
   Icon CustomSearch = const Icon(Icons.search);
-  Widget CustomText = Text("Cart Screen");
+  Widget CustomText = Text("My Cart");
   List<dynamic> SearchItems = [];
   bool ListEmptyBool = false;
   // var total=0;
   // void increment(int Price)=>ProductData[Price];
   // void decrement(int Price)=>ProductData[Price];
 
-  int counter=0;
+  int counter = 0;
+  int quantity = 0;
 
   List<dynamic> ProductData = [
     MainData(
@@ -31,42 +37,42 @@ class _CartScreenState extends State<CartScreen> {
       imgLink: 'assets/ProductImage.jpg',
       productName: 'Iphone 11 pro max',
       shortDescription: 'Deep Purple',
-      price: '₹110000',
+      price: 110000,
     ),
     MainData(
       productId: '1002',
       imgLink: 'assets/ProductImage.jpg',
       productName: 'Iphone 12 pro max',
       shortDescription: 'Deep Purple',
-      price: '₹120000',
+      price: 120000,
     ),
     MainData(
       productId: '1003',
       imgLink: 'assets/ProductImage.jpg',
       productName: 'Iphone 13 pro max',
       shortDescription: 'Deep Purple',
-      price: '₹130000',
+      price: 130000,
     ),
     MainData(
       productId: '1004',
       imgLink: 'assets/ProductImage.jpg',
       productName: 'Iphone 14 pro max',
       shortDescription: 'Deep Purple',
-      price: '₹110000',
+      price: 110000,
     ),
     MainData(
       productId: '1005',
       imgLink: 'assets/ProductImage.jpg',
       productName: 'Iphone 15 pro max',
       shortDescription: 'Deep Purple',
-      price: '₹120000',
+      price: 120000,
     ),
     MainData(
       productId: '1006',
       imgLink: 'assets/ProductImage.jpg',
       productName: 'Iphone 16 pro max',
       shortDescription: 'Deep Purple',
-      price: '₹130000',
+      price: 130000,
     ),
   ];
 
@@ -81,7 +87,8 @@ class _CartScreenState extends State<CartScreen> {
     if (text.isEmpty) {
       results = ProductData;
     } else {
-      results = ProductData.where((element) => element.ProductName.toString()
+      results = ProductData.where((element) => element.productName
+          .toString()
           .toLowerCase()
           .contains(text.toString())).toList();
     }
@@ -96,252 +103,424 @@ class _CartScreenState extends State<CartScreen> {
     });
   }
 
-  Widget CustomProduct() {
-    return ListEmptyBool
-        ? const Center(
-      child: Text(
-        "No items match your search...",
-        style: TextStyle(fontSize: 15),
-      ),
-    )
-        : ListView.builder(
-        itemBuilder: (context, index) {
-          return Card(
-            elevation: 6,
-            child: Padding(
-              padding: const EdgeInsets.all(15),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          children: [
-                            Image(
-                              image: AssetImage(SearchItems[index].ImgLink),
-                              height: 100,
-                              width: 100,
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                FavoriteButton(
-                                  iconSize: 20,
-                                  isFavorite: false,
-                                  valueChanged: (_isFavorite) {},
-                                ),
-                              ],
-                            ),
-                            Text(
-                              SearchItems[index].ProductName.toString(),
-                              style: TextStyle(
-                                fontSize: 20,
-                              ),
-                            ),
-                            Text(
-                              SearchItems[index].ShortDescription.toString(),
-                              style: TextStyle(fontSize: 15),
-                            ),
-                            Text(
-                              SearchItems[index].Price.toString(),
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            ElevatedButton(
-                                onPressed: () {}, child: Text('Add To Cart'))
-                          ],
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          );
-        },
-        itemCount: SearchItems.length);
-  }
-
   Widget AllProduct() {
-    final cartProvider=Provider.of<CartProvider>(context);
-    return cartProvider.CartItems.isEmpty?Center(child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(child: Image.asset('assets/cartEmpty.png'),),
-        SizedBox(height: 20,),
-        Text('Oops...!',style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold,fontSize: 20),),
-        Text('Your Cart list is currently empty')
-      ],
-    )):
-
-      ListView.builder(
-        itemBuilder: (context, index) {
-
-          return Card(
-            elevation: 6,
-            child: Padding(
-              padding: const EdgeInsets.all(15),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          children: [
-                            Image(
-                              image: AssetImage(cartProvider.CartItems[index].imgLink),
-                              height: 100,
-                              width: 100,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children:<Widget> [
-                                counter!=0? IconButton(onPressed: (){
-                                  setState(() {
-                                    counter--;
-                                    // decrement(ProductData[index].Price);
-                                  });
-                                }, icon: Icon(Icons.remove)): Container(),
-                                Text('$counter',style: TextStyle(fontSize: 20),),
-                                IconButton(onPressed: (){
-                                  setState(() {
-                                    counter++;
-                                    // increment(ProductData[index].Price);
-                                  });
-                                }, icon: Icon(Icons.add))
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                FavoriteButton(
-                                  iconSize: 20,
-                                  isFavorite: false,
-                                  valueChanged: (_isFavorite) {
-                                    // print('Is Favorite : $_isFavorite');
-                                  },
-                                ),
-                              ],
-                            ),
-                            Text(
-                              cartProvider.CartItems[index].productName.toString(),
-                              style: TextStyle(
-                                fontSize: 20,
-                              ),
-                            ),
-                            Text(
-                              cartProvider.CartItems[index].shortDescription.toString(),
-                              style: TextStyle(fontSize: 15),
-                            ),
-                            Text(
-                              cartProvider.CartItems[index].price.toString(),
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            Row(
-                              children: [
-                                Consumer<CartProvider>(builder: (context, vlaue,child){
-                                  return InkWell(
-                                    child: Icon(Icons.delete_forever),
-                                    onTap: (){
-                                      cartProvider.removeItem(cartProvider.CartItems[index]);
-                                    },
-                                  );
-                                }),
-
-                                SizedBox(width: 15,),
-                                ElevatedButton(
-                                    onPressed: () {
-
-                                    }, child: Text('Place Order'))
-                              ],
-                            )
-
-                          ],
-                        ),
-                      ),
-                    ],
-                  )
-                ],
+    final cartProvider = Provider.of<CartProvider>(context);
+    final favoriteProvider = Provider.of<FavouriteProvider>(context);
+    final placeOrderProvider = Provider.of<PlaceOrderProvider>(context);
+    return cartProvider.CartItems.isEmpty
+        ? Center(
+            child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                child: Image.asset('assets/cartEmpty.png'),
               ),
-            ),
-          );
-        },
-        itemCount: cartProvider.CartItems.length);
+              const SizedBox(
+                height: 20,
+              ),
+              const Text(
+                'Oops...!',
+                style: TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20),
+              ),
+              SizedBox(height: 5,),
+              const Text('Your Cart is empty !',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, "/home-screen");
+                  },
+                  child: Text('Find items to save')),
+            ],
+          ))
+        : ListView.builder(
+            itemBuilder: (context, index) {
+              bool isFavourite = favoriteProvider.FavItems.any((element) =>
+                  element.productId
+                      .contains(cartProvider.CartItems[index].productId));
+
+              return Card(
+                elevation: 6,
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              children: [
+                                Image(
+                                  image: AssetImage(
+                                      cartProvider.CartItems[index].imgLink),
+                                  height: 100,
+                                  width: 100,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20.0, right: 20.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            if (cartProvider
+                                                    .CartItems[index].quantity >
+                                                1) {
+                                              cartProvider
+                                                  .CartItems[index].quantity--;
+                                              print(cartProvider
+                                                  .CartItems[index].quantity);
+                                            }
+                                          });
+                                        },
+                                        child: CircleAvatar(
+                                          backgroundColor: Colors.grey[200],
+                                          radius: 14,
+                                          child: const Center(
+                                            child: Icon(
+                                              Icons.remove,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Text(
+                                        cartProvider.CartItems[index].quantity
+                                            .toString(),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            cartProvider
+                                                    .CartItems[index].quantity +
+                                                1;
+                                            print(cartProvider
+                                                .CartItems[index].quantity++);
+                                          });
+                                        },
+                                        child: CircleAvatar(
+                                          backgroundColor: Colors.grey[200],
+                                          radius: 14,
+                                          child: const Center(
+                                            child: Icon(
+                                              Icons.add,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Consumer<FavouriteProvider>(
+                                        builder: (context, value, child) {
+                                      return Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              if (isFavourite == true) {
+                                                value.removeItem(
+                                                    value.FavItems[index]);
+                                              } else {}
+                                            },
+                                            child: isFavourite
+                                                ? const Icon(
+                                                    Icons.favorite,
+                                                    color: Colors.red,
+                                                    size: 20,
+                                                  )
+                                                : const Icon(
+                                                    Icons.favorite_outline,
+                                                    size: 20),
+                                          ),
+                                        ],
+                                      );
+                                    }),
+                                  ],
+                                ),
+                                Text(
+                                  cartProvider.CartItems[index].productName
+                                      .toString(),
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                Text(
+                                  cartProvider.CartItems[index].shortDescription
+                                      .toString(),
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                                Text(
+                                  '₹${cartProvider.CartItems[index].price * cartProvider.CartItems[index].quantity}',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  children: [
+                                    Consumer<CartProvider>(
+                                        builder: (context, vlaue, child) {
+                                      return InkWell(
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(3)),
+                                            color: Colors.grey,
+                                          ),
+                                          padding: EdgeInsets.only(
+                                              left: 5.0, right: 10.0),
+                                          child: Row(
+                                            children: const [
+                                              Icon(Icons.delete_forever),
+                                              Text('Remove')
+                                            ],
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          cartProvider.removeItem(
+                                              cartProvider.CartItems[index]);
+                                        },
+                                      );
+                                    }),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              );
+            },
+            itemCount: cartProvider.CartItems.length);
   }
 
   @override
   Widget build(BuildContext context) {
+    final cartProvider = Provider.of<CartProvider>(context);
+    final favoriteProvider = Provider.of<FavouriteProvider>(context);
     return Scaffold(
       backgroundColor: Colors.white,
-      drawer: MyDrawer(),
+      // drawer: MyDrawer(),
       appBar: AppBar(
         title: CustomText,
-        leading: SearchButton
-            ? IconButton(
-            onPressed: () {
-              setState(() {
-                SearchButton = false;
-                CustomSearch = const Icon(Icons.search);
-                CustomText = const Text("Cart Screen");
-              });
+        centerTitle: true,
+        leading: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: InkWell(
+              onTap: () {
+                Navigator.of(context).pushReplacementNamed('/home-screen');
+              },
+              hoverColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              splashColor: Colors.transparent,
+              child: const CircleAvatar(
+                backgroundColor: Colors.white,
+                child: Icon(
+                  Icons.arrow_back_ios_new_sharp,
+                  color: Colors.black,
+                  size: 18,
+                ),
+              )),
+        ),
+        actions: [
+          InkWell(
+            child: Center(
+              child: Badge.Badge(
+                badgeContent: Text(
+                  favoriteProvider.FavItems.length.toString(),
+                  style: TextStyle(color: Colors.white),
+                ),
+                child: Icon(Icons.favorite_outline),
+              ),
+            ),
+            onTap: () {
+              Navigator.pushNamed(context, '/wishlist-screen');
             },
-            icon: const Icon(Icons.arrow_back_outlined))
-            : Builder(builder: (context) {
-          return IconButton(
-            onPressed: () => Scaffold.of(context).openDrawer(),
-            icon: Icon(Icons.menu),
-          );
-        }),
-        actions: ([
-          IconButton(
-              icon: CustomSearch,
-              onPressed: () {
-                setState(() {
-                  if (CustomSearch.icon == Icons.search) {
-                    SearchButton = true;
-                    CustomSearch = const Icon(Icons.clear);
-                    CustomText = TextField(
-                      textInputAction: TextInputAction.go,
-                      controller: search,
-                      onChanged: (value) => onSearchTextChanged(value),
-                      decoration: const InputDecoration(
-                          hintText: "Search here...",
-                          hintStyle: TextStyle(color: Colors.white),
-                          //
-                          border: UnderlineInputBorder()),
-                      style: const TextStyle(color: Colors.white, fontSize: 20),
-                    );
-                  } else {
-                    search.clear();
-                    onSearchTextChanged("");
-                  }
-                });
-              }),
-          !SearchButton
-              ? IconButton(
-              onPressed: () {}, icon: Icon(Icons.filter_alt_outlined))
-              : SizedBox(),
-        ]),
+          ),
+          SizedBox(
+            width: 20,
+          )
+        ],
       ),
-      body: !SearchButton ? AllProduct() : CustomProduct(),
+      // body: !SearchButton ? AllProduct() : CustomProduct(),
+      body: AllProduct(),
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.all(5.0),
+        color: Colors.blue,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+                child: Text(
+              'Total Items: ${cartProvider.allItemCount().toString()}',
+              style: const TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            )),
+            Expanded(
+                child: Text(
+              'Total Price: ₹${cartProvider.allItemPrice().toString()}',
+              style: const TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            )),
+            SizedBox(
+              height: 20,
+            ),
+            InkWell(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return cartProvider.CartItems.isNotEmpty
+                        ? AlertDialog(
+                            title: const Text("Confirm to Place Order"),
+                            content: Text(
+                                "You added ${cartProvider.allItemCount()} Product and Total Price ${cartProvider.allItemPrice()}"),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('Not Now'),
+                              ),
+                              Consumer<PlaceOrderProvider>(
+                                  builder: (context, value, child) {
+                                return TextButton(
+                                    child: const Text('Place Order'),
+                                    onPressed: () {
+                                      setState(() {
+                                        for (int index = 0;
+                                            index <
+                                                cartProvider
+                                                    .CartItems.length;
+                                            index++) {
+                                          value.placeItem(PlaceOrderData(
+                                              price: cartProvider
+                                                      .CartItems[index]
+                                                      .price *
+                                                  cartProvider
+                                                      .CartItems[index]
+                                                      .quantity,
+                                              productName: cartProvider
+                                                  .CartItems[index]
+                                                  .productName,
+                                              shortDescription: cartProvider
+                                                  .CartItems[index]
+                                                  .shortDescription,
+                                              imgLink: cartProvider
+                                                  .CartItems[index].imgLink,
+                                              quantity: cartProvider
+                                                  .CartItems[index].quantity,
+                                              dateTime: DateTime.now()));
+                                        }
+                                        cartProvider.cleanCartItem();
+                                        Navigator.pop(context);
+                                      });
+                                    });
+                              })
+                            ],
+                          )
+                        : AlertDialog(
+                            title: const Text("No Items Added in Cart"),
+                            content: const Text("Please add item in cart"),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('Not Now'),
+                              ),
+                              TextButton(
+                                  child: const Text('Okay'),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  }),
+                            ],
+                          );
+                  },
+                );
+              },
+              child: Container(
+                // height: size.height / 15,
+                padding: EdgeInsets.only(left: 10.0,right: 10.0),
+                height: 30,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    gradient: LinearGradient(colors: [
+                      Color.fromARGB(255, 37, 150, 190),
+                      Colors.pinkAccent
+                    ])),
+                child: const Center(
+                    child: Text(
+                  "Place Order ",
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                )),
+              ),
+            ),
+          ],
+        ),
+      ),
       // body: AllProduct(),
     );
   }
+}
+
+void alertFunc(BuildContext context) {
+  var alertDialog = AlertDialog(
+    title: Text(
+      'Confirm to Place Order',
+      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    ),
+    content: Text('Are you Sure, you want to Place an Order?'),
+    actions: [
+      TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text('Not Now')),
+      TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text('Place Order'))
+    ],
+  );
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alertDialog;
+      });
 }
