@@ -22,7 +22,7 @@ class _AccountScreenState extends State<AccountScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Account Screen'),
+        title: Text('Hello Sagar!'),
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -81,7 +81,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   children: [
                     Expanded(
                       child: TextFormField(
-                        // maxLength: 10,
+                        maxLength: 10,
                         decoration: InputDecoration(
                           label: Text('Mobile Number'),
                           hintText: 'Enter here',
@@ -90,7 +90,8 @@ class _AccountScreenState extends State<AccountScreen> {
                         keyboardType: TextInputType.phone,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly
-                        ],
+                        ]
+
                       ),
                     )
                   ],

@@ -35,6 +35,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       // home:Splash(),
       // home: LoginScreen(),
+      // home:RegistrationScreen() ,
       home: HomeScreen(),
       // home: AccountScreen(),
       routes: {

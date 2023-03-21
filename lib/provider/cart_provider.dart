@@ -2,10 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:collection/collection.dart';
 import 'package:oline_ordering_system/models/MainData.dart';
 
+
 class CartProvider with ChangeNotifier{
   List<MainData> _CartItems=[];
   List<dynamic> get CartItems =>_CartItems;
-  // var total=0;
 
   void addItem(MainData product){
     _CartItems.add(product);

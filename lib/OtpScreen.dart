@@ -192,6 +192,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       backgroundColor: Colors.transparent,
                       shadowColor: Colors.transparent),
                   onPressed: (){
+                    //if password is not matched with sent in email then display Alert Dialog -'Otp is not valid.' else route.
                     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_)=>HomeScreen()), (route) => false);
                     // Navigator.pushNamed(context, '/home-screen');
                   },child:Text('VERIFY & PROCEED') ),

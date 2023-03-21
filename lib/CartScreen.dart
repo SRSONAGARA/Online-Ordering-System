@@ -18,6 +18,7 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  var size,height,width;
   TextEditingController search = TextEditingController();
   bool SearchButton = false;
   Icon CustomSearch = const Icon(Icons.search);
@@ -104,14 +105,20 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   Widget AllProduct() {
+    size = MediaQuery.of(context).size;
+    height = size.height;
+    width = size.width;
+
     final cartProvider = Provider.of<CartProvider>(context);
     final favoriteProvider = Provider.of<FavouriteProvider>(context);
-    final placeOrderProvider = Provider.of<PlaceOrderProvider>(context);
     return cartProvider.CartItems.isEmpty
         ? Center(
             child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(
+                height: height/7,
+              ),
               Container(
                 child: Image.asset('assets/cartEmpty.png'),
               ),
@@ -125,7 +132,9 @@ class _CartScreenState extends State<CartScreen> {
                     fontWeight: FontWeight.bold,
                     fontSize: 20),
               ),
-              SizedBox(height: 5,),
+              SizedBox(
+                height: 5,
+              ),
               const Text('Your Cart is empty !',
                   style: TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(
@@ -139,6 +148,8 @@ class _CartScreenState extends State<CartScreen> {
             ],
           ))
         : ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
             itemBuilder: (context, index) {
               bool isFavourite = favoriteProvider.FavItems.any((element) =>
                   element.productId
@@ -372,7 +383,7 @@ class _CartScreenState extends State<CartScreen> {
         ],
       ),
       // body: !SearchButton ? AllProduct() : CustomProduct(),
-      body: AllProduct(),
+      body: SingleChildScrollView(child: AllProduct()),
       bottomNavigationBar: Container(
         padding: EdgeInsets.all(5.0),
         color: Colors.blue,
@@ -383,7 +394,7 @@ class _CartScreenState extends State<CartScreen> {
                 child: Text(
               'Total Items: ${cartProvider.allItemCount().toString()}',
               style: const TextStyle(
-                color: Colors.black,
+                color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
             )),
@@ -391,7 +402,7 @@ class _CartScreenState extends State<CartScreen> {
                 child: Text(
               'Total Price: ₹${cartProvider.allItemPrice().toString()}',
               style: const TextStyle(
-                color: Colors.black,
+                color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
             )),
@@ -423,19 +434,15 @@ class _CartScreenState extends State<CartScreen> {
                                       setState(() {
                                         for (int index = 0;
                                             index <
-                                                cartProvider
-                                                    .CartItems.length;
+                                                cartProvider.CartItems.length;
                                             index++) {
                                           value.placeItem(PlaceOrderData(
                                               price: cartProvider
-                                                      .CartItems[index]
-                                                      .price *
-                                                  cartProvider
-                                                      .CartItems[index]
+                                                      .CartItems[index].price *
+                                                  cartProvider.CartItems[index]
                                                       .quantity,
                                               productName: cartProvider
-                                                  .CartItems[index]
-                                                  .productName,
+                                                  .CartItems[index].productName,
                                               shortDescription: cartProvider
                                                   .CartItems[index]
                                                   .shortDescription,
@@ -474,7 +481,7 @@ class _CartScreenState extends State<CartScreen> {
               },
               child: Container(
                 // height: size.height / 15,
-                padding: EdgeInsets.only(left: 10.0,right: 10.0),
+                padding: EdgeInsets.only(left: 10.0, right: 10.0),
                 height: 30,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(5)),

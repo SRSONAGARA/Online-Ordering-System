@@ -1,5 +1,3 @@
-
-
 import 'package:badges/badges.dart' as Badge;
 import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
@@ -19,10 +17,14 @@ class WishlistScreen extends StatefulWidget {
 }
 
 class _WishlistScreenState extends State<WishlistScreen> {
+  var size,height,width;
+
   TextEditingController search = TextEditingController();
   bool SearchButton = false;
   Icon CustomSearch = const Icon(Icons.search);
-  Widget CustomText = Text("Wishlist",);
+  Widget CustomText = Text(
+    "Wishlist",
+  );
   List<dynamic> SearchItems = [];
   List<int> FavItems = [];
   bool ListEmptyBool = false;
@@ -100,6 +102,9 @@ class _WishlistScreenState extends State<WishlistScreen> {
   }
 
   Widget AllProduct() {
+    size = MediaQuery.of(context).size;
+    height = size.height;
+    width = size.width;
     final cartProvider = Provider.of<CartProvider>(context);
     FavouriteProvider favoriteProvider =
         Provider.of<FavouriteProvider>(context);
@@ -108,10 +113,13 @@ class _WishlistScreenState extends State<WishlistScreen> {
             child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(
+                height: height/5,
+              ),
               Container(
                 height: 200,
                 width: 200,
-                child: Image.asset('assets/shopcart-box.png'),
+                child: Image.asset('assets/wishlistEmptyImage.png'),
               ),
               SizedBox(
                 height: 20,
@@ -150,6 +158,8 @@ class _WishlistScreenState extends State<WishlistScreen> {
             ],
           ))
         : ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
             itemBuilder: (context, index) {
               bool itemAddedToCart = cartProvider.CartItems.any((element) =>
                   element.productId
@@ -260,19 +270,19 @@ class _WishlistScreenState extends State<WishlistScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cartProvider=Provider.of<CartProvider>(context);
+    final cartProvider = Provider.of<CartProvider>(context);
     FavouriteProvider favoriteProvider =
         Provider.of<FavouriteProvider>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: CustomText, centerTitle: true,
+        title: CustomText,
+        centerTitle: true,
         leading: Padding(
           padding: const EdgeInsets.all(12.0),
           child: InkWell(
               onTap: () {
-                Navigator.of(context)
-                    .pushReplacementNamed('/home-screen');
+                Navigator.of(context).pushReplacementNamed('/home-screen');
               },
               hoverColor: Colors.transparent,
               highlightColor: Colors.transparent,
@@ -288,25 +298,25 @@ class _WishlistScreenState extends State<WishlistScreen> {
         ),
         actions: [
           InkWell(
-            child: Center(
-              child: Badge.Badge(
-                badgeContent: Text(
-                  cartProvider.CartItems.length.toString(),
-                  style: TextStyle(color: Colors.white),
+              child: Center(
+                child: Badge.Badge(
+                  badgeContent: Text(
+                    cartProvider.CartItems.length.toString(),
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  child: Icon(Icons.shopping_cart_outlined),
                 ),
-                child: Icon(Icons.shopping_cart_outlined),
               ),
-            ),
-              onTap: (){
-              Navigator.pushNamed(context, '/cart-screen');
-              }
-          ),
-          SizedBox(width: 20,)
+              onTap: () {
+                Navigator.pushNamed(context, '/cart-screen');
+              }),
+          SizedBox(
+            width: 20,
+          )
         ],
-
       ),
       // body: !SearchButton ? AllProduct() : CustomProduct(),
-      body: AllProduct(),
+      body: SingleChildScrollView(child: AllProduct()),
     );
   }
 }

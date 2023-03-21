@@ -1,10 +1,11 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:badges/badges.dart' as Badge;
 import 'package:flutter/material.dart';
+import 'package:oline_ordering_system/provider/cart_provider.dart';
 import 'package:oline_ordering_system/provider/placeOrder_provider.dart';
 import 'package:provider/provider.dart';
 
-import 'DrawerScreen.dart';
+import 'models/MainData.dart';
 
 class OrderHistoryScreen extends StatefulWidget {
   const OrderHistoryScreen({Key? key}) : super(key: key);
@@ -14,6 +15,8 @@ class OrderHistoryScreen extends StatefulWidget {
 }
 
 class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
+  var size, height, width;
+
   TextEditingController search = TextEditingController();
   bool SearchButton = false;
   Icon CustomSearch = const Icon(Icons.search);
@@ -21,41 +24,47 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
   List<dynamic> SearchItems = [];
   bool ListEmptyBool = false;
   List<dynamic> ProductData = [
-    Product(
-      ImgLink: 'assets/ProductImage.jpg',
-      ProductName: 'Iphone 11 pro max',
-      ShortDescription: 'Deep Purple',
-      Price: '₹110000',
+    MainData(
+      productId: '1001',
+      imgLink: 'assets/ProductImage.jpg',
+      productName: 'Iphone 11 pro max',
+      shortDescription: 'Deep Purple',
+      price: 110000,
     ),
-    Product(
-      ImgLink: 'assets/ProductImage.jpg',
-      ProductName: 'Iphone 12 pro max',
-      ShortDescription: 'Deep Purple',
-      Price: '₹120000',
+    MainData(
+      productId: '1002',
+      imgLink: 'assets/ProductImage.jpg',
+      productName: 'Iphone 12 pro max',
+      shortDescription: 'Deep Purple',
+      price: 120000,
     ),
-    Product(
-      ImgLink: 'assets/ProductImage.jpg',
-      ProductName: 'Iphone 13 pro max',
-      ShortDescription: 'Deep Purple',
-      Price: '₹130000',
+    MainData(
+      productId: '1003',
+      imgLink: 'assets/ProductImage.jpg',
+      productName: 'Iphone 13 pro max',
+      shortDescription: 'Deep Purple',
+      price: 130000,
     ),
-    Product(
-      ImgLink: 'assets/ProductImage.jpg',
-      ProductName: 'Iphone 14 pro max',
-      ShortDescription: 'Deep Purple',
-      Price: '₹110000',
+    MainData(
+      productId: '1004',
+      imgLink: 'assets/ProductImage.jpg',
+      productName: 'Iphone 14 pro max',
+      shortDescription: 'Deep Purple',
+      price: 110000,
     ),
-    Product(
-      ImgLink: 'assets/ProductImage.jpg',
-      ProductName: 'Iphone 15 pro max',
-      ShortDescription: 'Deep Purple',
-      Price: '₹120000',
+    MainData(
+      productId: '1005',
+      imgLink: 'assets/ProductImage.jpg',
+      productName: 'Iphone 15 pro max',
+      shortDescription: 'Deep Purple',
+      price: 120000,
     ),
-    Product(
-      ImgLink: 'assets/ProductImage.jpg',
-      ProductName: 'Iphone 16 pro max',
-      ShortDescription: 'Deep Purple',
-      Price: '₹130000',
+    MainData(
+      productId: '1006',
+      imgLink: 'assets/ProductImage.jpg',
+      productName: 'Iphone 16 pro max',
+      shortDescription: 'Deep Purple',
+      price: 130000,
     ),
   ];
 
@@ -86,12 +95,19 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
   }
 
   Widget AllProduct() {
+    size = MediaQuery.of(context).size;
+    height = size.height;
+    width = size.width;
     final placeOrderProvider = Provider.of<PlaceOrderProvider>(context);
+    final cartProvider = Provider.of<CartProvider>(context);
     return placeOrderProvider.PlaceOrderItmes.isEmpty
         ? Center(
             child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(
+                height: height / 5,
+              ),
               Container(
                 height: 200,
                 width: 200,
@@ -107,11 +123,19 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                     fontWeight: FontWeight.bold,
                     fontSize: 20),
               ),
-              Text("You didn't place any Order till now !", style: TextStyle(fontWeight: FontWeight.bold),)
+              Text(
+                "You didn't place any Order till now !",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )
             ],
           ))
         : ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
             itemBuilder: (context, index) {
+              bool itemAddedToCart = cartProvider.CartItems.any((element) =>
+                  element.productName.contains(
+                      placeOrderProvider.PlaceOrderItmes[index].productName));
               return Card(
                 elevation: 6,
                 child: Padding(
@@ -187,8 +211,29 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                                     ],
                                   ),
                                 ),
-                                ElevatedButton(
-                                    onPressed: () {}, child: Text('Re Order'))
+                                Consumer<CartProvider>(builder: (context,value,child){
+                                  return ElevatedButton(
+                                      onPressed: () {
+                                        if (itemAddedToCart == true) {
+                                          // value.removeItem(value.CartItems[index]);
+                                        } else {
+                                          value.addItem(MainData(
+                                            productId:
+                                            ProductData[index].productId,
+                                            productName:
+                                            ProductData[index].productName,
+                                            shortDescription: ProductData[index]
+                                                .shortDescription,
+                                            price: ProductData[index].price,
+                                            imgLink: ProductData[index].imgLink,
+                                          quantity: 1
+                                          ));
+                                        }
+                                      },
+                                      style: ElevatedButton.styleFrom( primary: itemAddedToCart ? Colors.red[200]: Colors.blue),
+                                      child: itemAddedToCart? Text('Item is already Added')
+                                          : Text('Re Order'));
+                                })
                               ],
                             ),
                           ),
@@ -204,16 +249,17 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final cartProvider = Provider.of<CartProvider>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: CustomText,centerTitle: true,
+        title: CustomText,
+        centerTitle: true,
         leading: Padding(
           padding: const EdgeInsets.all(12.0),
           child: InkWell(
               onTap: () {
-                Navigator.of(context)
-                    .pushReplacementNamed('/home-screen');
+                Navigator.of(context).pushReplacementNamed('/home-screen');
               },
               hoverColor: Colors.transparent,
               highlightColor: Colors.transparent,
@@ -232,18 +278,22 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
             child: Center(
               child: Badge.Badge(
                 badgeContent: Text(
-                  '0',
+                  cartProvider.CartItems.length.toString(),
                   style: TextStyle(color: Colors.white),
                 ),
                 child: Icon(Icons.shopping_cart_outlined),
               ),
             ),
-            onTap: (){},
+            onTap: () {
+              Navigator.pushNamed(context, '/cart-screen');
+            },
           ),
-          SizedBox(width: 20,)
+          SizedBox(
+            width: 20,
+          )
         ],
       ),
-      body: AllProduct(),
+      body: SingleChildScrollView(child: AllProduct()),
       // body: !SearchButton ? AllProduct() : CustomProduct(),
     );
   }

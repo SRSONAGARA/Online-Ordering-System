@@ -8,6 +8,7 @@ import 'package:velocity_x/velocity_x.dart';
 
 import 'DrawerScreen.dart';
 import 'models/MainData.dart';
+import 'models/PlaceOrderData.dart';
 
 class ProductScreen extends StatefulWidget {
   const ProductScreen({Key? key}) : super(key: key);
@@ -20,7 +21,7 @@ class _ProductScreenState extends State<ProductScreen> {
   TextEditingController search = TextEditingController();
   bool SearchButton = false;
   Icon CustomSearch = const Icon(Icons.search);
-  Widget CustomText = Text("Product Screen");
+  Widget CustomText = Text("Online Ordering System");
   List<dynamic> SearchItems = [];
   bool ListEmptyBool = false;
   final List<dynamic> ProductData = [
@@ -293,6 +294,7 @@ class _ProductScreenState extends State<ProductScreen> {
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             ),
+
                             Consumer<CartProvider>(
                                 builder: (context, value, child) {
                               return ElevatedButton(
@@ -309,7 +311,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                           shortDescription: ProductData[index]
                                               .shortDescription,
                                           price: ProductData[index].price,
-                                          imgLink: ProductData[index].imgLink,
+                                          imgLink: ProductData[index].imgLink, quantity: 1,
                                           // quantity: 1
                                       ));
                                     }
