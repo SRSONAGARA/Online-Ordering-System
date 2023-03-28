@@ -14,5 +14,14 @@ class FavouriteProvider with ChangeNotifier{
     _FavItems.remove(product);
     notifyListeners();
   }
+  bool isExist(List FavItems){
+    final isExist=_FavItems.contains(FavItems);
+    return isExist;
+  }
+
+  void ClearFavorite(){
+    _FavItems=[];
+    notifyListeners();
+  }
 
 }

@@ -1,10 +1,10 @@
 class MainData {
   // late final int? id;
-  final String productId;
-  final String productName;
-  final String shortDescription;
-  final int price;
-  final String imgLink;
+  String productId;
+  String productName;
+  String shortDescription;
+  int price;
+  String imgLink;
   int quantity;
   // bool isFavorite;
 
