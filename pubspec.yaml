@@ -46,6 +46,7 @@ dependencies:
   velocity_x: ^3.6.0
   auto_size_text: ^3.0.0
   firebase_core: ^2.8.0
+  flutter_rating_bar: ^4.0.1
   flutter_otp_text_field: ^1.1.1
   http:
 

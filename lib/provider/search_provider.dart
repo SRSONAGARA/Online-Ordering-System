@@ -7,7 +7,7 @@ class SearchProvider with ChangeNotifier{
   TextEditingController search = TextEditingController();
   bool SearchButton = false;
   Icon CustomSearch = Icon(Icons.search);
-  Widget CustomText = Text("Online Ordering System");
+  Widget CustomText = Text("Ordefy",style: TextStyle(fontWeight: FontWeight.bold),);
   List<dynamic> SearchItems = [];
   Icon CusIcon=Icon(Icons.menu);
   bool ListEmptyBool = false;

@@ -490,7 +490,7 @@ class _CartScreenState extends State<CartScreen> {
   }
 }
 
-void alertFunc(BuildContext context) {
+/*void alertFunc(BuildContext context) {
   var alertDialog = AlertDialog(
     title: Text(
       'Confirm to Place Order',
@@ -515,4 +515,4 @@ void alertFunc(BuildContext context) {
       builder: (BuildContext context) {
         return alertDialog;
       });
-}
+}*/

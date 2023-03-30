@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:oline_ordering_system/repository/AuthRepo.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Home Screen.dart';
 
@@ -142,6 +143,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           print(jsonEncode(result));
 
                           if (result['status'] == 1) {
+                            
+                            final prefs=await SharedPreferences.getInstance();
+                            await prefs.setString('jwtToken', result['data']['jwtToken']);
+                            
+                            print('jwttoken: ${prefs.get('jwtToken')}');
+                            
                             String emailId = result['data']['emailId'];
                             await Future.delayed(const Duration(seconds: 1));
                             await Navigator.pushAndRemoveUntil(

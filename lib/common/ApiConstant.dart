@@ -8,4 +8,6 @@ class ApiConstant {
   static const forgotPasswordApi='$baseUrl/user/forgotPassword';
   static const verifyOtpOnForgotPasswordApi='$baseUrl/user/verifyOtpOnForgotPassword';
   static const getAllProductApi='$baseUrl/product/getAllProduct';
+  static const getMyCartApi='$baseUrl/cart/getMyCart';
+  static const getWatchListApi='$baseUrl/watchList/getWatchList';
 }

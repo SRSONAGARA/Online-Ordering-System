@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:oline_ordering_system/provider/ApiConnection/ApiConnection_Provider.dart';
 import 'package:oline_ordering_system/views/AccountScreen.dart';
 import 'package:oline_ordering_system/views/CartScreen.dart';
 import 'package:oline_ordering_system/views/ForgotPasswordOtpScreen.dart';
@@ -34,7 +35,8 @@ class MyApp extends StatelessWidget {
       ChangeNotifierProvider(create: (_)=>FavouriteProvider()),
       ChangeNotifierProvider(create: (_)=>CartProvider()),
       ChangeNotifierProvider(create: (_)=>PlaceOrderProvider()),
-      ChangeNotifierProvider(create: (_)=>SearchProvider())
+      ChangeNotifierProvider(create: (_)=>SearchProvider()),
+      ChangeNotifierProvider(create: (_)=>ApiConnectionProvider())
     ],
         child: MaterialApp(
       debugShowCheckedModeBanner: false,
