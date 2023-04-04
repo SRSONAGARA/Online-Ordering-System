@@ -43,8 +43,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     //     (element) => element.productName.contains(argument!['productName']));
     size = MediaQuery.of(context).size;
     return Scaffold(
-      /*appBar: AppBar(
-        title: CustomText,
+      appBar: AppBar(
+        // title: CustomText,
         leading: Padding(
           padding: const EdgeInsets.all(12.0),
           child: InkWell(
@@ -67,7 +67,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           InkWell(
               child: Center(
                 child: Badge.Badge(
-                  badgeContent: Text(cartProvider.CartItems.length.toString()),
+                  badgeContent: Text(cartProvider.CartItems.length.toString(),style: TextStyle(color: Colors.white),),
                   child: Icon(Icons.shopping_cart_outlined),
                 ),
               ),
@@ -78,13 +78,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             width: 20,
           )
         ],
-      ),*/
+      ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Column(
                 children: [
-                  Container(
+                  /*Container(
                     color: Colors.white,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -112,7 +112,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         ),
                       ],
                     ),
-                  ),
+                  ),*/
                   Center(
                     child: Stack(
                       children: [
@@ -120,10 +120,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           color: Colors.white,
                           height: size.height / 2,
                           width: size.width,
-                          child: Image(
-                            image: NetworkImage(argument.imageUrl),
-                            width: size.width / 2,
-                            height: size.height / 2,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Image(
+                              image: NetworkImage(argument.imageUrl),
+                              width: size.width / 2,
+                              height: size.height / 2,
+                            ),
                           ),
                         ),
 
@@ -223,7 +226,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       bottomNavigationBar: isLoading
           ? SizedBox()
           : Container(
-              height: 30,
               child: Row(
                 children: [
                   Expanded(

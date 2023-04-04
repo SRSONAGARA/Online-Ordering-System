@@ -23,32 +23,9 @@ class ProductScreen extends StatefulWidget {
 }
 
 class _ProductScreenState extends State<ProductScreen> {
+  var size, height, width;
   bool isLoading = true;
   List<dynamic> SearchItems = [];
-
-  /*List<Data> data = [];
-
-  Future<List<Data>> getData() async {
-    print('function');
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    String jwtToken = preferences.getString('jwtToken') ?? '';
-    final api =
-        'https://shopping-app-backend-t4ay.onrender.com/product/getAllProduct';
-    final header = {"Authorization": 'Bearer $jwtToken'};
-    final response = await http.get(Uri.parse(api), headers: header);
-    var item = jsonDecode(response.body);
-    var product = item['data'];
-    print(product);
-
-    if (response.statusCode == 200) {
-      for (Map<String, dynamic> index in product) {
-        data.add(Data.fromJson(index));
-      }
-      return data;
-    } else {
-      return data;
-    }
-  }*/
 
   final List<dynamic> ProductData = [
     MainData(
@@ -97,10 +74,28 @@ class _ProductScreenState extends State<ProductScreen> {
 
   @override
   void initState() {
-    // SearchItems = data;
     super.initState();
-    // accessApi(context);
-    // getProductData();
+    getData();
+  }
+
+  List<dynamic> data = [];
+  Future<void> getData() async {
+    print('getData Method');
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String jwtToken = preferences.getString('jwtToken') ?? '';
+    const url = ApiConstant.getAllProductApi;
+    final header = {"Authorization": 'Bearer $jwtToken'};
+    final response = await http.get(Uri.parse(url), headers: header);
+    var item = jsonDecode(response.body);
+    var product = item['data'];
+    print(product);
+
+    if (response.statusCode == 200) {
+      setState(() {
+        data = [ProductList.fromJson(jsonDecode(response.body))];
+      });
+      print(data);
+    }
   }
 
   Widget CustomProduct() {
@@ -248,170 +243,147 @@ class _ProductScreenState extends State<ProductScreen> {
             itemCount: SearchItems.length);
   }
 
-  FutureBuilder AllProduct() {
+  Widget AllProduct() {
+    size = MediaQuery.of(context).size;
+    height = size.height;
+    width = size.width;
     final favouriteProvider = Provider.of<FavouriteProvider>(context);
     final cartProvider = Provider.of<CartProvider>(context);
+    final searchProvider = Provider.of<SearchProvider>(context);
     final apiConnectionProvider = Provider.of<ApiConnectionProvider>(context);
 
-    return FutureBuilder(
-        future: apiConnectionProvider.getData(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            print('snapshot: ${snapshot}');
-            return ListView.builder(
-                itemBuilder: (context, index) {
-                  bool isFavourite = favouriteProvider.FavItems.any((element) =>
-                      element.productId.contains(ProductData[index].productId));
-                  bool itemAddedToCart = cartProvider.CartItems.any((element) =>
-                      element.productId.contains(ProductData[index].productId));
+    return data.length == 0
+        ? Container(
+            height: size.height,
+            child: Center(child: CircularProgressIndicator()))
+        : ListView.builder(
+            itemBuilder: (context, index) {
+              /*bool isFavourite = favouriteProvider.FavItems.any((element) =>
+                  element.productId.contains(ProductData[index].productId));
+              bool _selected = apiConnectionProvider.watchList.any((element) =>
+                  element.productDetails.id == data[0].data![index].id);*/
 
-                  return InkWell(
-                    onTap: () {
-                      Navigator.pushNamed(context, '/productDetails-screen',
-                          arguments: snapshot.data[index]
-
-                          /*{
-                          'price': ProductData[index].price.toString(),
-                          'productName': ProductData[index].productName,
-                          'productId': ProductData[index].productId,
-                          'imgLink': ProductData[index].imgLink,
-                          'shortDescription': ProductData[index].shortDescription,
-                        }*/
-                          );
-                    },
-                    child: Card(
-                      elevation: 6,
-                      // color: Colors.red,
-                      child: Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    children: [
-                                      Image(
-                                        image: NetworkImage(
-                                          snapshot.data![index].imageUrl,
-                                        ),
-                                        height: 100,
-                                        width: 100,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Consumer<FavouriteProvider>(
-                                          builder: (context, value, child) {
-                                        return Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            InkWell(
-                                              onTap: () {
-                                                if (isFavourite == true) {
-                                                  value.removeItem(
-                                                      value.FavItems[index]);
-                                                } else {
-                                                  /*value.addItem(MainData(
-                                                  productId:
-                                                      mainData[index].productId,
-                                                  productName: mainData[index]
-                                                      .productName,
-                                                  shortDescription:
-                                                      mainData[index]
-                                                          .shortDescription,
-                                                  price: mainData[index].price,
-                                                  imgLink:
-                                                      mainData[index].imgLink));*/
-                                                  // print(value.FavItems[index].productName);
-                                                }
-                                              },
-                                              child: isFavourite
-                                                  ? const Icon(
-                                                      Icons.favorite,
-                                                      color: Colors.red,
-                                                      size: 20,
-                                                    )
-                                                  : const Icon(
-                                                      Icons.favorite_outline,
-                                                      size: 20),
-                                            ),
-                                          ],
-                                        );
-                                      }),
-                                      Text(
-                                        snapshot.data![index].title,
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                      Text(
-                                        snapshot.data![index].description,
-                                        maxLines: 2,
-                                        style: TextStyle(fontSize: 15),
-                                      ),
-                                      Text(
-                                        '\$${snapshot.data![index].price}',
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Consumer<CartProvider>(
-                                          builder: (context, value, child) {
-                                        return ElevatedButton(
-                                            onPressed: () {
-                                              print(value.CartItems.length);
-                                              if (itemAddedToCart == true) {
-                                                // value.removeItem(value.CartItems[index]);
-                                              } else {
-                                                /*value.addItem(MainData(
-                                              productId:
-                                                  ProductData[index].productId,
-                                              productName:
-                                                  ProductData[index].productName,
-                                              shortDescription: ProductData[index]
-                                                  .shortDescription,
-                                              price: ProductData[index].price,
-                                              imgLink: ProductData[index].imgLink,
-                                              quantity: 1,
-                                              // quantity: 1
-                                            ));*/
-                                              }
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                                primary: itemAddedToCart
-                                                    ? Colors.red[200]
-                                                    : Colors.blue),
-                                            child: itemAddedToCart
-                                                ? Text('Item is already Added')
-                                                : Text('Add To Cart'));
-                                      })
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
+              bool isFavourite = data[0].data![index].watchListItemId != '';
+              bool itemAddedToCart = data[0].data![index].quantity != 0;
+              return InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, '/productDetails-screen',
+                      arguments: data[0].data![index]);
                 },
-                itemCount: snapshot.data?.length);
-          } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        });
+                child: Card(
+                  elevation: 6,
+                  // color: Colors.red,
+                  child: Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Column(
+                                children: [
+                                  Image(
+                                    image: NetworkImage(
+                                      data[0].data![index].imageUrl,
+                                    ),
+                                    height: 120,
+                                    // width: 100,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          if (isFavourite == true) {
+                                            String wathListItemId =
+                                                data[0].data![index].watchListItemId;
+                                            apiConnectionProvider
+                                                .removeFromWatchList(
+                                                    wathListItemId);
+                                            getData();
+                                          } else {
+                                            String productId =
+                                                data[0].data![index].id;
+                                            apiConnectionProvider
+                                                .addToWatchList(productId);
+                                            print('Id: ${productId}');
+                                            getData();
+                                          }
+                                        },
+                                        child: isFavourite
+                                            ? const Icon(
+                                                Icons.favorite,
+                                                color: Colors.red,
+                                                size: 20,
+                                              )
+                                            : const Icon(Icons.favorite_outline,
+                                                size: 20),
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    data[0].data![index].title,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  Text(
+                                    data[0].data![index].description,
+                                    maxLines: 2,
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                  Text(
+                                    '\$${data[0].data![index].price}',
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Consumer<CartProvider>(
+                                      builder: (context, value, child) {
+                                    return ElevatedButton(
+                                        onPressed: () {
+                                          if (itemAddedToCart == true) {
+                                            /* String cartItemId=data[0].data![index].id;
+                                            apiConnectionProvider.removeProductFromCart(cartItemId);*/
+                                          } else {
+                                            String productId =
+                                                data[0].data![index].id;
+                                            apiConnectionProvider
+                                                .addToCart(productId);
+                                            print('Id: ${productId}');
+                                          }
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                            primary: itemAddedToCart
+                                                ? Colors.red[200]
+                                                : Colors.blue),
+                                        child: itemAddedToCart
+                                            ? Text('Item is already Added')
+                                            : Text('Add To Cart'));
+                                  })
+                                ],
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+            itemCount: data[0].data?.length);
   }
 
   @override
@@ -424,7 +396,8 @@ class _ProductScreenState extends State<ProductScreen> {
         backgroundColor: Colors.white,
         drawer: MyDrawer(),
         appBar: AppBar(
-          title: searchProvider.CustomText,centerTitle: true,
+          title: searchProvider.CustomText,
+          centerTitle: true,
           leading: Consumer<SearchProvider>(builder: (context, value, child) {
             return searchProvider.SearchButton
                 ? IconButton(
@@ -474,10 +447,10 @@ class _ProductScreenState extends State<ProductScreen> {
                       decoration: const InputDecoration(
                         hintText: "Search for products",
                         hintStyle: TextStyle(color: Colors.white),
-                        prefixIcon: Icon(
+                        /*prefixIcon: Icon(
                           Icons.search,
                           color: Colors.white,
-                        ), /*border: UnderlineInputBorder()*/
+                        ),*/ /*border: UnderlineInputBorder()*/
                       ),
                       style: const TextStyle(color: Colors.white, fontSize: 20),
                     );

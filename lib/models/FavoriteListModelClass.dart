@@ -1,3 +1,4 @@
+/*
 import 'dart:convert';
 
 GetWatchList getWatchListFromJson(String str) => GetWatchList.fromJson(json.decode(str));
@@ -16,8 +17,8 @@ class GetWatchList {
   List<FavData> data;
 
   factory GetWatchList.fromJson(Map<String, dynamic> json) => GetWatchList(
-    status: json["status"] ?? 0,
-    msg: json["msg"] ?? '',
+    status: json["status"],
+    msg: json["msg"],
     data: List<FavData>.from(json["data"].map((x) => FavData.fromJson(x))),
   );
 
@@ -46,11 +47,11 @@ class FavData {
   ProductDetails productDetails;
 
   factory FavData.fromJson(Map<String, dynamic> json) => FavData(
-    id: json["_id"] ?? '',
-    userId: json["userId"] ?? '',
+    id: json["_id"],
+    userId: json["userId"],
     createdAt: DateTime.parse(json["createdAt"]),
     updatedAt: DateTime.parse(json["updatedAt"]),
-    v: json["__v"] ?? 0,
+    v: json["__v"],
     productDetails: ProductDetails.fromJson(json["productDetails"]),
   );
 
@@ -106,4 +107,4 @@ class ProductDetails {
     "createdAt": createdAt.toIso8601String(),
     "updatedAt": updatedAt.toIso8601String(),
   };
-}
+}*/

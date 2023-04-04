@@ -8,6 +8,14 @@ class ApiConstant {
   static const forgotPasswordApi='$baseUrl/user/forgotPassword';
   static const verifyOtpOnForgotPasswordApi='$baseUrl/user/verifyOtpOnForgotPassword';
   static const getAllProductApi='$baseUrl/product/getAllProduct';
-  static const getMyCartApi='$baseUrl/cart/getMyCart';
+  static const addToWatchListApi='$baseUrl/watchList/addToWatchList';
+  static const removeFromWatchListApi='$baseUrl/watchList/removeFromWatchList';
   static const getWatchListApi='$baseUrl/watchList/getWatchList';
+  static const addToCartApi='$baseUrl/cart/addToCart';
+  static const increaseProductQuantityApi='$baseUrl/cart/increaseProductQuantity';
+  static const decreaseProductQuantityApi='$baseUrl/cart/decreaseProductQuantity';
+  static const removeProductFromCartApi='$baseUrl/cart/removeProductFromCart';
+  static const getMyCartApi='$baseUrl/cart/getMyCart';
+  static const placeOrderApi='$baseUrl/order/placeOrder';
+  static const getOrderHistoryApi='$baseUrl/order/getOrderHistory';
 }

@@ -134,12 +134,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           backgroundColor: Colors.transparent,
                           shadowColor: Colors.transparent),
                       onPressed: () async {
-                        if (formkey.currentState!.validate()) {
+                        if (/*formkey.currentState!.validate()*/ !formkey.currentState!.validate()) {
                           formkey.currentState!.save();
 
                           var result = await AuthRepo.userLogin(
-                              emailId: emailController.text,
-                              password: passwordController.text);
+                              /*emailId: emailController.text,
+                              password: passwordController.text*/
+                          emailId: 'sagar7777926900@gmail.com',
+                          password: '5qz2lkm4');
                           print(jsonEncode(result));
 
                           if (result['status'] == 1) {

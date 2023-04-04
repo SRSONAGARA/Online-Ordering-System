@@ -16,7 +16,7 @@ class SearchProvider with ChangeNotifier{
    searchButtonPress(){
     SearchButton = false;
     CustomSearch = const Icon(Icons.search);
-    CustomText = const Text("Online Ordering System");
+    CustomText = const Text("Ordefy",style: TextStyle(fontWeight: FontWeight.bold),);
     notifyListeners();
 
   }

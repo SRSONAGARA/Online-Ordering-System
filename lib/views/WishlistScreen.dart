@@ -1,11 +1,17 @@
+import 'dart:convert';
+
 import 'package:badges/badges.dart' as Badge;
 import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
 import 'package:oline_ordering_system/provider/cart_provider.dart';
 import 'package:oline_ordering_system/provider/favourite_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocity_x/velocity_x.dart';
-
+import 'package:http/http.dart' as http;
+import '../common/ApiConstant.dart';
+import '../models/WatchListModelClass.dart';
+import '../provider/ApiConnection/ApiConnection_Provider.dart';
 import 'DrawerScreen.dart';
 import '../models/MainData.dart';
 
@@ -17,7 +23,7 @@ class WishlistScreen extends StatefulWidget {
 }
 
 class _WishlistScreenState extends State<WishlistScreen> {
-  var size,height,width;
+  var size, height, width;
   Widget CustomText = Text(
     "Wishlist",
   );
@@ -68,28 +74,52 @@ class _WishlistScreenState extends State<WishlistScreen> {
     ),
   ];
 
-  // @override
-  // void initState() {
-  //   //  SearchItems = ProductData;
-  //   SearchItems = ProductData;
-  //   super.initState();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    getWatchList();
+  }
 
+
+  List<dynamic> watchList = [];
+  Future<void> getWatchList() async {
+    print('MyWatchlist');
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String jwtToken = preferences.getString('jwtToken') ?? '';
+    const url = ApiConstant.getWatchListApi;
+    final header = {"Authorization": 'Bearer $jwtToken'};
+    final response = await http.get(Uri.parse(url), headers: header);
+    var item = jsonDecode(response.body);
+    var empty=item['msg'];
+    var product = item['data'];
+    print(product);
+
+    if (response.statusCode == 200) {
+        setState(() {
+          watchList = [GetWatchList.fromJson(jsonDecode(response.body))];
+        });
+        print(watchList);
+
+    }/* else if (response.statusCode == 400) {
+      watchList = [GetWatchList.fromJson(jsonDecode(response.body))];
+    }*/
+  }
 
   Widget AllProduct() {
     size = MediaQuery.of(context).size;
     height = size.height;
     width = size.width;
+
     final cartProvider = Provider.of<CartProvider>(context);
-    FavouriteProvider favoriteProvider =
-        Provider.of<FavouriteProvider>(context);
-    return favoriteProvider.FavItems.isEmpty
+    final favoriteProvider = Provider.of<FavouriteProvider>(context);
+    final apiConnectionProvider = Provider.of<ApiConnectionProvider>(context);
+    return watchList.length==0
         ? Center(
             child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                height: height/5,
+                height: height / 5,
               ),
               Container(
                 height: 200,
@@ -136,6 +166,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemBuilder: (context, index) {
+              print('list builder');
               bool itemAddedToCart = cartProvider.CartItems.any((element) =>
                   element.productId
                       .contains(favoriteProvider.FavItems[index].productId));
@@ -149,51 +180,65 @@ class _WishlistScreenState extends State<WishlistScreen> {
                       Row(
                         children: [
                           Expanded(
+                            flex: 1,
                             child: Column(
                               children: [
                                 Image(
-                                  image: AssetImage(
-                                      favoriteProvider.FavItems[index].imgLink),
-                                  height: 100,
-                                  width: 100,
+                                  image: NetworkImage(watchList[0]
+                                      .data![index]
+                                      .productDetails
+                                      .imageUrl),
+                                  height: 120,
+                                  // width: 100,
                                 ),
                               ],
                             ),
                           ),
                           Expanded(
+                            flex: 2,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Consumer<FavouriteProvider>(
-                                    builder: (context, value, child) {
-                                  return Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      InkWell(
-                                        onTap: () {
-                                          favoriteProvider.removeItem(
-                                              favoriteProvider.FavItems[index]);
-                                        },
-                                        child: Icon(Icons.favorite,
-                                            color: Colors.red, size: 20),
-                                      ),
-                                    ],
-                                  );
-                                }),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        String wathListItemId =
+                                            watchList[0].data![index].id;
+                                        apiConnectionProvider
+                                            .removeFromWatchList(
+                                                wathListItemId);
+                                        print('Id: ${wathListItemId}');
+                                        getWatchList();
+                                        /*favoriteProvider.removeItem(
+                                                favoriteProvider.FavItems[index]);*/
+                                      },
+                                      child: Icon(Icons.favorite,
+                                          color: Colors.red, size: 20),
+                                    ),
+                                  ],
+                                ),
                                 Text(
-                                  favoriteProvider.FavItems[index].productName,
+                                  watchList[0]
+                                      .data![index]
+                                      .productDetails
+                                      .title,
                                   style: TextStyle(
                                     fontSize: 20,
                                   ),
                                 ),
                                 Text(
-                                  favoriteProvider
-                                      .FavItems[index].shortDescription,
+                                  watchList[0]
+                                      .data![index]
+                                      .productDetails
+                                      .description,
+                                  maxLines: 2,
                                   style: TextStyle(fontSize: 15),
                                 ),
                                 Text(
-                                  '₹${favoriteProvider.FavItems[index].price}',
+                                  '\$${watchList[0].data![index].productDetails.price}',
                                   style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold),
@@ -238,8 +283,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                 ),
               );
             },
-            itemCount: favoriteProvider.FavItems.length,
-            // itemCount: ProductData.length
+            itemCount: watchList[0].data.length,
           );
   }
 

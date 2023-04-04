@@ -1,10 +1,15 @@
+import 'dart:convert';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:badges/badges.dart' as Badge;
 import 'package:flutter/material.dart';
 import 'package:oline_ordering_system/provider/cart_provider.dart';
 import 'package:oline_ordering_system/provider/placeOrder_provider.dart';
 import 'package:provider/provider.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import '../common/ApiConstant.dart';
+import '../models/ConfirmOrderModelClass.dart';
 import '../models/MainData.dart';
 
 class OrderHistoryScreen extends StatefulWidget {
@@ -63,6 +68,29 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
     ),
   ];
 
+  List<dynamic> confirmOrderList=[];
+  Future<void> getOrderHistory()async{
+    print('getOrderHistory');
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String jwtToken = preferences.getString('jwtToken') ?? '';
+    const url = ApiConstant.getOrderHistoryApi;
+    final header = {"Authorization": 'Bearer $jwtToken'};
+    final response = await http.get(Uri.parse(url), headers: header);
+    if (response.statusCode == 200) {
+      setState(() {
+        confirmOrderList = [ConfirmOrderList.fromJson(jsonDecode(response.body))];
+      });
+      print(confirmOrderList);
+    }
+
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getOrderHistory();
+  }
+
 
   Widget AllProduct() {
     size = MediaQuery.of(context).size;
@@ -70,7 +98,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
     width = size.width;
     final placeOrderProvider = Provider.of<PlaceOrderProvider>(context);
     final cartProvider = Provider.of<CartProvider>(context);
-    return placeOrderProvider.PlaceOrderItmes.isEmpty
+    return confirmOrderList.isEmpty
         ? Center(
             child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -103,9 +131,10 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemBuilder: (context, index) {
-              bool itemAddedToCart = cartProvider.CartItems.any((element) =>
+/*              bool itemAddedToCart = cartProvider.CartItems.any((element) =>
                   element.productName.contains(
-                      placeOrderProvider.PlaceOrderItmes[index].productName));
+                      placeOrderProvider.PlaceOrderItmes[index].productName));*/
+              // bool itemAddedToCart = confirmOrderList[0].data![index].quantity != 0;
               return Card(
                 elevation: 6,
                 child: Padding(
@@ -115,18 +144,18 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                       Row(
                         children: [
                           Expanded(
+                            flex: 1,
                             child: Column(
                               children: [
                                 Image(
-                                  image: AssetImage(placeOrderProvider
-                                      .PlaceOrderItmes[index].imgLink),
-                                  height: 100,
-                                  width: 100,
+                                  image: NetworkImage(confirmOrderList[0].data![index].imageUrl),
+                                  height: 120,
                                 ),
                               ],
                             ),
                           ),
                           Expanded(
+                            flex: 2,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,7 +167,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                                       child: Align(
                                         alignment: Alignment.topRight,
                                         child: AutoSizeText(
-                                          'Order Place Date:- ${placeOrderProvider.PlaceOrderItmes[index].dateTime}',
+                                          'Order Place Date:- ${confirmOrderList[0].data![index].updatedAt}',
                                           style: TextStyle(fontSize: 10),
                                           maxLines: 1,
                                         ),
@@ -147,17 +176,14 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                                   ],
                                 ),
                                 Text(
-                                  placeOrderProvider
-                                      .PlaceOrderItmes[index].productName
-                                      .toString(),
+                                 confirmOrderList[0].data![index].title,
                                   style: TextStyle(
                                     fontSize: 20,
                                   ),
                                 ),
                                 Text(
-                                  placeOrderProvider
-                                      .PlaceOrderItmes[index].shortDescription
-                                      .toString(),
+                                  confirmOrderList[0].data![index].description,
+                                  maxLines: 2,
                                   style: TextStyle(fontSize: 15),
                                 ),
                                 Padding(
@@ -167,13 +193,13 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        '₹${placeOrderProvider.PlaceOrderItmes[index].price}',
+                                        '\$${confirmOrderList[0].data![index].productTotalAmount}',
                                         style: TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Text(
-                                        'Total quantity: ${placeOrderProvider.PlaceOrderItmes[index].quantity}',
+                                        'Total quantity: ${confirmOrderList[0].data![index].quantity}',
                                         style: TextStyle(
                                           fontSize: 12,
                                         ),
@@ -184,7 +210,8 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                                 Consumer<CartProvider>(builder: (context,value,child){
                                   return ElevatedButton(
                                       onPressed: () {
-                                        if (itemAddedToCart == true) {
+                                        Navigator.of(context).pushReplacementNamed('/home-screen');
+                                        /*if (itemAddedToCart == true) {
                                           // value.removeItem(value.CartItems[index]);
                                         } else {
                                           value.addItem(MainData(
@@ -198,11 +225,11 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                                             imgLink: ProductData[index].imgLink,
                                           quantity: 1
                                           ));
-                                        }
+                                        }*/
                                       },
-                                      style: ElevatedButton.styleFrom( primary: itemAddedToCart ? Colors.red[200]: Colors.blue),
-                                      child: itemAddedToCart? Text('Item is already Added')
-                                          : Text('Re Order'));
+                                      style: ElevatedButton.styleFrom( primary: /*itemAddedToCart ? Colors.red[200]:*/ Colors.blue),
+                                      child: /*itemAddedToCart? Text('Item is already Added')
+                                          :*/ Text('Re Order'));
                                 })
                               ],
                             ),
@@ -214,7 +241,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                 ),
               );
             },
-            itemCount: placeOrderProvider.PlaceOrderItmes.length);
+            itemCount: confirmOrderList[0].data?.length);
   }
 
   @override

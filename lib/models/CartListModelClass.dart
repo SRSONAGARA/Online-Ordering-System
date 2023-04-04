@@ -1,25 +1,101 @@
 import 'dart:convert';
 
-CartList cartListFromJson(String str) => CartList.fromJson(json.decode(str));
+GetMyCart getMyCartFromJson(String str) => GetMyCart.fromJson(json.decode(str));
 
-String cartListToJson(CartList data) => json.encode(data.toJson());
+String getMyCartToJson(GetMyCart data) => json.encode(data.toJson());
 
-class CartList {
-  CartList({
+class GetMyCart {
+  GetMyCart({
     required this.status,
     required this.msg,
+    required this.cartTotal,
+    required this.data,
   });
 
   int status;
   String msg;
+  double cartTotal;
+  List<CartData> data;
 
-  factory CartList.fromJson(Map<String, dynamic> json) => CartList(
-    status: json["status"],
-    msg: json["msg"],
-  );
+  factory GetMyCart.fromJson(Map<String, dynamic> json) => GetMyCart(
+        status: json["status"] ?? 0,
+        msg: json["msg"] ?? '',
+        cartTotal: json["cartTotal"]?.toDouble() ?? 0,
+        data: List<CartData>.from(json["data"].map((x) => CartData.fromJson(x))),
+      );
 
   Map<String, dynamic> toJson() => {
-    "status": status,
-    "msg": msg,
-  };
+        "status": status,
+        "msg": msg,
+        "cartTotal": cartTotal,
+        "data": List<dynamic>.from(data.map((x) => x.toJson())),
+      };
+}
+
+class CartData {
+  CartData({
+    required this.id,
+    required this.userId,
+    required this.cartId,
+    required this.quantity,
+    required this.itemTotal,
+    required this.productDetails,
+  });
+
+  String id;
+  String userId;
+  String cartId;
+  int quantity;
+  double itemTotal;
+  ProductDetails productDetails;
+
+  factory CartData.fromJson(Map<String, dynamic> json) => CartData(
+        id: json["_id"] ?? '',
+        userId: json["userId"] ?? '',
+        cartId: json["cartId"] ?? '',
+        quantity: json["quantity"] ?? 0,
+        itemTotal: json["itemTotal"] ?? 0.00,
+        productDetails: ProductDetails.fromJson(json["productDetails"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "_id": id,
+        "userId": userId,
+        "cartId": cartId,
+        "quantity": quantity,
+        "itemTotal": itemTotal,
+        "productDetails": productDetails.toJson(),
+      };
+}
+
+class ProductDetails {
+  ProductDetails({
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.price,
+    required this.imageUrl,
+  });
+
+  String id;
+  String title;
+  String description;
+  String price;
+  String imageUrl;
+
+  factory ProductDetails.fromJson(Map<String, dynamic> json) => ProductDetails(
+        id: json["_id"] ?? '',
+        title: json["title"] ?? '',
+        description: json["description"] ?? '',
+        price: json["price"] ?? '',
+        imageUrl: json["imageUrl"] ?? '',
+      );
+
+  Map<String, dynamic> toJson() => {
+        "_id": id,
+        "title": title,
+        "description": description,
+        "price": price,
+        "imageUrl": imageUrl,
+      };
 }
