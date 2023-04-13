@@ -153,6 +153,17 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                               print('Id: ${wathListItemId}');
                                               removeFromWatchListProvider
                                                   .getWatchList(context);
+                                              ScaffoldMessenger.of(
+                                                  context)
+                                                  .showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text(
+                                                        'Item removed from WatchList !'),
+                                                    backgroundColor:
+                                                    Colors.blue,
+                                                    duration: Duration(
+                                                        seconds: 2),
+                                                  ));
                                             },
                                             child: const Icon(Icons.favorite,
                                                 color: Colors.red, size: 20),

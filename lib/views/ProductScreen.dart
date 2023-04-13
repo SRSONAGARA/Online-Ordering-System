@@ -34,7 +34,6 @@ class _ProductScreenState extends State<ProductScreen> {
     print('cartItemCount: $cartItemCount');
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -64,71 +63,80 @@ class _ProductScreenState extends State<ProductScreen> {
                   print(SearchItems.length);
 
                   bool isFavourite = apiConnectionProvider
-                      .productDataList[0].data![index].watchListItemId !=
+                          .productDataList[0].data![index].watchListItemId !=
                       '';
-                  bool itemAddedToCart =
-                      apiConnectionProvider.productDataList[0].data![index].quantity !=
-                          0;
+                  bool itemAddedToCart = apiConnectionProvider
+                          .productDataList[0].data![index].quantity !=
+                      0;
                   return InkWell(
                       onTap: () {
-                    Navigator.pushNamed(context, '/productDetails-screen',
-                        arguments: productData[0].data![index]);
-                  },
-                  child:Card(
-                    elevation: 6,
-                    child: Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Column(
-                        children: [
-                          Row(
+                        Navigator.pushNamed(context, '/productDetails-screen',
+                            arguments: productData[0].data![index]);
+                      },
+                      child: Card(
+                        elevation: 6,
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Column(
                             children: [
-                              Expanded(
-                                flex: 1,
-                                child: Column(
-                                  children: [
-                                    Image(
-                                      image: NetworkImage(
-                                          SearchItems[index].imageUrl),
-                                      height: 100,
-                                      width: 100,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.end,
+                              Row(
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: Column(
                                       children: [
-                                        Consumer<
-                                            ApiConnectionProvider>(
-                                            builder: (context,
-                                                getDataProvider,
-                                                child) {
+                                        Image(
+                                          image: NetworkImage(
+                                              SearchItems[index].imageUrl),
+                                          height: 100,
+                                          width: 100,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 2,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Consumer<ApiConnectionProvider>(
+                                                builder: (context,
+                                                    getDataProvider, child) {
                                               return InkWell(
-                                                onTap: ()async {
-                                                  if (isFavourite ==
-                                                      true) {
-                                                    String?
-                                                    wathListItemId =
+                                                onTap: () async {
+                                                  if (isFavourite == true) {
+                                                    String? wathListItemId =
                                                         getDataProvider
                                                             .productDataList[0]
                                                             .data![index]
                                                             .watchListItemId;
                                                     await getDataProvider
                                                         .removeFromWatchList(
-                                                        getDataProvider
-                                                            .productDataList[0]
-                                                            .data![index]
-                                                            .watchListItemId!);
+                                                            getDataProvider
+                                                                .productDataList[
+                                                                    0]
+                                                                .data![index]
+                                                                .watchListItemId!);
                                                     print(
                                                         'wathListItemId: $wathListItemId');
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                            const SnackBar(
+                                                      content: Text(
+                                                          'Item removed from WatchList !'),
+                                                      backgroundColor:
+                                                          Colors.blue,
+                                                      duration:
+                                                          Duration(seconds: 2),
+                                                    ));
                                                   } else {
                                                     String productId =
                                                         getDataProvider
@@ -137,88 +145,95 @@ class _ProductScreenState extends State<ProductScreen> {
                                                             .id;
                                                     await getDataProvider
                                                         .addToWatchList(
-                                                        productId);
-                                                    print(
-                                                        'Id: ${productId}');
+                                                            productId);
+                                                    print('Id: ${productId}');
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(const SnackBar(
+                                                            content: Text(
+                                                                'Item Added to WatchList !'),
+                                                            backgroundColor:
+                                                                Colors.blue,
+                                                            duration: Duration(
+                                                                seconds: 2)));
                                                   }
                                                   accessApi(context);
                                                 },
                                                 child: isFavourite
                                                     ? const Icon(
-                                                  Icons.favorite,
-                                                  color: Colors.red,
-                                                  size: 20,
-                                                )
+                                                        Icons.favorite,
+                                                        color: Colors.red,
+                                                        size: 20,
+                                                      )
                                                     : const Icon(
-                                                    Icons
-                                                        .favorite_outline,
-                                                    size: 20),
+                                                        Icons.favorite_outline,
+                                                        size: 20),
                                               );
                                             })
+                                          ],
+                                        ),
+                                        Text(
+                                          SearchItems[index].title.toString(),
+                                          maxLines: 1,
+                                          style: const TextStyle(
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                        Text(
+                                          SearchItems[index]
+                                              .description
+                                              .toString(),
+                                          maxLines: 2,
+                                          style: const TextStyle(fontSize: 15),
+                                        ),
+                                        Text(
+                                          '\$${SearchItems[index].price}',
+                                          style: const TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        ElevatedButton(
+                                            onPressed: () async {
+                                              if (itemAddedToCart != true) {
+                                                String productId =
+                                                    apiConnectionProvider
+                                                        .productDataList[0]
+                                                        .data![index]
+                                                        .id;
+                                                await apiConnectionProvider
+                                                    .addToCart(productId);
+                                                print('Id: ${productId}');
+                                                ScaffoldMessenger.of(
+                                                    context)
+                                                    .showSnackBar(
+                                                    const SnackBar(
+                                                      content: Text(
+                                                          'Item Added to Cart !'),
+                                                      backgroundColor:
+                                                      Colors.blue,
+                                                      duration:
+                                                      Duration(seconds: 2),
+                                                    ));
+                                              }
+                                              accessApi(context);
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                                primary: itemAddedToCart
+                                                    ? Colors.red[200]
+                                                    : Colors.blue),
+                                            child: itemAddedToCart
+                                                ? const Text(
+                                                    'Item is already Added')
+                                                : const Text('Add To Cart'))
                                       ],
                                     ),
-                                    Text(
-                                      SearchItems[index]
-                                          .title
-                                          .toString(),
-                                      maxLines: 1,
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                    Text(
-                                      SearchItems[index]
-                                          .description
-                                          .toString(),
-                                      maxLines: 2,
-                                      style: const TextStyle(fontSize: 15),
-                                    ),
-                                    Text(
-                                      '\$${SearchItems[index].price}',
-                                      style: const TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    ElevatedButton(
-                                        onPressed: () async {
-                                          if (itemAddedToCart !=
-                                              true) {
-                                            String productId =
-                                                apiConnectionProvider
-                                                    .productDataList[0]
-                                                    .data![index]
-                                                    .id;
-                                            await apiConnectionProvider
-                                                .addToCart(
-                                                productId);
-                                            print(
-                                                'Id: ${productId}');
-                                          }
-                                          accessApi(context);
-                                        },
-                                        style: ElevatedButton
-                                            .styleFrom(
-                                            primary:
-                                            itemAddedToCart
-                                                ? Colors.red[
-                                            200]
-                                                : Colors
-                                                .blue),
-                                        child: itemAddedToCart
-                                            ? const Text(
-                                            'Item is already Added')
-                                            : const Text(
-                                            'Add To Cart'))
-                                  ],
-                                ),
-                              ),
+                                  ),
+                                ],
+                              )
                             ],
-                          )
-                        ],
-                      ),
-                    ),
-                  )
-                  );
+                          ),
+                        ),
+                      ));
                 },
                 itemCount: SearchItems.length),
           );
@@ -331,11 +346,13 @@ class _ProductScreenState extends State<ProductScreen> {
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
                       bool isFavourite = apiConnectionProvider
-                              .productDataList[0].data![index].watchListItemId !=
+                              .productDataList[0]
+                              .data![index]
+                              .watchListItemId !=
                           '';
-                      bool itemAddedToCart =
-                          apiConnectionProvider.productDataList[0].data![index].quantity !=
-                              0;
+                      bool itemAddedToCart = apiConnectionProvider
+                              .productDataList[0].data![index].quantity !=
+                          0;
                       return InkWell(
                         onTap: () {
                           Navigator.pushNamed(context, '/productDetails-screen',
@@ -385,27 +402,42 @@ class _ProductScreenState extends State<ProductScreen> {
                                                           getDataProvider,
                                                           child) {
                                                     return InkWell(
-                                                      onTap: ()async {
+                                                      onTap: () async {
                                                         if (isFavourite ==
                                                             true) {
                                                           String?
                                                               wathListItemId =
                                                               getDataProvider
-                                                                  .productDataList[0]
+                                                                  .productDataList[
+                                                                      0]
                                                                   .data![index]
                                                                   .watchListItemId;
                                                           await getDataProvider
                                                               .removeFromWatchList(
-                                                              getDataProvider
-                                                                  .productDataList[0]
-                                                                  .data![index]
-                                                                  .watchListItemId!);
+                                                                  getDataProvider
+                                                                      .productDataList[
+                                                                          0]
+                                                                      .data![
+                                                                          index]
+                                                                      .watchListItemId!);
                                                           print(
                                                               'wathListItemId: $wathListItemId');
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                                  const SnackBar(
+                                                            content: Text(
+                                                                'Item removed from WatchList !'),
+                                                            backgroundColor:
+                                                                Colors.blue,
+                                                            duration: Duration(
+                                                                seconds: 2),
+                                                          ));
                                                         } else {
                                                           String productId =
                                                               getDataProvider
-                                                                  .productDataList[0]
+                                                                  .productDataList[
+                                                                      0]
                                                                   .data![index]
                                                                   .id;
                                                           await getDataProvider
@@ -413,6 +445,17 @@ class _ProductScreenState extends State<ProductScreen> {
                                                                   productId);
                                                           print(
                                                               'Id: ${productId}');
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(const SnackBar(
+                                                                  content: Text(
+                                                                      'Item Added to WatchList !'),
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .blue,
+                                                                  duration: Duration(
+                                                                      seconds:
+                                                                          2)));
                                                         }
                                                         accessApi(context);
                                                       },
@@ -455,36 +498,46 @@ class _ProductScreenState extends State<ProductScreen> {
                                                     fontWeight:
                                                         FontWeight.bold),
                                               ),
-                                          ElevatedButton(
-                                              onPressed: () async {
-                                                if (itemAddedToCart !=
-                                                    true) {
-                                                  String productId =
-                                                      apiConnectionProvider
-                                                          .productDataList[0]
-                                                          .data![index]
-                                                          .id;
-                                                  await apiConnectionProvider
-                                                      .addToCart(
-                                                      productId);
-                                                  print(
-                                                      'Id: ${productId}');
-                                                }
-                                                  accessApi(context);
-                                              },
-                                              style: ElevatedButton
-                                                  .styleFrom(
-                                                  primary:
-                                                  itemAddedToCart
-                                                      ? Colors.red[
-                                                  200]
-                                                      : Colors
-                                                      .blue),
-                                              child: itemAddedToCart
-                                                  ? const Text(
-                                                  'Item is already Added')
-                                                  : const Text(
-                                                  'Add To Cart'))
+                                              ElevatedButton(
+                                                  onPressed: () async {
+                                                    if (itemAddedToCart !=
+                                                        true) {
+                                                      String productId =
+                                                          apiConnectionProvider
+                                                              .productDataList[
+                                                                  0]
+                                                              .data![index]
+                                                              .id;
+                                                      await apiConnectionProvider
+                                                          .addToCart(productId);
+                                                      print('Id: ${productId}');
+                                                      ScaffoldMessenger.of(
+                                                          context)
+                                                          .showSnackBar(
+                                                          const SnackBar(
+                                                            content: Text(
+                                                                'Item Added to Cart !'),
+                                                            backgroundColor:
+                                                            Colors.blue,
+                                                            duration:
+                                                            Duration(seconds: 2),
+                                                          ));
+                                                    }
+                                                    accessApi(context);
+                                                  },
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                          primary:
+                                                              itemAddedToCart
+                                                                  ? Colors
+                                                                      .red[200]
+                                                                  : Colors
+                                                                      .blue),
+                                                  child: itemAddedToCart
+                                                      ? const Text(
+                                                          'Item is already Added')
+                                                      : const Text(
+                                                          'Add To Cart'))
                                             ],
                                           ),
                                         ),
@@ -555,7 +608,8 @@ class _ProductScreenState extends State<ProductScreen> {
                         if (value.isEmpty) {
                           results = productData[0].data;
                         } else {
-                          results = apiConnectionProvider.productDataList[0].data
+                          results = apiConnectionProvider
+                              .productDataList[0].data
                               .where((element) => element.title
                                   .toString()
                                   .toLowerCase()

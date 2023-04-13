@@ -397,7 +397,12 @@ void alertFunc(BuildContext context) {
           child: const Text('No')),
       TextButton(
           onPressed: () async{
-
+            ScaffoldMessenger.of(context)
+                .showSnackBar(const SnackBar(
+              content: Text('Log out successful !'),
+              backgroundColor: Colors.blue,
+              duration: Duration(seconds: 2),
+            ));
             final share = await SharedPreferences.getInstance();
             share.clear();
             Navigator.pushNamedAndRemoveUntil(

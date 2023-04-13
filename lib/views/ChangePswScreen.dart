@@ -27,7 +27,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final favoriteProvider = Provider.of<FavouriteProvider>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(

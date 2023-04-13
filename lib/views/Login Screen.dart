@@ -19,15 +19,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool _isObscure = true;
 
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _isObscure;
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +56,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     )
                   ],
+                ),
+                SizedBox(
+                  height: 20,
                 ),
                 TextFormField(
                   controller: emailController,
@@ -143,10 +143,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
                           var result = await AuthRepo.userLogin(
                               emailId: emailController.text,
-                              password: passwordController.text
-                              );
+                              password: passwordController.text);
 
                           if (result['status'] == 1) {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              content: Text('Log in successful !'),
+                              backgroundColor: Colors.blue,
+                              duration: Duration(seconds: 2),
+                            ));
                             final prefs = await SharedPreferences.getInstance();
                             await prefs.setString(
                                 'jwtToken', result['data']['jwtToken']);
@@ -165,7 +170,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             await Future.delayed(const Duration(seconds: 1));
                             await Navigator.pushAndRemoveUntil(
                                 context,
-                                MaterialPageRoute(builder: (_) => HomeScreen(from: '/login screen',)),
+                                MaterialPageRoute(
+                                    builder: (_) => HomeScreen(
+                                          from: '/login screen',
+                                        )),
                                 (route) => false);
                           } else {
                             showDialog(

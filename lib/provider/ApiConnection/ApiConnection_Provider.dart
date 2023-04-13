@@ -261,7 +261,7 @@ class ApiConnectionProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void placeOrder(String cartId, String cartTotal)async{
+  placeOrder(String cartId, String cartTotal)async{
     SharedPreferences preferences=await SharedPreferences.getInstance();
     String jwtToken=preferences.getString('jwtToken') ??'';
     try{

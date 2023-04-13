@@ -138,12 +138,12 @@ class _CartScreenState extends State<CartScreen> {
                                                   .toString();
                                               print('cartId= $cartId');
                                               print('cartTotal= $cartTotal');
-                                              apiConnectionProvider.placeOrder(
+                                              await apiConnectionProvider.placeOrder(
                                                   cartId, cartTotal);
                                               Navigator.pop(context);
-                                              await getMyCartProvider
+                                               getMyCartProvider
                                                   .getMyCart(context);
-                                              // });
+
                                             },
                                             child: const Text('Place Order'))
                                       ],
@@ -381,6 +381,17 @@ class _CartScreenState extends State<CartScreen> {
                                                   }
                                                   removeProductFromCartProvider
                                                       .getMyCart(context);
+                                                  ScaffoldMessenger.of(
+                                                      context)
+                                                      .showSnackBar(
+                                                      const SnackBar(
+                                                        content: Text(
+                                                            'Item removed from Cart !'),
+                                                        backgroundColor:
+                                                        Colors.blue,
+                                                        duration: Duration(
+                                                            seconds: 2),
+                                                      ));
                                                 },
                                               );
                                             }),
