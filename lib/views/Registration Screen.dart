@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:oline_ordering_system/repository/AuthRepo.dart';
+import 'package:flutter/services.dart';
+import 'package:oline_ordering_system/provider/ApiConnection/AuthRepo.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({Key? key}) : super(key: key);
@@ -30,10 +31,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('Sign Up'),
-      //   centerTitle: true,
-      // ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
@@ -42,7 +39,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             key: formKey,
             child: Column(
               children: [
-                Container(
+                const SizedBox(
                     height: 200,
                     width: 200,
                     child: Image(
@@ -50,7 +47,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     )),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  children: const [
                     Text(
                       "Welcome",
                       style:
@@ -94,6 +91,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   height: 20,
                 ),
                 TextFormField(
+                  inputFormatters: [new LengthLimitingTextInputFormatter(10),],
                   controller: mobileNumberController,
                   keyboardType: TextInputType.phone,
                   decoration: const InputDecoration(
@@ -116,7 +114,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 TextFormField(
                   obscureText: true,
                   controller: passwordController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     icon: Icon(Icons.lock_outline),
                     labelText: 'Password',
                     hintText: 'Enter your Password',
@@ -185,16 +183,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           print(jsonEncode(result));
                           if (result['status'] == 1) {
                             String userId = result['data']['_id'];
-                            // String name = result['data']['name'];
-                            // String mobileNo = result['data']['mobileNo'];
-                            // String emailId = result['data']['emailId'];
-                            // String status = result['data']['status'];
-                            // String createdAt = result['data']['createdAt'];
-                            // String updatedAt = result['data']['updatedAt'];
-
+                            print(jsonEncode(result));
                             print(userId);
-                            await Future.delayed(const Duration(seconds: 1));
-                            await Navigator.pushNamed(context, '/otp-screen',arguments: userId.toString());
+                            Navigator.pushNamed(context, '/otp-screen',arguments: userId.toString());
                           }
                         }
                       },

@@ -12,26 +12,25 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      // backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Center(
           child: Column(
             children: [
-              SizedBox(height: 50),
-              Text('Hello There!',style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black,fontSize: 30),),
-              SizedBox(height: 10,),
-              Text('Automatic identity verification which enable you to verify your identity'),
-              Container(
+              const SizedBox(height: 50),
+              const Text('Hello There!',style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black,fontSize: 30),),
+              const SizedBox(height: 10,),
+              const Text('Automatic identity verification which enable you to verify your identity'),
+              SizedBox(
                   height: size.height / 2,
                   width: size.width / 2,
-                  child: Image(image: AssetImage('assets/WelcomeImage.png'))),
+                  child: const Image(image: AssetImage('assets/WelcomeImage.png'))),
               // InkWell(onTap: (){}, child: Text('Log In'),),
               ElevatedButton(
                   onPressed: () {
                     Navigator.pushNamed(context, '/login-screen');
                   },
-                  child: Text('Login')),
-              SizedBox(
+                  child: const Text('Login')),
+              const SizedBox(
                 height: 20,
               ),
               ElevatedButton(
@@ -39,7 +38,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   onPressed: () {
                     Navigator.pushNamed(context, '/registration-screen');
                   },
-                  child: Text('Sign Up')),
+                  child: const Text('Sign Up')),
             ],
           ),
         ),

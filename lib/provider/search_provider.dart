@@ -6,17 +6,17 @@ import 'package:flutter/material.dart';
 class SearchProvider with ChangeNotifier{
   TextEditingController search = TextEditingController();
   bool SearchButton = false;
-  Icon CustomSearch = Icon(Icons.search);
-  Widget CustomText = Text("Ordefy",style: TextStyle(fontWeight: FontWeight.bold),);
-  List<dynamic> SearchItems = [];
-  Icon CusIcon=Icon(Icons.menu);
+  Icon CustomSearch = const Icon(Icons.search, color: Colors.blue,);
+  Widget CustomText = const Text("Ordefy",style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),);
+  // List<dynamic> SearchItems = [];
+  Icon CusIcon=const Icon(Icons.menu, color: Colors.blue,);
   bool ListEmptyBool = false;
 
 
    searchButtonPress(){
     SearchButton = false;
-    CustomSearch = const Icon(Icons.search);
-    CustomText = const Text("Ordefy",style: TextStyle(fontWeight: FontWeight.bold),);
+    CustomSearch = const Icon(Icons.search, color: Colors.blue,);
+    CustomText = const Text("Ordefy",style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),);
     notifyListeners();
 
   }

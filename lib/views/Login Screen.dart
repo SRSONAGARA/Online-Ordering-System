@@ -1,7 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:oline_ordering_system/repository/AuthRepo.dart';
+import 'package:oline_ordering_system/provider/ApiConnection/AuthRepo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Home Screen.dart';
@@ -19,13 +17,17 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  var _isObscure;
+  bool _isObscure = true;
+
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _isObscure = true;
+    _isObscure;
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -42,15 +44,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(
                   height: 100,
                 ),
-                Container(
+                const SizedBox(
                     height: 200,
                     width: 200,
-                    child: const Image(
+                    child: Image(
                       image: AssetImage('assets/LoginImage.png'),
                     )),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  children: const [
                     Text(
                       "Welcome Back",
                       style:
@@ -112,8 +114,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextButton(
-                        onPressed: ()async {
-                          await Navigator.pushNamed(context, '/forgotpsw-screen');
+                        onPressed: () async {
+                          await Navigator.pushNamed(
+                              context, '/forgotpsw-screen');
                         },
                         child: const Text('Forgot your Password?')),
                   ],
@@ -123,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 Container(
                   height: 30,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(5)),
                       gradient: LinearGradient(colors: [
                         Color.fromARGB(255, 37, 150, 190),
@@ -134,28 +137,35 @@ class _LoginScreenState extends State<LoginScreen> {
                           backgroundColor: Colors.transparent,
                           shadowColor: Colors.transparent),
                       onPressed: () async {
-                        if (/*formkey.currentState!.validate()*/ !formkey.currentState!.validate()) {
+                        if (formkey.currentState!
+                            .validate() /*!formkey.currentState!.validate()*/) {
                           formkey.currentState!.save();
 
                           var result = await AuthRepo.userLogin(
-                              /*emailId: emailController.text,
-                              password: passwordController.text*/
-                          emailId: 'sagar7777926900@gmail.com',
-                          password: '5qz2lkm4');
-                          print(jsonEncode(result));
+                              emailId: emailController.text,
+                              password: passwordController.text
+                              );
 
                           if (result['status'] == 1) {
-                            
-                            final prefs=await SharedPreferences.getInstance();
-                            await prefs.setString('jwtToken', result['data']['jwtToken']);
-                            
+                            final prefs = await SharedPreferences.getInstance();
+                            await prefs.setString(
+                                'jwtToken', result['data']['jwtToken']);
+
                             print('jwttoken: ${prefs.get('jwtToken')}');
-                            
-                            String emailId = result['data']['emailId'];
+
+                            await prefs.setString(
+                                'name', result['data']['name']);
+                            await prefs.setString(
+                                'emailId', result['data']['emailId']);
+                            await prefs.setString(
+                                'mobileNo', result['data']['mobileNo']);
+                            print(prefs.getString('name'));
+
+                            // String emailId = result['data']['emailId'];
                             await Future.delayed(const Duration(seconds: 1));
                             await Navigator.pushAndRemoveUntil(
                                 context,
-                                MaterialPageRoute(builder: (_) => HomeScreen()),
+                                MaterialPageRoute(builder: (_) => HomeScreen(from: '/login screen',)),
                                 (route) => false);
                           } else {
                             showDialog(
@@ -177,23 +187,23 @@ class _LoginScreenState extends State<LoginScreen> {
                           }
                         }
                       },
-                      child: Text('LOGIN')),
+                      child: const Text('LOGIN')),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Don't have an Account?"),
-                    SizedBox(
+                    const Text("Don't have an Account?"),
+                    const SizedBox(
                       width: 10,
                     ),
                     TextButton(
                         onPressed: () {
                           Navigator.pushNamed(context, '/registration-screen');
                         },
-                        child: Text('Register'))
+                        child: const Text('Register'))
                   ],
                 )
               ],

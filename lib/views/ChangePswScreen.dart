@@ -1,43 +1,36 @@
-import 'dart:convert';
-
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:oline_ordering_system/provider/favourite_provider.dart';
 import 'package:oline_ordering_system/provider/ApiConnection/AuthRepo.dart';
+import 'package:oline_ordering_system/provider/favourite_provider.dart';
 import 'package:provider/provider.dart';
 
-class ForgotPasswordScreen extends StatefulWidget {
-  const ForgotPasswordScreen({Key? key}) : super(key: key);
+class ResetPasswordScreen extends StatefulWidget {
+  const ResetPasswordScreen({Key? key}) : super(key: key);
 
   @override
-  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
-class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final formKey = GlobalKey<FormState>();
 
-  Widget CustomText = Text("Forgot Password");
-  TextEditingController emailController = TextEditingController();
+  bool _isObscure = true;
+  Widget CustomText = const Text("Reset Your Password");
   TextEditingController newPassword = TextEditingController();
   TextEditingController confirmPassword = TextEditingController();
-  var size;
-  var _isObscure;
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    _isObscure = true;
+    _isObscure;
   }
 
   @override
   Widget build(BuildContext context) {
-    size = MediaQuery.of(context).size;
     final favoriteProvider = Provider.of<FavouriteProvider>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.blue,
         title: CustomText,
         centerTitle: true,
         leading: Padding(
@@ -68,55 +61,64 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Image(
-                    height: size.height / 4,
-                    width: size.width / 4,
-                    image: const AssetImage('assets/ForgotPswImage.png'),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
+                  Container(
+                      height: 300,
+                      width: 400,
+                      child: const Image(
+                        image: AssetImage('assets/ResetPswImage.jpeg'),
+                      )),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
-                      Text('Forgot Your Password?',style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      AutoSizeText("Please enter the email address you'd like \n  your password reset information sent to" ,maxLines: 2,),
+                      Text(
+                        'Enter a new password',
+                        style: TextStyle(fontSize: 20),
+                      )
                     ],
                   ),
                   const SizedBox(
-                    height: 30,
+                    height: 20,
                   ),
                   TextFormField(
-                    controller: emailController,
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.lock_outline),
-                      labelText: 'Email address',
-                      hintText: 'Enter your email',
-                    ),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return "Email can't empty";
-                      } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}')
-                          .hasMatch(value!)) {
-                        return "Enter Correct email";
-                      } else {
-                        return null;
-                      }
-                    },
-                  ),
+                      obscureText: true,
+                      controller: newPassword,
+                      decoration: const InputDecoration(
+                          labelText: 'New Password',
+                          hintText: 'Enter New Password'),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "New Password Can't empty";
+                        } else if (value.length < 6) {
+                          return "Password is not less than 6 letter";
+                        }
+                      }),
+                  TextFormField(
+                      obscureText: _isObscure,
+                      controller: confirmPassword,
+                      decoration: InputDecoration(
+                          labelText: 'Confirm Password',
+                          hintText: 'Re-Enter your New Password',
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _isObscure = !_isObscure;
+                              });
+                            },
+                            icon: Icon(_isObscure
+                                ? Icons.visibility
+                                : Icons.visibility_off),
+                          )),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Confirm Password Can't empty";
+                        } else if (value.length < 6) {
+                          return "Password is not less than 6 letter";
+                        } else if (value != newPassword.text) {
+                          return "Password not matched";
+                        }
+                      }),
                   const SizedBox(
                     height: 40,
-                  ),
-                  const SizedBox(
-                    height: 60,
                   ),
                   Container(
                     height: 30,
@@ -134,39 +136,32 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           if (formKey.currentState!.validate()) {
                             formKey.currentState!.save();
 
-                            var result = await AuthRepo.forgotPassword(
-                                emailId: emailController.text);
-                            print(jsonEncode(result));
-
+                            var result = await AuthRepo.changePassword(
+                                newPass: newPassword.text,
+                                confirmPass: confirmPassword.text);
                             if (result['status'] == 1) {
-                              String userId = result['data']['_id'];
-                              print(userId);
-                              await Future.delayed(const Duration(seconds: 1));
-                              await Navigator.pushNamed(
-                                  context, '/forgotpswOtp-screen',
-                                  arguments: {'id': userId.toString()});
-                            } else {
                               showDialog(
                                   context: context,
                                   builder: (context) {
                                     return AlertDialog(
-                                      title: Text('Email is not registered'),
-                                      content: Text(
-                                          'This Email Id is not Registered With us kindly register first!'),
+                                      title: const Text(
+                                          'Your Password has been Updated'),
                                       actions: [
                                         TextButton(
                                             onPressed: () {
-                                              Navigator.of(context).pop();
+                                              Navigator.pushNamedAndRemoveUntil(
+                                                  context,
+                                                  '/login-screen',
+                                                  (route) => false);
                                             },
-                                            child: const Text('okey'))
+                                            child: const Text('Okey'))
                                       ],
                                     );
                                   });
                             }
-                            ;
                           }
                         },
-                        child: const Text('Send otp')),
+                        child: const Text('Save the Password')),
                   ),
                 ],
               ),

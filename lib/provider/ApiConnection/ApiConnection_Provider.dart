@@ -1,22 +1,52 @@
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:oline_ordering_system/common/ApiConstant.dart';
-import 'package:oline_ordering_system/models/FavoriteListModelClass.dart';
 import 'package:oline_ordering_system/models/CartListModelClass.dart';
 import 'package:oline_ordering_system/models/ProductListModelClass.dart';
 import 'package:oline_ordering_system/models/WatchListModelClass.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
+import '../../models/ConfirmOrderModelClass.dart';
+
 class ApiConnectionProvider extends ChangeNotifier {
- /* List<Data> data = [];
-  List<FavData> watchList = [];
-  List<CartData> cart=[];*/
 
+  List<ProductList> productDataList = [];
+  List<GetMyCart> cart = [];
+  List<GetWatchList> watchList = [];
+  List<ConfirmOrderList> confirmOrderList=[];
 
+  bool showItemBool=false;
 
-  void addToWatchList(String productId) async {
+  void showItem(){
+    showItemBool=true;
+  }
+
+  Future<void> getData(BuildContext context) async {
+    print('getData Method');
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String jwtToken = preferences.getString('jwtToken') ?? '';
+    const url = ApiConstant.getAllProductApi;
+    final header = {"Authorization": 'Bearer $jwtToken'};
+    final response = await http.get(Uri.parse(url), headers: header);
+
+    if (response.statusCode == 200) {
+
+      var item = jsonDecode(response.body);
+      var product = item['data'];
+      print(product);
+        productDataList = [ProductList.fromJson(jsonDecode(response.body))];
+      print(productDataList);
+    }else if (response.statusCode == 500){
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.clear();
+      await Navigator.of(context).pushNamedAndRemoveUntil('/login-screen', (route) => false);
+    }
+    notifyListeners();
+  }
+
+   addToWatchList(String productId) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String jwtToken = preferences.getString('jwtToken') ?? '';
     print('addToWatchList Method');
@@ -47,7 +77,7 @@ class ApiConnectionProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeFromWatchList(String wathListItemId) async {
+  removeFromWatchList(String wathListItemId) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String jwtToken = preferences.getString('jwtToken') ?? '';
     print('removeFromWatchList Method');
@@ -79,8 +109,31 @@ class ApiConnectionProvider extends ChangeNotifier {
   }
 
 
+  Future<void> getWatchList(BuildContext context) async {
+    print('MyWatchlist');
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String jwtToken = preferences.getString('jwtToken') ?? '';
+    const url = ApiConstant.getWatchListApi;
+    final header = {"Authorization": 'Bearer $jwtToken'};
+    final response = await http.get(Uri.parse(url), headers: header);
 
-  void addToCart(String productId) async {
+
+    if (response.statusCode == 200) {
+      var item = jsonDecode(response.body);
+      var product = item['data'];
+      print(product);
+        watchList = [GetWatchList.fromJson(jsonDecode(response.body))];
+      print(watchList);
+    }else if (response.statusCode == 500){
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.clear();
+      await Navigator.of(context).pushNamedAndRemoveUntil('/login-screen', (route) => false);
+    }
+    notifyListeners();
+  }
+
+
+   addToCart(String productId) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String jwtToken = preferences.getString('jwtToken') ?? '';
 
@@ -107,7 +160,61 @@ class ApiConnectionProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
-  void removeProductFromCart(String cartItemId)async{
+
+  Future<void> decreaseProductQuantity(String cartItemId) async {
+    print(cartItemId);
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String jwtToken = preferences.getString('jwtToken') ?? '';
+    print(jwtToken);
+    try {
+      String url = ApiConstant.decreaseProductQuantityApi;
+      var requestBody = {"cartItemId": cartItemId};
+      print(url);
+      final header = {"Authorization": 'Bearer $jwtToken'};
+      final response =
+      await http.post(Uri.parse(url), headers: header, body: requestBody);
+      print(response.body);
+
+      if (response.statusCode == 200) {
+        final responseBody = jsonDecode(response.body);
+        print(responseBody);
+        print('product Quantity decreased');
+      } else {
+        final responseBody = jsonDecode(response.body);
+        print(responseBody);
+      }
+    } catch (error) {
+      print('ApiConnection_Provider.decreaseProductQuantity: $error');
+    }
+    notifyListeners();
+  }
+
+  Future<void> increaseProductQuantity(String cartItemId) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String jwtToken = preferences.getString('jwtToken') ?? '';
+    try {
+      String url = ApiConstant.increaseProductQuantityApi;
+      var requestBody = {"cartItemId": cartItemId};
+      print(url);
+      print(requestBody);
+      final header = {"Authorization": 'Bearer $jwtToken'};
+      final response =
+      await http.post(Uri.parse(url), headers: header, body: requestBody);
+      if (response.statusCode == 200) {
+        final responseBody = jsonDecode(response.body);
+        print(responseBody);
+        print('product Quantity increased');
+      } else {
+        final responseBody = jsonDecode(response.body);
+        print(responseBody);
+      }
+    } catch (error) {
+      print('ApiConnection_Provider.increaseProductQuantity: $error');
+    }
+    notifyListeners();
+  }
+
+   removeProductFromCart(String cartItemId)async{
     SharedPreferences preferences=await SharedPreferences.getInstance();
     String jwtToken=preferences.getString('jwtToken')??'';
     try{
@@ -130,6 +237,30 @@ class ApiConnectionProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  Future<void> getMyCart(BuildContext context) async {
+    print('getMyCart');
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String jwtToken = preferences.getString('jwtToken') ?? '';
+    const url = ApiConstant.getMyCartApi;
+    final header = {"Authorization": 'Bearer $jwtToken'};
+    final response = await http.get(Uri.parse(url), headers: header);
+
+
+    if (response.statusCode == 200) {
+      var item = jsonDecode(response.body);
+      var product = item['data'];
+      print(product);
+        cart = [GetMyCart.fromJson(jsonDecode(response.body))];
+      print(cart);
+    }else if (response.statusCode == 500){
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.clear();
+      await Navigator.of(context).pushNamedAndRemoveUntil('/login-screen', (route) => false);
+    }
+    notifyListeners();
+  }
+
   void placeOrder(String cartId, String cartTotal)async{
     SharedPreferences preferences=await SharedPreferences.getInstance();
     String jwtToken=preferences.getString('jwtToken') ??'';
@@ -150,6 +281,26 @@ class ApiConnectionProvider extends ChangeNotifier {
       }
     }catch(error){
       print('ApiConnection_Provider.placeOrder.error: $error');
+    }
+    notifyListeners();
+  }
+
+
+  Future<void> getOrderHistory(BuildContext context)async{
+    print('getOrderHistory');
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String jwtToken = preferences.getString('jwtToken') ?? '';
+    const url = ApiConstant.getOrderHistoryApi;
+    final header = {"Authorization": 'Bearer $jwtToken'};
+    final response = await http.get(Uri.parse(url), headers: header);
+
+    if (response.statusCode == 200) {
+        confirmOrderList = [ConfirmOrderList.fromJson(jsonDecode(response.body))];
+      print(confirmOrderList);
+    }else if (response.statusCode == 500){
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.clear();
+      await Navigator.of(context).pushNamedAndRemoveUntil('/login-screen', (route) => false);
     }
     notifyListeners();
   }

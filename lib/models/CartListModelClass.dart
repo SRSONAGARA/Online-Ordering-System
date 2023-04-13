@@ -20,8 +20,8 @@ class GetMyCart {
   factory GetMyCart.fromJson(Map<String, dynamic> json) => GetMyCart(
         status: json["status"] ?? 0,
         msg: json["msg"] ?? '',
-        cartTotal: json["cartTotal"]?.toDouble() ?? 0,
-        data: List<CartData>.from(json["data"].map((x) => CartData.fromJson(x))),
+        cartTotal: json["cartTotal"] == null ? 0.00 : json["cartTotal"].toDouble(),
+        data:json["data"] != null ? List<CartData>.from(json["data"].map((x) => CartData.fromJson(x))): <CartData>[],
       );
 
   Map<String, dynamic> toJson() => {
@@ -54,7 +54,7 @@ class CartData {
         userId: json["userId"] ?? '',
         cartId: json["cartId"] ?? '',
         quantity: json["quantity"] ?? 0,
-        itemTotal: json["itemTotal"] ?? 0.00,
+        itemTotal: json["itemTotal"] == null ? 0.00 : json["itemTotal"].toDouble(),
         productDetails: ProductDetails.fromJson(json["productDetails"]),
       );
 

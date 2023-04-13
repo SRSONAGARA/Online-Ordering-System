@@ -1,10 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
-import 'package:oline_ordering_system/repository/AuthRepo.dart';
-import 'package:oline_ordering_system/views/Home%20Screen.dart';
+import 'package:oline_ordering_system/provider/ApiConnection/AuthRepo.dart';
+import 'package:oline_ordering_system/views/Login%20Screen.dart';
 class OtpScreen extends StatefulWidget {
   const OtpScreen({Key? key}) : super(key: key);
 
@@ -15,7 +14,6 @@ class OtpScreen extends StatefulWidget {
 class _OtpScreenState extends State<OtpScreen> {
   var size;
   String verificationCode='';
-  // TextEditingController otpController=TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -34,37 +32,37 @@ class _OtpScreenState extends State<OtpScreen> {
             const SizedBox(
               height: 100,
             ),
-            Container(
+            const SizedBox(
                 height: 200,
                 width: 200,
                 child: Image(
                   image: AssetImage('assets/Otpimage.png'),
                 )),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
-            Text(
+            const Text(
               'OTP Verification',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(
+            const SizedBox(
               height: 5,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   'Enter the OTP sent to - ',
                 ),
-                Icon(Icons.email_outlined),
+                const Icon(Icons.email_outlined),
                 IconButton(
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    icon: Icon(Icons.edit)),
+                    icon: const Icon(Icons.edit)),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Form(
                 child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -84,28 +82,28 @@ class _OtpScreenState extends State<OtpScreen> {
                 )
               ],
             )),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Didn't Receive the OTP?"),
-                SizedBox(
+                const Text("Didn't Receive the OTP?"),
+                const SizedBox(
                   width: 5,
                 ),
                 TextButton(
                     onPressed: ()async {
-                      var result1=await AuthRepo.resendOtp(userId: userId);
+                     await AuthRepo.resendOtp(userId: userId);
                     },
-                    child: Text(
+                    child: const Text(
                       'RESEND OTP',
                       style: TextStyle(color: Colors.pinkAccent),
                     ))
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Container(
               height: 30,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
                   gradient: LinearGradient(colors: [
                     Color.fromARGB(255, 37, 150, 190),
@@ -124,7 +122,7 @@ class _OtpScreenState extends State<OtpScreen> {
                         await Future.delayed(const Duration(seconds: 1));
                         await  Navigator.pushAndRemoveUntil(
                             context,
-                            MaterialPageRoute(builder: (_) => HomeScreen()),
+                            MaterialPageRoute(builder: (_) => LoginScreen()),
                                 (route) => false);
                     }else{
                       showDialog(context: context, builder: (context){
@@ -141,7 +139,7 @@ class _OtpScreenState extends State<OtpScreen> {
                     }
                    
                   },
-                  child: Text('VERIFY & PROCEED')),
+                  child: const Text('VERIFY & PROCEED')),
             ),
           ],
         ),

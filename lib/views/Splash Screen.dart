@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'Login Screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Splash extends StatefulWidget {
   const Splash({Key? key}) : super(key: key);
@@ -11,27 +10,40 @@ class Splash extends StatefulWidget {
 
 class _SplashState extends State<Splash> {
    bool Opacity1 = true;
+   bool? logInBool;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _navigateToHome();
     _opacity();
-  }
-
-  _navigateToHome() async {
-    await Future.delayed(Duration(seconds: 3));
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (_) => LoginScreen()));
+    isLogIn();
   }
 
   _opacity() async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 2 ));
    setState(() {
      Opacity1 = !Opacity1;
    });
   }
+
+   isLogIn() async {
+     final preferences = await SharedPreferences.getInstance();
+     logInBool = preferences.getBool('loginBool');
+
+     print(preferences.getBool('loginBool'));
+     await Future.delayed(const Duration(seconds: 2), () {
+       if (logInBool != null && logInBool == true) {
+
+         Navigator.of(context)
+             .pushReplacementNamed('/home-screen');
+         return;
+       }
+         Navigator.of(context).pushReplacementNamed('/login-screen');
+       return;
+
+     });
+   }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +59,7 @@ class _SplashState extends State<Splash> {
               AnimatedOpacity(
                 opacity: Opacity1 ? 1:0,
                 duration: Duration(seconds: 1),
-                child: Image(
+                child: const Image(
                   image: AssetImage('assets/SplashImage.jpg'),
                 ),
               )

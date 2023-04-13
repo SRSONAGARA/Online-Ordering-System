@@ -10,7 +10,7 @@ import 'package:oline_ordering_system/views/OrderHistoryScreen.dart';
 import 'package:oline_ordering_system/views/OtpScreen.dart';
 import 'package:oline_ordering_system/views/ProductScreen.dart';
 import 'package:oline_ordering_system/views/Registration%20Screen.dart';
-import 'package:oline_ordering_system/views/ResetPswScreen.dart';
+import 'package:oline_ordering_system/views/ChangePswScreen.dart';
 import 'package:oline_ordering_system/views/Splash%20Screen.dart';
 import 'package:oline_ordering_system/provider/cart_provider.dart';
 import 'package:oline_ordering_system/provider/favourite_provider.dart';
@@ -40,8 +40,8 @@ class MyApp extends StatelessWidget {
     ],
         child: MaterialApp(
       debugShowCheckedModeBanner: false,
-      // home:Splash(),
-      home: LoginScreen(),
+      home:Splash(),
+      // home: LoginScreen(),
       // home:RegistrationScreen() ,
       // home: ForgotPasswordScreen(),
       // home: HomeScreen(),
@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
         '/resetpsw-screen':(context)=>ResetPasswordScreen(),
         '/registration-screen':(context)=>RegistrationScreen(),
         '/otp-screen':(context)=>OtpScreen(),
-        '/home-screen':(context)=>HomeScreen(),
+        '/home-screen':(context)=>HomeScreen(from: 'main.dart'),
         '/product-screen':(context)=>ProductScreen(),
         '/productDetails-screen':(context)=>ProductDetailsScreen(),
         '/wishlist-screen':(context)=>WishlistScreen(),

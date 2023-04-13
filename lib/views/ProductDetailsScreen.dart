@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:oline_ordering_system/models/ProductListModelClass.dart';
@@ -6,7 +5,7 @@ import 'package:oline_ordering_system/provider/cart_provider.dart';
 import 'package:oline_ordering_system/provider/favourite_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:badges/badges.dart' as Badge;
-import '../models/MainData.dart';
+import '../provider/ApiConnection/ApiConnection_Provider.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   const ProductDetailsScreen({Key? key}) : super(key: key);
@@ -17,14 +16,13 @@ class ProductDetailsScreen extends StatefulWidget {
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   var size;
-  // Map<String, dynamic> argument = {};
-  Widget CustomText = Text("Product Details Screen");
+  Widget CustomText = const Text("Product Details Screen");
   bool isLoading = true;
   late Data argument;
 
   @override
   void initState() {
-    Future.delayed(Duration(seconds: 0), () {
+    Future.delayed(const Duration(seconds: 0), () {
       argument = ModalRoute.of(context)!.settings.arguments as Data;
       setState(() {
         isLoading = false;
@@ -35,12 +33,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    late String watchListItemId = argument.watchListItemId.toString();
+    late String cartItemId = argument.cartItemId.toString();
+    final apiConnectionProvider = Provider.of<ApiConnectionProvider>(context);
     final favouriteProvider = Provider.of<FavouriteProvider>(context);
     final cartProvider = Provider.of<CartProvider>(context);
-    // bool isFavourite = favouriteProvider.FavItems.any(
-    //     (element) => element.productName.contains(argument!['productName']));
-    // bool itemAddedToCart = cartProvider.CartItems.any(
-    //     (element) => element.productName.contains(argument!['productName']));
+
+    bool isFavourite = watchListItemId != '';
+    bool itemAddedToCart = cartItemId != '';
     size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -67,14 +67,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           InkWell(
               child: Center(
                 child: Badge.Badge(
-                  badgeContent: Text(cartProvider.CartItems.length.toString(),style: TextStyle(color: Colors.white),),
-                  child: Icon(Icons.shopping_cart_outlined),
+                  badgeContent: Text(
+                    cartProvider.CartItems.length.toString(),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  child: const Icon(Icons.shopping_cart_outlined),
                 ),
               ),
               onTap: () {
                 Navigator.pushNamed(context, '/cart-screen');
               }),
-          SizedBox(
+          const SizedBox(
             width: 20,
           )
         ],
@@ -84,35 +87,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           : SingleChildScrollView(
               child: Column(
                 children: [
-                  /*Container(
-                    color: Colors.white,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                            onPressed: () {
-                              Navigator.of(context).pushReplacementNamed('/home-screen');
-                            },
-                            icon: Icon(
-                              Icons.arrow_back_outlined,
-                              color: Colors.black,
-                            )),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 15.0),
-                          child: InkWell(
-                              child: Center(
-                                child: Badge.Badge(
-                                  badgeContent: Text(cartProvider.CartItems.length.toString()),
-                                  child: Icon(Icons.shopping_cart_outlined, color: Colors.black,),
-                                ),
-                              ),
-                              onTap: () {
-                                Navigator.pushNamed(context, '/cart-screen');
-                              }),
-                        ),
-                      ],
-                    ),
-                  ),*/
                   Center(
                     child: Stack(
                       children: [
@@ -129,41 +103,44 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             ),
                           ),
                         ),
-
-                        /*Padding(
-                          padding: const EdgeInsets.all(8.0),
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(top: 10.0, right: 10.0),
                           child: Align(
-                            alignment: Alignment.topRight,
-                            child: InkWell(
-                              onTap: () {
-                                if (isFavourite == true) {
-                                  favouriteProvider.removeItem(favouriteProvider
-                                      .FavItems[argument!['index']]);
-                                } else {
-                                  // favouriteProvider.addItem(MainData(
-                                  //     productId: argument!['productId'],
-                                  //     productName: argument!['productName'],
-                                  //     shortDescription:
-                                  //         argument!['shortDescription'],
-                                  //     price: argument!['price'],
-                                  //     imgLink: argument!['imgLink']));
-                                  // print(value.FavItems[index].productName);
-                                }
-                              },
-                              child: isFavourite
-                                  ? const Icon(
-                                      Icons.favorite,
-                                      color: Colors.red,
-                                      size: 20,
-                                    )
-                                  : const Icon(Icons.favorite_outline, size: 20),
-                            ),
-                          ),
-                        ),*/
+                              alignment: Alignment.topRight,
+                              child: Consumer<ApiConnectionProvider>(
+                                  builder: (context, value, child) {
+                                return InkWell(
+                                  onTap: () {
+                                    if (isFavourite == true) {
+                                      String wathListItemId =
+                                          argument.watchListItemId.toString();
+                                      value.removeFromWatchList(wathListItemId);
+                                      print('wathListItemId: $wathListItemId');
+                                    } else {
+                                      String productId = argument.id;
+                                      value.addToWatchList(productId);
+                                      print('Id: ${productId}');
+                                      setState(() {
+
+                                      });
+                                    }
+                                  },
+                                  child: isFavourite
+                                      ? const Icon(
+                                          Icons.favorite,
+                                          color: Colors.red,
+                                          size: 20,
+                                        )
+                                      : const Icon(Icons.favorite_outline,
+                                          size: 20),
+                                );
+                              })),
+                        ),
                       ],
                     ),
                   ),
-                  Divider(
+                  const Divider(
                     color: Colors.black12,
                   ),
                   Container(
@@ -177,12 +154,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             Flexible(
                               child: Text(
                                 argument!.title,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.bold),
                               ),
                             )
                           ]),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Row(children: [
@@ -205,7 +182,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               },
                             ),
                           ]),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Row(
@@ -213,6 +190,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               Flexible(
                                   child: Text(
                                 argument!.description,
+                                style: const TextStyle(fontSize: 15),
                               ))
                             ],
                           ),
@@ -224,47 +202,29 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               ),
             ),
       bottomNavigationBar: isLoading
-          ? SizedBox()
-          : Container(
+          ? const SizedBox()
+          : SizedBox(
+              height: 50,
               child: Row(
                 children: [
                   Expanded(
                       child: Text('\$${argument!.price}',
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 20))),
                   Expanded(
-                      child: Container(
-                    color: Colors.blue,
-                    child: TextButton(
-                      // style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.blue)),
-                      child: Text(
-                        'Add to Cart',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                      onPressed: () {},
-                    ),
-                  ))
-
-                  /*Expanded(
-                  child: Consumer<CartProvider>(builder: (context, value, child) {
+                  child: Consumer<ApiConnectionProvider>(builder: (context, value, child) {
                     return ElevatedButton(
                         onPressed: () {
-                          print(value.CartItems.length);
                           if (itemAddedToCart == true) {
-                            // value.removeItem(value.CartItems[index]);
                           } else {
-                            cartProvider.addItem(MainData(
-                              productId: argument!['productId'],
-                              productName: argument!['productName'],
-                              shortDescription: argument!['shortDescription'],
-                              price: argument!['price'],
-                              imgLink: argument!['imgLink'],
-                              quantity: 1,
-                            ));
-
+                            String productId =
+                                argument.id;
+                            apiConnectionProvider
+                                .addToCart(productId);
+                            print('Id: ${productId}');
                           }
+
                         },
                         style: ElevatedButton.styleFrom(
                             primary: itemAddedToCart
@@ -274,7 +234,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             ? Text('Item is already Added')
                             : Text('Add To Cart'));
                   }),
-                )*/
+                )
                 ],
               ),
             ),
