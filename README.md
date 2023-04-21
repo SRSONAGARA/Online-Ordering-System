@@ -1,16 +1,33 @@
-# oline_ordering_system
 
-A new Flutter project.
+# **ONLINE ORDERING SYSTEM** -Flutter project
 
-## Getting Started
+The project is an online ordering system that allows customers to browse products, add items to their cart, and complete orders online. It includes features such as wishlist functionality, order history, and account management. Customers can view their previous orders and reorder items from past orders. The system includes a user authentication process by cross verifying OTP sent on a registered email. It also includes notification panel which shows notifications after placing an order.
 
-This project is a starting point for a Flutter application.
+## Acknowledgements
 
-A few resources to get you started if this is your first Flutter project:
+ - [Flutter](https://flutter.dev/)
+ - [Stackoverflow](https://stackoverflow.com/)
+ - [Youtube](https://www.youtube.com/watch?v=jqxz7QvdWk8&list=PLjVLYmrlmjGfGLShoW0vVX_tcyT8u1Y3E)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## API Reference
+
+https://shopping-app-backend-t4ay.onrender.com/api-doc/document
+
+
+## 🚀 About Me
+I'm a Flutter developer...
+
+
+## 🔗 Links
+
+[![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/sagar-sonagara-428883215/)
+[![twitter](https://img.shields.io/badge/github-1DA1F2?style=for-the-badge&logo=github&logoColor=white)](https://github.com/SRSONAGARA/)
+
+
+## Contributing
+
+Contributions are always welcome!
+
+Please adhere to this project's `code of conduct`.
+
