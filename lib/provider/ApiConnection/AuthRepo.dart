@@ -1,15 +1,26 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:oline_ordering_system/common/ApiConstant.dart';
+import 'package:oline_ordering_system/models/LoginModelClass.dart';
+import 'package:oline_ordering_system/models/SignUpModelClass.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthRepo {
-  static Future<Map<String, dynamic>> userRegister({
+class AuthRepo extends ChangeNotifier{
+  List<SignupModelClass> _registerData = [];
+  List<SignupModelClass> get registerData => _registerData;
+  List<LoginModelClass> loginData = [];
+
+  bool isLoading = false;
+
+   Future<void> userRegister({
     required String username,
     required String email,
     required String phone,
     required String password,
   }) async {
+    isLoading = true;
+    notifyListeners();
     try {
       String url = ApiConstant.userRegisterApi;
       var requestBody = {
@@ -23,14 +34,67 @@ class AuthRepo {
       print(requestBody);
 
       var response = await http.post(Uri.parse(url), body: requestBody);
-      String responseBody = response.body;
 
-      print(responseBody);
-      return jsonDecode(responseBody) as Map<String, dynamic>;
+      if(response.statusCode == 201){
+        print('Hello my friend');
+        final responseBody = json.decode(response.body);
+        var signUpList = <SignupModelClass>[];
+        signUpList = [
+          SignupModelClass(
+              status: responseBody['status'],
+              msg: responseBody['msg'],
+              data: SignUpData(
+                id: responseBody['data']['_id'].toString(),
+                name: responseBody['data']['name'].toString(),
+                mobileNo: responseBody['data']['mobileNo'].toString(),
+                emailId: responseBody['data']['emailId'],
+                status: responseBody['data']['status'],
+                createdAt: responseBody['data']['createdAt'].toString(),
+                updatedAt: responseBody['data']['updatedAt'].toString(),
+                v: responseBody['data']['__v'],
+                jwtToken: responseBody['data']['jwtToken'].toString(),
+                fcmToken: responseBody['data']['fcmToken'].toString(),
+              ))
+        ];
+        _registerData = signUpList;
+
+        // registerData = [SignupModelClass.fromJson(jsonDecode(response.body))];
+        print(responseBody);
+      }else if(response.statusCode == 400){
+        print('object');
+        final responseBody = jsonDecode(response.body);
+        var signUpList1 = <SignupModelClass>[];
+        signUpList1 = [
+          SignupModelClass(
+              status: responseBody['status'],
+              msg: responseBody['msg'],
+              data: SignUpData(
+                id: '',
+                name: '',
+                mobileNo: '',
+                emailId: '',
+                status: 0,
+                createdAt: '',
+                updatedAt: '',
+                v: 0,
+                jwtToken: '',
+                fcmToken: '',
+              ))
+        ];
+        _registerData = signUpList1;
+
+        /* var item = jsonDecode(response.body);
+        List<SignupModelClass> product = item['status'];
+        print('product: $product');*/
+        // registerData = [SignupModelClass.fromJson(jsonDecode(response.body))];
+        print(responseBody);
+      }
+
     } catch (error) {
       print('AuthRepo.userRegister.error: $error');
-      return {};
     }
+    // isLoading =false;
+    notifyListeners();
   }
 
   static Future<Map<String, dynamic>> verifyOtpOnRegister({
@@ -76,10 +140,12 @@ class AuthRepo {
     }
   }
 
-  static Future<Map<String, dynamic>> userLogin({
+  Future<void> userLogin({
     required String emailId,
     required String password,
   }) async {
+    isLoading = true;
+    notifyListeners();
     try {
       String url = ApiConstant.userLoginApi;
       var requestBody = {
@@ -92,21 +158,25 @@ class AuthRepo {
       var response = await http.post(Uri.parse(url), body: requestBody);
 
       if (response.statusCode == 200) {
-        // String responseBody=response.body;
-        // print(responseBody);
-        var responseBody = jsonDecode(response.body);
+       /* isLoading = true;
+        notifyListeners();*/
+
+        final responseBody = json.decode(response.body);
+        loginData = [LoginModelClass.fromJson(jsonDecode(response.body))];
+        // var responseBody = jsonDecode(response.body);
         var status = responseBody['status'];
         SharedPreferences preferences = await SharedPreferences.getInstance();
         preferences.setBool('loginBool', status == 1);
 
-        return jsonDecode(response.body) as Map<String, dynamic>;
       } else {
-        return {};
+        final responseBody = jsonDecode(response.body);
+        print(responseBody);
       }
     } catch (error) {
       print('AuthRepo.userLogin.error: $error');
-      return {};
     }
+    // isLoading =false;
+    notifyListeners();
   }
 
   static Future<Map<String, dynamic>> forgotPassword(

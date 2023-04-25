@@ -29,6 +29,13 @@
             {
               "client_id": "400498252194-21i6p27fopuh37kj68s2ubc7sd662gtk.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "400498252194-0uf41q9orsfshonc4tnahgqcmnr6lpqs.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.olineOrderingSystem"
+              }
             }
           ]
         }

@@ -86,12 +86,12 @@ class ProductDetails {
   DateTime updatedAt;
 
   factory ProductDetails.fromJson(Map<String, dynamic> json) => ProductDetails(
-    id: json["_id"],
-    title: json["title"],
-    description: json["description"],
-    price: json["price"],
+    id: json["_id"] ?? '',
+    title: json["title"] ?? '',
+    description: json["description"] ?? '',
+    price: json["price"] ?? '',
     imageUrl: json["imageUrl"],
-    v: json["__v"],
+    v: json["__v"] ?? 0,
     createdAt: DateTime.parse(json["createdAt"]),
     updatedAt: DateTime.parse(json["updatedAt"]),
   );

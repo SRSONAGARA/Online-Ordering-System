@@ -11,11 +11,11 @@ import 'package:http/http.dart' as http;
 import '../../models/ConfirmOrderModelClass.dart';
 
 class ApiConnectionProvider extends ChangeNotifier {
-
   List<ProductList> productDataList = [];
   List<GetMyCart> cart = [];
   List<GetWatchList> watchList = [];
   List<ConfirmOrderList> confirmOrderList=[];
+
 
   bool showItemBool=false;
 

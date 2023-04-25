@@ -12,10 +12,10 @@ class GetMyCart {
     required this.data,
   });
 
-  int status;
-  String msg;
-  double cartTotal;
-  List<CartData> data;
+  int? status;
+  String? msg;
+  double? cartTotal;
+  List<CartData>? data;
 
   factory GetMyCart.fromJson(Map<String, dynamic> json) => GetMyCart(
         status: json["status"] ?? 0,
@@ -28,7 +28,7 @@ class GetMyCart {
         "status": status,
         "msg": msg,
         "cartTotal": cartTotal,
-        "data": List<dynamic>.from(data.map((x) => x.toJson())),
+        "data": List<dynamic>.from(data!.map((x) => x.toJson())),
       };
 }
 
