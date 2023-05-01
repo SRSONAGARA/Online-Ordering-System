@@ -1,0 +1,453 @@
+import 'package:badges/badges.dart' as Badge;
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../ControllersGetx/ApiConnection_Getx/CartScreenGetxController.dart';
+import '../../ControllersGetx/ApiConnection_Getx/ProductScreenGetxController.dart';
+
+class CartScreenGetx extends StatefulWidget {
+  const CartScreenGetx({Key? key}) : super(key: key);
+
+  @override
+  State<CartScreenGetx> createState() => _CartScreenGetxState();
+}
+
+class _CartScreenGetxState extends State<CartScreenGetx> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    var cartScreenGetxController = Get.put(CartScreenGetxController());
+    cartScreenGetxController.getMyCartGetx();
+  }
+
+  var cartScreenGetxController = Get.put(CartScreenGetxController());
+  var productScreenGetxController = Get.put(ProductScreenGetxController());
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color.fromRGBO(86, 126, 239, 15),
+          title: Text('Cart'),
+          centerTitle: true,
+          leading: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: InkWell(
+                onTap: () {
+                  Get.offAllNamed('/homeScreenGetx');
+                },
+                hoverColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                child: const CircleAvatar(
+                  backgroundColor: Colors.white,
+                  child: Icon(
+                    Icons.arrow_back_ios_new_sharp,
+                    color: Colors.black,
+                    size: 18,
+                  ),
+                )),
+          ),
+          actions: [
+            InkWell(
+              child: Center(
+                child: Badge.Badge(
+                  badgeContent: Text(
+                    '0',
+                    // watchListItemCount.toString(),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  child: const Icon(Icons.favorite_outline),
+                ),
+              ),
+              onTap: () {
+                Navigator.pushNamed(context, '/wishlist-screen');
+              },
+            ),
+            const SizedBox(
+              width: 20,
+            )
+          ],
+        ),
+        body: SingleChildScrollView(child: AllProduct()),
+        bottomNavigationBar: Container(
+          padding: const EdgeInsets.all(10.0),
+          color: Color.fromRGBO(86, 126, 239, 205),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                  child: Text(
+                'Total Items: ${cartScreenGetxController.cartGetx.data!.isEmpty ? 0 : cartScreenGetxController.cartGetx.data!.length}',
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              )),
+              Expanded(
+                  child: Text(
+                'Total Price: \$${cartScreenGetxController.cartGetx.data!.isEmpty ? 0 : cartScreenGetxController.cartGetx.cartTotal!.toStringAsFixed(2)}',
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              )),
+              Expanded(
+                child: InkWell(
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return cartScreenGetxController
+                                  .cartGetx.data!.isNotEmpty
+                              ? AlertDialog(
+                                  title: const Text("Confirm to Place Order"),
+                                  content: Text(
+                                      "You added ${cartScreenGetxController.cartGetx.data!.isEmpty ? 0 : cartScreenGetxController.cartGetx.data!.length} Product and Total Price \$${cartScreenGetxController.cartGetx.data!.isEmpty ? 0 : cartScreenGetxController.cartGetx.cartTotal}"),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('Not Now'),
+                                    ),
+                                    InkWell(
+                                        onTap: () async {
+                                          String cartId =
+                                              cartScreenGetxController
+                                                  .cartGetx.data![0].cartId
+                                                  .toString();
+                                          String cartTotal =
+                                              cartScreenGetxController
+                                                  .cartGetx.cartTotal
+                                                  .toString();
+                                          print('cartId= $cartId');
+                                          print('cartTotal= $cartTotal');
+                                          SharedPreferences prefs =
+                                              await SharedPreferences
+                                                  .getInstance();
+
+                                          /*await apiConnectionProvider.placeOrder(
+                                        cartId, cartTotal);
+                                    firebaseApiProvider.sendPushNotification('Online Ordering System', 'Your order has been placed !');
+                                    Navigator.pop(context);
+                                    getMyCartProvider
+                                        .getMyCart(context);*/
+                                        },
+                                        onDoubleTap: () {},
+                                        onLongPress: () {},
+                                        child: const Text('Place Order'))
+                                  ],
+                                )
+                              : AlertDialog(
+                                  title: const Text("No Items Added in Cart"),
+                                  content:
+                                      const Text("Please add item in cart"),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('Not Now'),
+                                    ),
+                                    TextButton(
+                                        child: const Text('Okay'),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        }),
+                                  ],
+                                );
+                        });
+                  },
+                  child: Container(
+                    // height: size.height / 15,
+                    padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                    height: 30,
+                    decoration: BoxDecoration(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(5)),
+                        color: Colors.red[400]
+                        /*gradient: LinearGradient(colors: [
+                              Colors.redAccent,
+                              Colors.redAccent
+                            ])*/
+                        ),
+                    child: const Center(
+                        child: Text(
+                      "Place Order ",
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    )),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ));
+  }
+
+  Widget AllProduct() {
+/*    final cartProvider = Provider.of<CartProvider>(context);
+    final favoriteProvider = Provider.of<FavouriteProvider>(context);
+    final apiConnectionProvider = Provider.of<ApiConnectionProvider>(context);*/
+
+    return /*!apiConnectionProvider.showItemBool
+        ? SizedBox(
+        height: MediaQuery.of(context).size.height / 1.3,
+        child: const Center(child: CircularProgressIndicator()))
+        : apiConnectionProvider.cart[0].data!.isEmpty
+        ? Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: height / 7,
+            ),
+            Image.asset('assets/cartEmpty.png'),
+            const SizedBox(
+              height: 20,
+            ),
+            const Text(
+              'Oops...!',
+              style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            const Text('Your Cart is empty !',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, "/home-screen");
+                },
+                child: const Text('Find items to save')),
+          ],
+        ))
+        : */
+        Obx(() => cartScreenGetxController.isLoading.value
+            ? Center(
+                child: CircularProgressIndicator(
+                color: Color.fromRGBO(86, 126, 239, 10),
+              ))
+            : ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  /* bool isFavourite = favoriteProvider.FavItems.any((element) =>
+              element.productName
+                  .contains(cartProvider.CartItems[index].productName));*/
+
+                  return Card(
+                    elevation: 6,
+                    child: Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: Column(
+                                  children: [
+                                    Image(
+                                      image: /*AssetImage('assets/Products/iphone11.png'),*/
+                                          NetworkImage(cartScreenGetxController
+                                              .cartGetx
+                                              .data![index]
+                                              .productDetails
+                                              .imageUrl),
+                                      height: 120,
+                                      // width: 100,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        /*Consumer<FavouriteProvider>(
+                                            builder: (context, value, child) {
+                                          return Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              InkWell(
+                                                onTap: () {},
+                                                child: const Icon(
+                                                        Icons.favorite_outline,
+                                                        size: 20),
+                                              ),
+                                            ],
+                                          );
+                                        }),*/
+                                      ],
+                                    ),
+                                    Text(
+                                      cartScreenGetxController.cartGetx
+                                          .data![index].productDetails.title,
+                                      maxLines: 1,
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    Text(
+                                      cartScreenGetxController
+                                          .cartGetx
+                                          .data![index]
+                                          .productDetails
+                                          .description,
+                                      maxLines: 2,
+                                      style: const TextStyle(
+                                          fontSize: 15, color: Colors.black54),
+                                    ),
+                                    Text(
+                                      '\$${cartScreenGetxController.cartGetx.data![index].productDetails.price}',
+                                      style: const TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          children: [
+                                            InkWell(
+                                              child: Container(
+                                                decoration: const BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(3)),
+                                                  color: Colors.grey,
+                                                ),
+                                                padding: const EdgeInsets.only(
+                                                    left: 5.0, right: 10.0),
+                                                child: Row(
+                                                  children: const [
+                                                    Icon(Icons.delete_forever),
+                                                    Text('Remove')
+                                                  ],
+                                                ),
+                                              ),
+                                              onTap: () async {
+                                                if(cartScreenGetxController.cartGetx.data!.isEmpty){
+                                                  print('your cart is empty');
+                                                }else{
+                                                  cartScreenGetxController.removeProductFromCartGetx(cartScreenGetxController.cartGetx.data![index].id.toString());
+
+                                                }
+                                                await productScreenGetxController.getDataGetx();
+                                                Get.rawSnackbar(
+                                                    message: 'Item removed from Cart !',
+                                                    backgroundColor: const Color.fromRGBO(86, 126, 239, 10),
+                                                    duration:
+                                                    const Duration(seconds: 2)
+                                                );
+                                                await cartScreenGetxController.getMyCartGetx();
+                                              },
+                                              onDoubleTap: () {},
+                                              onLongPress: () {},
+                                            )
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 20.0, right: 20.0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: [
+                                                    InkWell(
+                                                      onTap: () async {
+                                                        await cartScreenGetxController.decreaseProductQuantityGetx(cartScreenGetxController.cartGetx.data![index].id);
+                                                        cartScreenGetxController.getMyCartGetx();
+                                                      },
+                                                      onDoubleTap: () {},
+                                                      onLongPress: () {},
+                                                      child: CircleAvatar(
+                                                        backgroundColor:
+                                                            Colors.grey[200],
+                                                        radius: 14,
+                                                        child: const Center(
+                                                          child: Icon(
+                                                            Icons.remove,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(
+                                                      cartScreenGetxController
+                                                          .cartGetx
+                                                          .data![index]
+                                                          .quantity
+                                                          .toString(),
+                                                      style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () async {
+                                                        await cartScreenGetxController.increaseProductQuantityGetx(cartScreenGetxController.cartGetx.data![index].id);
+                                                        cartScreenGetxController.getMyCartGetx();
+                                                      },
+                                                      onDoubleTap: () {},
+                                                      onLongPress: () {},
+                                                      child: CircleAvatar(
+                                                        backgroundColor:
+                                                            Colors.grey[200],
+                                                        radius: 14,
+                                                        child: const Center(
+                                                          child: Icon(
+                                                            Icons.add,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ))
+                                          ],
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                },
+                itemCount: cartScreenGetxController.cartGetx.data!.length));
+  }
+}

@@ -5,15 +5,9 @@ The project is an online ordering system that allows customers to browse product
 
 ## Acknowledgements
 
-<<<<<<< HEAD
 - [Flutter](https://flutter.dev/)
 - [Stackoverflow](https://stackoverflow.com/)
 - [Youtube](https://www.youtube.com/watch?v=jqxz7QvdWk8&list=PLjVLYmrlmjGfGLShoW0vVX_tcyT8u1Y3E)
-=======
- - [Flutter](https://flutter.dev/)
- - [Stackoverflow](https://stackoverflow.com/)
- - [Youtube](https://www.youtube.com/watch?v=jqxz7QvdWk8&list=PLjVLYmrlmjGfGLShoW0vVX_tcyT8u1Y3E)
->>>>>>> 7849bde3ae6d02f90b4c68d2cb7209aa3df20999
 
 
 ## API Reference

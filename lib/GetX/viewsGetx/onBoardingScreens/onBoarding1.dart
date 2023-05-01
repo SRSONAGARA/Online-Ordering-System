@@ -24,16 +24,16 @@ class OnBoarding1 extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 100,
                     ),
                     Image.asset(height: 350,'assets/imagesGetx/onBoarding1.png'),
-                    SizedBox(
+                    const SizedBox(
                       height: 50,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                      children: const [
                         Text(
                           'VISITE OUR',
                           style: TextStyle(
@@ -45,7 +45,7 @@ class OnBoarding1 extends StatelessWidget {
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                      children: const [
                         Text(
                           'ONLINE SHOP',
                           style: TextStyle(
@@ -55,12 +55,12 @@ class OnBoarding1 extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                      children: const [
                         Text(
                           'We have many of items, so you can find ',
                           style: TextStyle(
@@ -71,7 +71,7 @@ class OnBoarding1 extends StatelessWidget {
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                      children: const [
                         Text(
                           'whatever you need for you or anyone you love.',
                           style: TextStyle(
@@ -80,7 +80,7 @@ class OnBoarding1 extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Row(
@@ -90,12 +90,12 @@ class OnBoarding1 extends StatelessWidget {
                           onPressed: () {
                             // debugPrint('ElevatedButton Clicked');
                           },
-                          child: Text('VISITE NOW'),
                           style: ElevatedButton.styleFrom(
-                              shape: StadiumBorder(),
+                              shape: const StadiumBorder(),
                               backgroundColor: Colors.indigo
                             // side: BorderSide(color: Colors.red, width: 2),
                           ),
+                          child: const Text('VISITE NOW'),
                         )
                       ],
                     ),

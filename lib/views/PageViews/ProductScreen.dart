@@ -28,7 +28,7 @@ class _ProductScreenState extends State<ProductScreen> {
         Provider.of<ApiConnectionProvider>(context, listen: false);
     await apiConnectionProvider.getData(context);
     // await apiConnectionProvider.getMyCart(context);
-
+    apiConnectionProvider.isLoading=false;
     productData = apiConnectionProvider.productDataList.map((e) => e).toList();
     SearchItems = productData[0].data;
     cartItemCount = productData[0].totalProduct.toString();
@@ -507,7 +507,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                                         decoration:
                                                             BoxDecoration(
                                                               borderRadius:
-                                                              BorderRadius.all(
+                                                              const BorderRadius.all(
                                                                   Radius.circular(3)),
                                                           color: itemAddedToCart
                                                               ? Colors.red[200]
@@ -519,19 +519,19 @@ class _ProductScreenState extends State<ProductScreen> {
                                                                   .all(8.0),
                                                           child: InkWell(
                                                               onTap: () async {
-                                                                if (itemAddedToCart !=
-                                                                    true) {
-                                                                  String
-                                                                      productId =
-                                                                      apiConnectionProvider
+                                                                if (itemAddedToCart != true) {String
+                                                                      productId = apiConnectionProvider
                                                                           .productDataList[
                                                                               0]
                                                                           .data![
                                                                               index]
                                                                           .id;
+
                                                                   await apiConnectionProvider
                                                                       .addToCart(
                                                                           productId);
+                                                                  accessApi(
+                                                                      context);
                                                                   print(
                                                                       'Id: ${productId}');
                                                                   ScaffoldMessenger.of(
@@ -547,8 +547,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                                                         seconds:
                                                                             2),
                                                                   ));
-                                                                  accessApi(
-                                                                      context);
+                                                                  /*accessApi(
+                                                                      context);*/
                                                                   apiConnectionProvider
                                                                       .getMyCart(
                                                                           context);
@@ -709,116 +709,133 @@ class _ProductScreenState extends State<ProductScreen> {
           );
   }
 
+  DateTime pre_backpress = DateTime.now();
+
+
   @override
   Widget build(BuildContext context) {
     final cartProvider = Provider.of<CartProvider>(context);
     final searchProvider = Provider.of<SearchProvider>(context);
     final apiConnectionProvider = Provider.of<ApiConnectionProvider>(context);
 
-    return Scaffold(
-        backgroundColor: Colors.white,
-        drawer: MyDrawer(),
-        appBar: AppBar(
+    return WillPopScope(
+      onWillPop: () async {
+        final timegap = DateTime.now().difference(pre_backpress);
+        final cantExit = timegap >= const Duration(seconds: 2);
+        pre_backpress = DateTime.now();
+        if(cantExit){
+          const snack = SnackBar(content: Text('Press Back button again to Exit'), duration: Duration(seconds: 2),);
+          ScaffoldMessenger.of(context).showSnackBar(snack);
+          return false;
+        }else{
+          return true;
+        }
+      },
+      child: Scaffold(
           backgroundColor: Colors.white,
-          title: searchProvider.CustomText,
-          centerTitle: true,
-          leading: Consumer<SearchProvider>(builder: (context, value, child) {
-            return searchProvider.SearchButton
-                ? IconButton(
-                    onPressed: () {
-                      value.searchButtonPress();
-                    },
-                    icon: const Icon(
-                      Icons.arrow_back_outlined,
-                      color: Colors.blue,
-                    ))
-                : Builder(builder: (context) {
-                    return InkWell(
-                      onTap: () => Scaffold.of(context).openDrawer(),
-                      child: Icon(
-                        Icons.menu,
-                        color: Colors.blue,
-                      ),
-                    );
-                  });
-          }),
-          actions: ([
-            IconButton(
-                icon: searchProvider.CustomSearch,
-                onPressed: () {
-                  if (searchProvider.CustomSearch.icon == Icons.search) {
-                    searchProvider.SearchButton = true;
-                    searchProvider.CustomSearch = const Icon(
-                      Icons.clear_outlined,
-                      color: Colors.blue,
-                    );
-                    searchProvider.CustomText = TextField(
-                      textInputAction: TextInputAction.go,
-                      controller: searchProvider.search,
-                      onChanged: (value) {
-                        List<dynamic> results = [];
-                        if (value.isEmpty) {
-                          results = productData[0].data;
-                        } else {
-                          results = apiConnectionProvider
-                              .productDataList[0].data
-                              .where((element) => element.title
-                                  .toString()
-                                  .toLowerCase()
-                                  .contains(value.toString()))
-                              .toList();
-                        }
-
-                        if (results.isEmpty) {
-                          searchProvider.searchListIsEmpty();
-                        } else {
-                          searchProvider.searchListIsNotEmpty();
-                        }
-                        SearchItems = results;
+          drawer: MyDrawer(),
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            title: searchProvider.CustomText,
+            centerTitle: true,
+            leading: Consumer<SearchProvider>(builder: (context, value, child) {
+              return searchProvider.SearchButton
+                  ? IconButton(
+                      onPressed: () {
+                        value.searchButtonPress();
                       },
-                      decoration: const InputDecoration(
-                        hintText: "Search for products",
-                        hintStyle: TextStyle(color: Colors.black),
-                      ),
-                      style: const TextStyle(color: Colors.blue, fontSize: 20),
-                    );
-                    searchProvider.notifyListeners();
-                  } else {
-                    searchProvider.search.clear();
-                    searchProvider.searchButtonUnPress();
-                  }
-                }),
-            !searchProvider.SearchButton
-                ? Consumer<ApiConnectionProvider>(
-                    builder: (context, getMyCartProvider, child) {
-                    return InkWell(
-                        child: Center(
-                          child: Badge.Badge(
-                            badgeContent: Text(
-                              cartItemCount,
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                            child: const Icon(
-                              Icons.shopping_cart_outlined,
-                              color: Colors.blue,
+                      icon: const Icon(
+                        Icons.arrow_back_outlined,
+                        color: Colors.blue,
+                      ))
+                  : Builder(builder: (context) {
+                      return InkWell(
+                        onTap: () => Scaffold.of(context).openDrawer(),
+                        child: Icon(
+                          Icons.menu,
+                          color: Colors.blue,
+                        ),
+                      );
+                    });
+            }),
+            actions: ([
+              IconButton(
+                  icon: searchProvider.CustomSearch,
+                  onPressed: () {
+                    if (searchProvider.CustomSearch.icon == Icons.search) {
+                      searchProvider.SearchButton = true;
+                      searchProvider.CustomSearch = const Icon(
+                        Icons.clear_outlined,
+                        color: Colors.blue,
+                      );
+                      searchProvider.CustomText = TextField(
+                        textInputAction: TextInputAction.go,
+                        controller: searchProvider.search,
+                        onChanged: (value) {
+                          List<dynamic> results = [];
+                          if (value.isEmpty) {
+                            results = productData[0].data;
+                          } else {
+                            results = apiConnectionProvider
+                                .productDataList[0].data
+                                .where((element) => element.title
+                                    .toString()
+                                    .toLowerCase()
+                                    .contains(value.toString()))
+                                .toList();
+                          }
+
+                          if (results.isEmpty) {
+                            searchProvider.searchListIsEmpty();
+                          } else {
+                            searchProvider.searchListIsNotEmpty();
+                          }
+                          SearchItems = results;
+                        },
+                        decoration: const InputDecoration(
+                          hintText: "Search for products",
+                          hintStyle: TextStyle(color: Colors.black),
+                        ),
+                        style: const TextStyle(color: Colors.blue, fontSize: 20),
+                      );
+                      searchProvider.notifyListeners();
+                    } else {
+                      searchProvider.search.clear();
+                      searchProvider.searchButtonUnPress();
+                    }
+                  }),
+              !searchProvider.SearchButton
+                  ? Consumer<ApiConnectionProvider>(
+                      builder: (context, getMyCartProvider, child) {
+                      return InkWell(
+                          child: Center(
+                            child: Badge.Badge(
+                              badgeContent: Text(
+                                cartItemCount,
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              child: const Icon(
+                                Icons.shopping_cart_outlined,
+                                color: Colors.blue,
+                              ),
                             ),
                           ),
-                        ),
-                        onTap: () {
-                          Navigator.pushNamed(context, '/cart-screen');
-                        },
-                      onDoubleTap: (){},
-                      onLongPress: (){},
-                    );
-                  })
-                : const SizedBox(),
-            const SizedBox(
-              width: 20,
-            )
-          ]),
-        ),
-        body: SingleChildScrollView(
-          child: !searchProvider.SearchButton ? AllProduct() : CustomProduct(),
-        ));
+                          onTap: () {
+                            Navigator.pushNamed(context, '/cart-screen');
+                          },
+                        onDoubleTap: (){},
+                        onLongPress: (){},
+                      );
+                    })
+                  : const SizedBox(),
+              const SizedBox(
+                width: 20,
+              )
+            ]),
+          ),
+          body: apiConnectionProvider.isLoading? const Center(child: CircularProgressIndicator()):  SingleChildScrollView(
+            child: !searchProvider.SearchButton ? AllProduct() : CustomProduct(),
+          )),
+    );
   }
 }

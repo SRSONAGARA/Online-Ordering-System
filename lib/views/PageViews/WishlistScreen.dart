@@ -22,7 +22,9 @@ class _WishlistScreenState extends State<WishlistScreen> {
   void accessApi(BuildContext context) async {
     final apiConnectionProvider =
         Provider.of<ApiConnectionProvider>(context, listen: false);
+    // apiConnectionProvider.isLoading=false;
     apiConnectionProvider.showItemBool = false;
+    apiConnectionProvider.isLoading=false;
     await apiConnectionProvider.getWatchList(context);
     watchListData = apiConnectionProvider.productDataList.map((e) => e).toList();
     apiConnectionProvider.showItem();
@@ -162,6 +164,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                                     duration: Duration(
                                                         seconds: 2),
                                                   ));
+                                              accessApi(context);
                                             },
                                             onDoubleTap: (){},
                                             onLongPress: (){},
@@ -257,49 +260,56 @@ class _WishlistScreenState extends State<WishlistScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: CustomText,
-        centerTitle: true,
-        leading: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: InkWell(
-              onTap: () {
-                // Navigator.of(context).canPop();
-                Navigator.of(context).pushReplacementNamed('/home-screen');
-              },
-              hoverColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              splashColor: Colors.transparent,
-              child: const CircleAvatar(
-                backgroundColor: Colors.white,
-                child: Icon(
-                  Icons.arrow_back_ios_new_sharp,
-                  color: Colors.black,
-                  size: 18,
-                ),
-              )),
-        ),
-        actions: [
-          InkWell(
-              child: Center(
-                child: Badge.Badge(
-                  badgeContent: Text(cartItemCount.toString(),
-                    style: const TextStyle(color: Colors.white),
+    final apiConnectionProvider = Provider.of<ApiConnectionProvider>(context);
+
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pushNamedAndRemoveUntil(
+            context, '/home-screen', (route) => false);
+        return false;
+      },      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: CustomText,
+          centerTitle: true,
+          leading: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: InkWell(
+                onTap: () {
+                  Navigator.of(context).pushReplacementNamed('/home-screen');
+                },
+                hoverColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                child: const CircleAvatar(
+                  backgroundColor: Colors.white,
+                  child: Icon(
+                    Icons.arrow_back_ios_new_sharp,
+                    color: Colors.black,
+                    size: 18,
                   ),
-                  child:  const Icon(Icons.shopping_cart_outlined, color: Colors.white,),
+                )),
+          ),
+          actions: [
+            InkWell(
+                child: Center(
+                  child: Badge.Badge(
+                    badgeContent: Text(cartItemCount.toString(),
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    child:  const Icon(Icons.shopping_cart_outlined, color: Colors.white,),
+                  ),
                 ),
-              ),
-              onTap: () {
-                Navigator.pushNamed(context, '/cart-screen');
-              }),
-          const SizedBox(
-            width: 20,
-          )
-        ],
+                onTap: () {
+                  Navigator.pushNamed(context, '/cart-screen');
+                }),
+            const SizedBox(
+              width: 20,
+            )
+          ],
+        ),
+        body:  apiConnectionProvider.isLoading? const Center(child: CircularProgressIndicator()):  SingleChildScrollView(child: AllProduct()),
       ),
-      body: SingleChildScrollView(child: AllProduct()),
     );
   }
 }

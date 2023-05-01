@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:oline_ordering_system/GetX/routesGetx/RouteClassGetx.dart';
+import 'package:oline_ordering_system/GetX/viewsGetx/app_pagesGetx/homeScreenGetx.dart';
 import 'package:oline_ordering_system/GetX/viewsGetx/onBoardingScreens/onBoarding1.dart';
 import 'package:oline_ordering_system/GetX/viewsGetx/onBoardingScreens/onBoarding2.dart';
 import 'package:oline_ordering_system/GetX/viewsGetx/onBoardingScreens/onBoarding3.dart';
+import 'package:oline_ordering_system/views/Home%20Screen.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnBoardingMain extends StatefulWidget {
@@ -29,7 +32,7 @@ class _OnBoardingMainState extends State<OnBoardingMain> {
           children: [OnBoarding1(), OnBoarding2(), OnBoarding3()],
         ),
         bottomNavigationBar: Container(
-          decoration: BoxDecoration(color: Color(0xffc7e2ff)),
+          decoration: BoxDecoration(color: Colors.white10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -45,7 +48,8 @@ class _OnBoardingMainState extends State<OnBoardingMain> {
               onLastPage
                   ? TextButton(
                       onPressed: () {
-
+                        Get.offAllNamed('/loginScreenGetx');
+                        // Get.offAllNamed(RouteClassGetx.getHomeRouteGetx());
                       },
                       child: Text(
                         'Done',

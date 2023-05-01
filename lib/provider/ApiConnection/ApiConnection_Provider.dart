@@ -15,6 +15,7 @@ class ApiConnectionProvider extends ChangeNotifier {
   List<GetMyCart> cart = [];
   List<GetWatchList> watchList = [];
   List<ConfirmOrderList> confirmOrderList=[];
+  bool isLoading = false;
 
 
   bool showItemBool=false;
@@ -25,25 +26,33 @@ class ApiConnectionProvider extends ChangeNotifier {
 
   Future<void> getData(BuildContext context) async {
     print('getData Method');
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    String jwtToken = preferences.getString('jwtToken') ?? '';
-    const url = ApiConstant.getAllProductApi;
-    final header = {"Authorization": 'Bearer $jwtToken'};
-    final response = await http.get(Uri.parse(url), headers: header);
-
-    if (response.statusCode == 200) {
-
-      var item = jsonDecode(response.body);
-      var product = item['data'];
-      print(product);
-        productDataList = [ProductList.fromJson(jsonDecode(response.body))];
-      print(productDataList);
-    }else if (response.statusCode == 500){
+    try{
+      isLoading = true;
+      // notifyListeners();
       SharedPreferences preferences = await SharedPreferences.getInstance();
-      preferences.clear();
-      await Navigator.of(context).pushNamedAndRemoveUntil('/login-screen', (route) => false);
+      String jwtToken = preferences.getString('jwtToken') ?? '';
+      const url = ApiConstant.getAllProductApi;
+      final header = {"Authorization": 'Bearer $jwtToken'};
+      final response = await http.get(Uri.parse(url), headers: header);
+
+      if (response.statusCode == 200) {
+
+        var item = jsonDecode(response.body);
+        var product = item['data'];
+        print(product);
+        productDataList = [ProductList.fromJson(jsonDecode(response.body))];
+        print(productDataList);
+      }else if (response.statusCode == 500){
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        preferences.clear();
+        await Navigator.of(context).pushNamedAndRemoveUntil('/login-screen', (route) => false);
+      }
+      isLoading=false;
+      notifyListeners();
     }
-    notifyListeners();
+    catch(e){
+      print(e);
+    }
   }
 
    addToWatchList(String productId) async {
@@ -105,31 +114,39 @@ class ApiConnectionProvider extends ChangeNotifier {
     } catch (error) {
       print('ApiConnection_Provider.removeFromWatchList.error: $error');
     }
+
     notifyListeners();
   }
 
 
   Future<void> getWatchList(BuildContext context) async {
     print('MyWatchlist');
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    String jwtToken = preferences.getString('jwtToken') ?? '';
-    const url = ApiConstant.getWatchListApi;
-    final header = {"Authorization": 'Bearer $jwtToken'};
-    final response = await http.get(Uri.parse(url), headers: header);
-
-
-    if (response.statusCode == 200) {
-      var item = jsonDecode(response.body);
-      var product = item['data'];
-      print(product);
-        watchList = [GetWatchList.fromJson(jsonDecode(response.body))];
-      print(watchList);
-    }else if (response.statusCode == 500){
+    try{
+      isLoading = true;
+      notifyListeners();
       SharedPreferences preferences = await SharedPreferences.getInstance();
-      preferences.clear();
-      await Navigator.of(context).pushNamedAndRemoveUntil('/login-screen', (route) => false);
+      String jwtToken = preferences.getString('jwtToken') ?? '';
+      const url = ApiConstant.getWatchListApi;
+      final header = {"Authorization": 'Bearer $jwtToken'};
+      final response = await http.get(Uri.parse(url), headers: header);
+
+
+      if (response.statusCode == 200) {
+        var item = jsonDecode(response.body);
+        var product = item['data'];
+        print(product);
+        watchList = [GetWatchList.fromJson(jsonDecode(response.body))];
+        print(watchList);
+      }else if (response.statusCode == 500){
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        preferences.clear();
+        await Navigator.of(context).pushNamedAndRemoveUntil('/login-screen', (route) => false);
+      }
+      isLoading=false;
+      notifyListeners();
+    }catch(e){
+      print(e);
     }
-    notifyListeners();
   }
 
 
@@ -240,25 +257,32 @@ class ApiConnectionProvider extends ChangeNotifier {
 
   Future<void> getMyCart(BuildContext context) async {
     print('getMyCart');
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    String jwtToken = preferences.getString('jwtToken') ?? '';
-    const url = ApiConstant.getMyCartApi;
-    final header = {"Authorization": 'Bearer $jwtToken'};
-    final response = await http.get(Uri.parse(url), headers: header);
+   try{
+     isLoading = true;
+     notifyListeners();
+     SharedPreferences preferences = await SharedPreferences.getInstance();
+     String jwtToken = preferences.getString('jwtToken') ?? '';
+     const url = ApiConstant.getMyCartApi;
+     final header = {"Authorization": 'Bearer $jwtToken'};
+     final response = await http.get(Uri.parse(url), headers: header);
 
 
-    if (response.statusCode == 200) {
-      var item = jsonDecode(response.body);
-      var product = item['data'];
-      print(product);
-        cart = [GetMyCart.fromJson(jsonDecode(response.body))];
-      print(cart);
-    }else if (response.statusCode == 500){
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-      preferences.clear();
-      await Navigator.of(context).pushNamedAndRemoveUntil('/login-screen', (route) => false);
-    }
-    notifyListeners();
+     if (response.statusCode == 200) {
+       var item = jsonDecode(response.body);
+       var product = item['data'];
+       print(product);
+       cart = [GetMyCart.fromJson(jsonDecode(response.body))];
+       print(cart);
+     }else if (response.statusCode == 500){
+       SharedPreferences preferences = await SharedPreferences.getInstance();
+       preferences.clear();
+       await Navigator.of(context).pushNamedAndRemoveUntil('/login-screen', (route) => false);
+     }
+     isLoading=false;
+     notifyListeners();
+   }catch(e){
+     print(e);
+   }
   }
 
   placeOrder(String cartId, String cartTotal)async{
@@ -288,20 +312,24 @@ class ApiConnectionProvider extends ChangeNotifier {
 
   Future<void> getOrderHistory(BuildContext context)async{
     print('getOrderHistory');
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    String jwtToken = preferences.getString('jwtToken') ?? '';
-    const url = ApiConstant.getOrderHistoryApi;
-    final header = {"Authorization": 'Bearer $jwtToken'};
-    final response = await http.get(Uri.parse(url), headers: header);
-
-    if (response.statusCode == 200) {
-        confirmOrderList = [ConfirmOrderList.fromJson(jsonDecode(response.body))];
-      print(confirmOrderList);
-    }else if (response.statusCode == 500){
+    try{
       SharedPreferences preferences = await SharedPreferences.getInstance();
-      preferences.clear();
-      await Navigator.of(context).pushNamedAndRemoveUntil('/login-screen', (route) => false);
+      String jwtToken = preferences.getString('jwtToken') ?? '';
+      const url = ApiConstant.getOrderHistoryApi;
+      final header = {"Authorization": 'Bearer $jwtToken'};
+      final response = await http.get(Uri.parse(url), headers: header);
+
+      if (response.statusCode == 200) {
+        confirmOrderList = [ConfirmOrderList.fromJson(jsonDecode(response.body))];
+        print(confirmOrderList);
+      }else if (response.statusCode == 500){
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        preferences.clear();
+        await Navigator.of(context).pushNamedAndRemoveUntil('/login-screen', (route) => false);
+      }
+      notifyListeners();
+    }catch(e){
+      print(e);
     }
-    notifyListeners();
   }
 }

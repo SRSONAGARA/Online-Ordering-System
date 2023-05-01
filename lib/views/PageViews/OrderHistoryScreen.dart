@@ -24,7 +24,8 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
     apiConnectionProvider.showItemBool = false;
     await apiConnectionProvider.getOrderHistory(context);
 
-    confirmOrderListData = apiConnectionProvider.productDataList.map((e) => e).toList();
+    confirmOrderListData =
+        apiConnectionProvider.productDataList.map((e) => e).toList();
 
     apiConnectionProvider.showItem();
     cartItemCount = await apiConnectionProvider.cart[0].data!.length;
@@ -166,14 +167,14 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                                         ],
                                       ),
                                     ),
-                                   /* Consumer<CartProvider>(
+                                    /* Consumer<CartProvider>(
                                         builder: (context, value, child) {
                                       return ElevatedButton(
                                           onPressed: () {
                                             Navigator.of(context)
                                                 .pushReplacementNamed(
                                                     '/home-screen');
-                                            *//*if (itemAddedToCart == true) {
+                                            */ /*if (itemAddedToCart == true) {
                                           // value.removeItem(value.CartItems[index]);
                                         } else {
                                           value.addItem(MainData(
@@ -187,13 +188,13 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                                             imgLink: ProductData[index].imgLink,
                                           quantity: 1
                                           ));
-                                        }*//*
+                                        }*/ /*
                                           },
                                           style: ElevatedButton.styleFrom(
-                                              primary: *//*itemAddedToCart ? Colors.red[200]:*//*
+                                              primary: */ /*itemAddedToCart ? Colors.red[200]:*/ /*
                                                   Colors.blue),
-                                          child: *//*itemAddedToCart? Text('Item is already Added')
-                                          :*//*
+                                          child: */ /*itemAddedToCart? Text('Item is already Added')
+                                          :*/ /*
                                               const Text('Re Order'));
                                     })*/
                                   ],
@@ -212,50 +213,57 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-      return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: CustomText,
-        centerTitle: true,
-        leading: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: InkWell(
-              onTap: () {
-                Navigator.of(context).pushReplacementNamed('/home-screen');
-              },
-              hoverColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              splashColor: Colors.transparent,
-              child: const CircleAvatar(
-                backgroundColor: Colors.white,
-                child: Icon(
-                  Icons.arrow_back_ios_new_sharp,
-                  color: Colors.black,
-                  size: 18,
-                ),
-              )),
-        ),
-        actions: [
-          InkWell(
-            child: Center(
-              child: Badge.Badge(
-                badgeContent: Text(
-                  cartItemCount.toString(),
-                  style: const TextStyle(color: Colors.white),
-                ),
-                child: const Icon(Icons.shopping_cart_outlined),
-              ),
-            ),
-            onTap: () {
-              Navigator.pushNamed(context, '/cart-screen');
-            },
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pushNamedAndRemoveUntil(
+            context, '/home-screen', (route) => false);
+        return false;
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: CustomText,
+          centerTitle: true,
+          leading: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: InkWell(
+                onTap: () {
+                  Navigator.of(context).pushReplacementNamed('/home-screen');
+                },
+                hoverColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                child: const CircleAvatar(
+                  backgroundColor: Colors.white,
+                  child: Icon(
+                    Icons.arrow_back_ios_new_sharp,
+                    color: Colors.black,
+                    size: 18,
+                  ),
+                )),
           ),
-          const SizedBox(
-            width: 20,
-          )
-        ],
+          actions: [
+            InkWell(
+              child: Center(
+                child: Badge.Badge(
+                  badgeContent: Text(
+                    cartItemCount.toString(),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  child: const Icon(Icons.shopping_cart_outlined),
+                ),
+              ),
+              onTap: () {
+                Navigator.pushNamed(context, '/cart-screen');
+              },
+            ),
+            const SizedBox(
+              width: 20,
+            )
+          ],
+        ),
+        body: SingleChildScrollView(child: AllProduct()),
       ),
-      body: SingleChildScrollView(child: AllProduct()),
     );
   }
 }

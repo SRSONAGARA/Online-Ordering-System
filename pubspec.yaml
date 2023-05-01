@@ -57,6 +57,7 @@ dependencies:
   get: ^4.6.5
   smooth_page_indicator: ^1.1.0
   flutter_offline: ^2.1.0
+#  simple_animations: ^5.0.0+3
 
 dev_dependencies:
   flutter_test:
@@ -84,6 +85,7 @@ flutter:
   assets:
     - assets/sliderImages/
     - assets/imagesGetx/
+    - assets/imagesGetx/loginImgGetx/
     - assets/
 #    - assets/icon.jpg
   #   - images/a_dot_ham.jpeg

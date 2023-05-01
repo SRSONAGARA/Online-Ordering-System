@@ -191,10 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 'emailId', authRepoProvider.loginData[0].data.emailId);
                             await prefs.setString(
                                 'mobileNo', authRepoProvider.loginData[0].data.mobileNo);
-                            // print(prefs.getString('name'));
 
-                            // String emailId = result['data']['emailId'];
-                            // await Future.delayed(const Duration(seconds: 3));
                             await Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(

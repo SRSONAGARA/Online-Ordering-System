@@ -25,6 +25,7 @@ class _CartScreenState extends State<CartScreen> {
     final apiConnectionProvider =
         Provider.of<ApiConnectionProvider>(context, listen: false);
     apiConnectionProvider.showItemBool = false;
+    apiConnectionProvider.isLoading = false;
     await apiConnectionProvider.getMyCart(context);
 
     cartData = apiConnectionProvider.productDataList.map((e) => e).toList();
@@ -42,168 +43,186 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     final apiConnectionProvider = Provider.of<ApiConnectionProvider>(context);
-    final firebaseApiProvider= Provider.of<FirebaseApiCalling>(context);
-    return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: CustomText,
-          centerTitle: true,
-          leading: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: InkWell(
-                onTap: () {
-                  Navigator.of(context).pushReplacementNamed('/home-screen');
-                },
-                hoverColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                splashColor: Colors.transparent,
-                child: const CircleAvatar(
-                  backgroundColor: Colors.white,
-                  child: Icon(
-                    Icons.arrow_back_ios_new_sharp,
-                    color: Colors.black,
-                    size: 18,
-                  ),
-                )),
-          ),
-          actions: [
-            InkWell(
-              child: Center(
-                child: Badge.Badge(
-                  badgeContent: Text(
-                    watchListItemCount.toString(),
-                    // favoriteProvider.FavItems.length.toString(),
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  child: const Icon(Icons.favorite_outline),
-                ),
-              ),
-              onTap: () {
-                Navigator.pushNamed(context, '/wishlist-screen');
-              },
+    final firebaseApiProvider = Provider.of<FirebaseApiCalling>(context);
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pushNamedAndRemoveUntil(
+            context, '/home-screen', (route) => false);
+        return false;
+      },
+      child: Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            title: CustomText,
+            centerTitle: true,
+            leading: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: InkWell(
+                  onTap: () {
+                    Navigator.of(context).pushReplacementNamed('/home-screen');
+                  },
+                  hoverColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  splashColor: Colors.transparent,
+                  child: const CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: Icon(
+                      Icons.arrow_back_ios_new_sharp,
+                      color: Colors.black,
+                      size: 18,
+                    ),
+                  )),
             ),
-            const SizedBox(
-              width: 20,
-            )
-          ],
-        ),
-        body: SingleChildScrollView(child: AllProduct()),
-        bottomNavigationBar: Consumer<ApiConnectionProvider>(
-          builder: (context, getMyCartProvider, child) {
-            return Container(
-              padding: const EdgeInsets.all(10.0),
-              color: Colors.blue,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                      child: Text(
-                    'Total Items: ${getMyCartProvider.cart.isEmpty ? 0 : getMyCartProvider.cart[0].data!.length}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+            actions: [
+              InkWell(
+                child: Center(
+                  child: Badge.Badge(
+                    badgeContent: Text(
+                      watchListItemCount.toString(),
+                      // favoriteProvider.FavItems.length.toString(),
+                      style: const TextStyle(color: Colors.white),
                     ),
-                  )),
-                  Expanded(
-                      child: Text(
-                    'Total Price: \$${getMyCartProvider.cart.isEmpty ? 0 : getMyCartProvider.cart[0].cartTotal!.toStringAsFixed(2) }',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )),
-                  Expanded(
-                    child: InkWell(
-                      onTap: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return getMyCartProvider.cart.isNotEmpty
-                                  ? AlertDialog(
-                                      title: const Text("Confirm to Place Order"),
-                                      content: Text(
-                                          "You added ${getMyCartProvider.cart.isEmpty ? 0 : getMyCartProvider.cart[0].data!.length} Product and Total Price \$${getMyCartProvider.cart.isEmpty ? 0 : getMyCartProvider.cart[0].cartTotal}"),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text('Not Now'),
-                                        ),
-                                        InkWell(
-                                            onTap: () async {
-                                              String cartId = getMyCartProvider
-                                                  .cart[0].data![0].cartId
-                                                  .toString();
-                                              String cartTotal = getMyCartProvider
-                                                  .cart[0].cartTotal
-                                                  .toString();
-                                              print('cartId= $cartId');
-                                              print('cartTotal= $cartTotal');
-                                              SharedPreferences prefs=await SharedPreferences.getInstance();
-
-                                              await apiConnectionProvider.placeOrder(
-                                                  cartId, cartTotal);
-                                              firebaseApiProvider.sendPushNotification('Online Ordering System', 'Your order has been placed !');
-                                              Navigator.pop(context);
-                                               getMyCartProvider
-                                                  .getMyCart(context);
-
-                                            },
-                                            onDoubleTap: (){},
-                                            onLongPress: (){},
-                                            child: const Text('Place Order'))
-                                      ],
-                                    )
-                                  : AlertDialog(
-                                      title: const Text("No Items Added in Cart"),
-                                      content:
-                                          const Text("Please add item in cart"),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text('Not Now'),
-                                        ),
-                                        TextButton(
-                                            child: const Text('Okay'),
+                    child: const Icon(Icons.favorite_outline),
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pushNamed(context, '/wishlist-screen');
+                },
+              ),
+              const SizedBox(
+                width: 20,
+              )
+            ],
+          ),
+          body: apiConnectionProvider.isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(child: AllProduct()),
+          bottomNavigationBar: Consumer<ApiConnectionProvider>(
+            builder: (context, getMyCartProvider, child) {
+              return Container(
+                padding: const EdgeInsets.all(10.0),
+                color: Colors.blue,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                        child: Text(
+                      'Total Items: ${getMyCartProvider.cart.isEmpty ? 0 : getMyCartProvider.cart[0].data!.length}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )),
+                    Expanded(
+                        child: Text(
+                      'Total Price: \$${getMyCartProvider.cart.isEmpty ? 0 : getMyCartProvider.cart[0].cartTotal!.toStringAsFixed(2)}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return getMyCartProvider.cart.isNotEmpty
+                                    ? AlertDialog(
+                                        title: const Text(
+                                            "Confirm to Place Order"),
+                                        content: Text(
+                                            "You added ${getMyCartProvider.cart.isEmpty ? 0 : getMyCartProvider.cart[0].data!.length} Product and Total Price \$${getMyCartProvider.cart.isEmpty ? 0 : getMyCartProvider.cart[0].cartTotal}"),
+                                        actions: [
+                                          TextButton(
                                             onPressed: () {
                                               Navigator.pop(context);
-                                            }),
-                                      ],
-                                    );
-                            });
-                      },
-                      child: Container(
-                        // height: size.height / 15,
-                        padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-                        height: 30,
-                        decoration: BoxDecoration(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(5)),
-                            color: Colors.red[400]
-                            /*gradient: LinearGradient(colors: [
-                              Colors.redAccent,
-                              Colors.redAccent
-                            ])*/
-                            ),
-                        child: const Center(
-                            child: Text(
-                          "Place Order ",
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                        )),
+                                            },
+                                            child: const Text('Not Now'),
+                                          ),
+                                          InkWell(
+                                              onTap: () async {
+                                                String cartId =
+                                                    getMyCartProvider
+                                                        .cart[0].data![0].cartId
+                                                        .toString();
+                                                String cartTotal =
+                                                    getMyCartProvider
+                                                        .cart[0].cartTotal
+                                                        .toString();
+                                                print('cartId= $cartId');
+                                                print('cartTotal= $cartTotal');
+                                                SharedPreferences prefs =
+                                                    await SharedPreferences
+                                                        .getInstance();
+
+                                                await apiConnectionProvider
+                                                    .placeOrder(
+                                                        cartId, cartTotal);
+                                                firebaseApiProvider
+                                                    .sendPushNotification(
+                                                        'Online Ordering System',
+                                                        'Your order has been placed !');
+                                                Navigator.pop(context);
+                                                getMyCartProvider
+                                                    .getMyCart(context);
+                                              },
+                                              onDoubleTap: () {},
+                                              onLongPress: () {},
+                                              child: const Text('Place Order'))
+                                        ],
+                                      )
+                                    : AlertDialog(
+                                        title: const Text(
+                                            "No Items Added in Cart"),
+                                        content: const Text(
+                                            "Please add item in cart"),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text('Not Now'),
+                                          ),
+                                          TextButton(
+                                              child: const Text('Okay'),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              }),
+                                        ],
+                                      );
+                              });
+                        },
+                        child: Container(
+                          // height: size.height / 15,
+                          padding:
+                              const EdgeInsets.only(left: 10.0, right: 10.0),
+                          height: 30,
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(5)),
+                              color: Colors.red[400]
+                              /*gradient: LinearGradient(colors: [
+                                Colors.redAccent,
+                                Colors.redAccent
+                              ])*/
+                              ),
+                          child: const Center(
+                              child: Text(
+                            "Place Order ",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          )),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            );
-          },
-        )
-        // body: AllProduct(),
-        );
+                  ],
+                ),
+              );
+            },
+          )),
+    );
   }
 
   Widget AllProduct() {
@@ -388,20 +407,20 @@ class _CartScreenState extends State<CartScreen> {
                                                   }
                                                   removeProductFromCartProvider
                                                       .getMyCart(context);
-                                                  ScaffoldMessenger.of(
-                                                      context)
+                                                  ScaffoldMessenger.of(context)
                                                       .showSnackBar(
-                                                      const SnackBar(
-                                                        content: Text(
-                                                            'Item removed from Cart !'),
-                                                        backgroundColor:
+                                                          const SnackBar(
+                                                    content: Text(
+                                                        'Item removed from Cart !'),
+                                                    backgroundColor:
                                                         Colors.blue,
-                                                        duration: Duration(
-                                                            seconds: 2),
-                                                      ));
+                                                    duration:
+                                                        Duration(seconds: 2),
+                                                  ));
+                                                  accessApi(context);
                                                 },
-                                                onDoubleTap: (){},
-                                                onLongPress: (){},
+                                                onDoubleTap: () {},
+                                                onLongPress: () {},
                                               );
                                             }),
                                           ],
@@ -435,8 +454,8 @@ class _CartScreenState extends State<CartScreen> {
                                                               .getMyCart(
                                                                   context);
                                                         },
-                                                        onDoubleTap: (){},
-                                                        onLongPress: (){},
+                                                        onDoubleTap: () {},
+                                                        onLongPress: () {},
                                                         child: CircleAvatar(
                                                           backgroundColor:
                                                               Colors.grey[200],
@@ -481,8 +500,8 @@ class _CartScreenState extends State<CartScreen> {
                                                               .getMyCart(
                                                                   context);
                                                         },
-                                                        onDoubleTap: (){},
-                                                        onLongPress: (){},
+                                                        onDoubleTap: () {},
+                                                        onLongPress: () {},
                                                         child: CircleAvatar(
                                                           backgroundColor:
                                                               Colors.grey[200],

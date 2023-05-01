@@ -56,8 +56,8 @@ void main() async {
   } else {
 
   }
-  // runApp(const GetApp());
-  runApp(const MyApp());
+  runApp(const GetApp());
+  // runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
