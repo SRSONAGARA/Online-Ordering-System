@@ -14,7 +14,7 @@ class LoginScreenGetx extends StatefulWidget {
 }
 
 class _LoginScreenGetxState extends State<LoginScreenGetx> {
-  final _authGetxController = Get.put(AuthGetxController());
+  final authGetxController = Get.put(AuthGetxController());
   final formkey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -27,7 +27,7 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
     super.initState();
     // permission();
     _isObscure;
-    _authGetxController.isLoading.value=false;
+    authGetxController.isLoading.value=false;
   }
 
   @override
@@ -35,7 +35,7 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body:_authGetxController.isLoading.value ? Center(child: CircularProgressIndicator(),): /*authRepoProvider.isLoading? const Center(child: CircularProgressIndicator()): */
+      body:authGetxController.isLoading.value ? Center(child: CircularProgressIndicator(),): /*authRepoProvider.isLoading? const Center(child: CircularProgressIndicator()): */
           SingleChildScrollView(
         child: Form(
           key: formkey,
@@ -290,8 +290,7 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
                       children: [
                         TextButton(
                             onPressed: () async {
-                              await Navigator.pushNamed(
-                                  context, '/forgotpsw-screen');
+                              await Get.toNamed('/forgotPswScreenGetx');
                             },
                             child: const Text(
                               'Forgot your Password?',
@@ -318,18 +317,19 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
                               backgroundColor: Colors.transparent,
                               shadowColor: Colors.transparent),
                           onPressed: () async {
-                            if (/*formkey.currentState!
-                                .validate()*/ !formkey.currentState!.validate()) {
+                            if (formkey.currentState!
+                                .validate() /*!formkey.currentState!.validate()*/) {
                               formkey.currentState!.save();
 
                               var result =
-                                  await _authGetxController.userLoginGetx(
-                                      /*emailId: emailController.text,
-                                      password: passwordController.text*/
-                                  emailId: 'felitej727@larland.com',
-                                    password: '123456'
+                                  await authGetxController.userLoginGetx(
+                                      emailId: emailController.text,
+                                      password: passwordController.text
+                                 /* emailId: 'felitej727@larland.com',
+                                    password: '123456'*/
                                   );
-                              if (_authGetxController
+                              print('status: ${authGetxController.loginModelClassGetx.status}');
+                              if (authGetxController
                                       .loginModelClassGetx.status ==
                                   1) {
                                 Get.rawSnackbar(
@@ -342,25 +342,25 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
                                     await SharedPreferences.getInstance();
                                 await prefs.setString(
                                     'jwtToken',
-                                    _authGetxController
+                                    authGetxController
                                         .loginModelClassGetx.data.jwtToken);
                                 print('jwttoken: ${prefs.get('jwtToken')}');
                                 await prefs.setString(
                                     'name',
-                                    _authGetxController
+                                    authGetxController
                                         .loginModelClassGetx.data.name);
                                 await prefs.setString(
                                     'emailId',
-                                    _authGetxController
+                                    authGetxController
                                         .loginModelClassGetx.data.emailId);
                                 await prefs.setString(
                                     'mobileNo',
-                                    _authGetxController
+                                    authGetxController
                                         .loginModelClassGetx.data.mobileNo);
 
                                 await Get.offNamedUntil(
                                     '/homeScreenGetx', (route) => false);
-                              } else if (_authGetxController
+                              } else if (authGetxController
                                       .loginModelClassGetx.status ==
                                   0) {
                                 // print('please register in app');
@@ -368,7 +368,7 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
                                   actions: [
                                     TextButton(
                                         onPressed: () {
-                                          Get.back();
+                                          Navigator.pop(context);
                                         },
                                         child: const Text(
                                           'okey',
@@ -407,8 +407,7 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
                         ),
                         TextButton(
                             onPressed: () {
-                              Navigator.pushNamed(
-                                  context, '/registration-screen');
+                              Get.toNamed('/registrationScreenGetx');
                             },
                             child: const Text(
                               'Register',

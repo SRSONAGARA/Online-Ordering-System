@@ -45,4 +45,29 @@ class OrderScreenGetxController extends GetxController {
       isLoading(false);
     }
   }
+
+  placeOrderGetx(String cartId, String cartTotal)async{
+    SharedPreferences preferences=await SharedPreferences.getInstance();
+    String jwtToken=preferences.getString('jwtToken') ??'';
+    try{
+      String url= ApiConstant.placeOrderApi;
+      var requestBody={
+        "cartId": cartId,
+        "cartTotal": cartTotal
+      };
+      print(url);
+      print(requestBody);
+      final header={"Authorization": 'Bearer $jwtToken'};
+      final response= await http.post(Uri.parse(url), headers: header, body: requestBody);
+      print(response);
+      if(response.statusCode==200){
+        final responseBody=jsonDecode(response.body);
+        print(responseBody);
+        update();
+      }
+    }catch(error){
+      print('ApiConnection_Provider.placeOrderGetx.error: $error');
+    }
+  }
+
 }

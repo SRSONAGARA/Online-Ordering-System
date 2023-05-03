@@ -18,7 +18,7 @@ class ProductScreenGetxController extends GetxController {
     getDataGetx();
   }
 
-  ProductListGetx productDataListGetx = ProductListGetx(status: 0, msg: '', data: [], totalProduct: 0);
+  ProductListGetx productDataListGetx = ProductListGetx(status: 0, msg: '', totalProduct: 0, data: []); /* ProductListGetx(status: 0, msg: '', data: [], totalProduct: 0);*/
 
 
   Future<void> getDataGetx() async {

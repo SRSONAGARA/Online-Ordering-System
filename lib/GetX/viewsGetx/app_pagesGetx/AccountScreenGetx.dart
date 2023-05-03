@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../ControllersGetx/ApiConnection_Getx/AccountScreenGetxController.dart';
+
 class AccountScreenGetx extends StatefulWidget {
   const AccountScreenGetx({Key? key}) : super(key: key);
 
@@ -11,6 +13,8 @@ class AccountScreenGetx extends StatefulWidget {
 }
 
 class _AccountScreenGetxState extends State<AccountScreenGetx> {
+  var accountScreenGetxController = Get.put(AccountScreenGetxController());
+
   TextEditingController UserName = TextEditingController();
   TextEditingController EmailAddress = TextEditingController();
   TextEditingController MobileNo = TextEditingController();
@@ -18,12 +22,33 @@ class _AccountScreenGetxState extends State<AccountScreenGetx> {
   var UserNameValue = "";
   var EmailAddressValue = "";
   var MobileNumberValue = "";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getAccountDetails();
+  }
+
+  void getAccountDetails() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String userName = preferences.getString('name') ?? '';
+    String emailAddress = preferences.getString('emailId') ?? '';
+    String mobileNo = preferences.getString('mobileNo') ?? '';
+
+    setState(() {
+      UserNameValue = userName ?? "";
+      EmailAddressValue = emailAddress ?? "";
+      MobileNumberValue = mobileNo ?? "";
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(86, 126, 239, 15),
+        backgroundColor: const Color.fromRGBO(86, 126, 239, 15),
         title: Text('Hello!'),
         leading: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -84,8 +109,7 @@ class _AccountScreenGetxState extends State<AccountScreenGetx> {
                                     backgroundColor: Colors.transparent,
                                     shadowColor: Colors.transparent),
                                 onPressed: () {
-                                  Navigator.of(context)
-                                      .pushNamed('/orderhistory-screen');
+                                  Get.toNamed('/orderHistoryScreenGetx');
                                 },
                                 child: Row(
                                   children: const [
@@ -122,8 +146,7 @@ class _AccountScreenGetxState extends State<AccountScreenGetx> {
                                     backgroundColor: Colors.transparent,
                                     shadowColor: Colors.transparent),
                                 onPressed: () {
-                                  Navigator.of(context)
-                                      .pushNamed('/wishlist-screen');
+                                  Get.toNamed('/wishlistScreenGetx');
                                 },
                                 child: Row(
                                   children: const [
@@ -170,8 +193,7 @@ class _AccountScreenGetxState extends State<AccountScreenGetx> {
                                     backgroundColor: Colors.transparent,
                                     shadowColor: Colors.transparent),
                                 onPressed: () {
-                                  Navigator.of(context)
-                                      .pushNamed('/cart-screen');
+                                  Get.toNamed('/cartScreenGetx');
                                 },
                                 child: Row(
                                   children: const [
@@ -335,8 +357,7 @@ class _AccountScreenGetxState extends State<AccountScreenGetx> {
                         children: [
                           TextButton(
                               onPressed: () {
-                                Navigator.pushNamed(
-                                    context, '/resetpsw-screen');
+                                Get.toNamed('/changePswScreenGetx');
                               },
                               child: const Text(
                                 'Change Password ?',
@@ -401,7 +422,7 @@ class _AccountScreenGetxState extends State<AccountScreenGetx> {
                             backgroundColor: Colors.transparent,
                             shadowColor: Colors.transparent),
                         onPressed: () {
-                          alertFunc(context);
+                          alertFuncGetx(context);
                         },
                         child: const Text(
                           'Log Out',
@@ -417,7 +438,7 @@ class _AccountScreenGetxState extends State<AccountScreenGetx> {
     );
   }
 }
-void alertFunc(BuildContext context) {
+void alertFuncGetx(BuildContext context) {
   var alertDialog = AlertDialog(
     title: const Text(
       'Log Out',
@@ -427,20 +448,29 @@ void alertFunc(BuildContext context) {
     actions: [
       TextButton(
           onPressed: () {
-            Navigator.pop(context);
+            Get.back();
           },
-          child: const Text('No')),
+          child: const Text('No', style: TextStyle(color: Color
+              .fromRGBO(
+              86,
+              126,
+              239,
+              10),),)),
       TextButton(
           onPressed: () async {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text('Log out successful !'),
-              backgroundColor: Colors.blue,
+            Get.rawSnackbar(
+              message: 'Log out successful !',
+              backgroundColor: Color
+                  .fromRGBO(
+                  86,
+                  126,
+                  239,
+                  10),
               duration: Duration(seconds: 2),
-            ));
+            );
             final share = await SharedPreferences.getInstance();
             share.clear();
-            Navigator.pushNamedAndRemoveUntil(
-                context, '/login-screen', (route) => false);
+            Get.offNamedUntil('/loginScreenGetx', (route) => false);
           },
           child: const Text(
             'Yes',

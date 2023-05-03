@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get/get.dart';
 class SplashScreenGetX extends StatefulWidget {
   const SplashScreenGetX({Key? key}) : super(key: key);
 
@@ -9,12 +10,29 @@ class SplashScreenGetX extends StatefulWidget {
 
 class _SplashScreenGetXState extends State<SplashScreenGetX> {
   bool Opacity1 = true;
+  bool? logInBool;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    // _opacity();
+     _opacity();
+    isLogIn();
+  }
+  isLogIn() async {
+    final preferences = await SharedPreferences.getInstance();
+    logInBool = preferences.getBool('loginBool');
+
+    print(preferences.getBool('loginBool'));
+    await Future.delayed(const Duration(seconds: 2), () {
+      if (logInBool != null && logInBool == true) {
+        Get.offNamed('/homeScreenGetx');
+        return;
+      }
+      Get.offNamed('/loginScreenGetx');
+      return;
+
+    });
   }
 
   _opacity() async {
@@ -28,12 +46,17 @@ class _SplashScreenGetXState extends State<SplashScreenGetX> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(40),
-          child: AnimatedOpacity(
-              opacity: Opacity1 ? 1 : 0,
-              duration: Duration(seconds: 5),
-              child: Image(image: AssetImage('assets/SplashImage.jpg'))),
+        child: Container(
+          padding: const EdgeInsets.all(50),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AnimatedOpacity(
+                  opacity: Opacity1 ? 1 : 0,
+                  duration: Duration(seconds: 5),
+                  child: Image(image: AssetImage('assets/imagesGetx/SplashImageGetx.jpg'))),
+            ],
+          ),
         ),
       ),
     );

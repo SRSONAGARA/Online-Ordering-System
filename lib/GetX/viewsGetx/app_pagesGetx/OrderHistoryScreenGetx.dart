@@ -3,6 +3,7 @@ import 'package:badges/badges.dart' as Badge;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../ControllersGetx/ApiConnection_Getx/CartScreenGetxController.dart';
 import '../../ControllersGetx/ApiConnection_Getx/OrderScreenGetxController.dart';
 
 class OrderHistoryScreenGetx extends StatefulWidget {
@@ -14,11 +15,14 @@ class OrderHistoryScreenGetx extends StatefulWidget {
 
 class _OrderHistoryScreenGetxState extends State<OrderHistoryScreenGetx> {
   var orderScreenGetxController = Get.put(OrderScreenGetxController());
+  var cartScreenGetxController = Get.put(CartScreenGetxController());
+
 
   @override
   Widget build(BuildContext context) {
     // orderScreenGetxController.getOrderHistoryGetx();
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor:
         Color.fromRGBO(86, 126, 239, 15),
@@ -46,15 +50,14 @@ class _OrderHistoryScreenGetxState extends State<OrderHistoryScreenGetx> {
           InkWell(
             child: Center(
               child: Badge.Badge(
-                badgeContent: Text('0',
-                  // cartItemCount.toString(),
+                badgeContent: Text(cartScreenGetxController.cartGetx.data!.length.toString(),
                   style: const TextStyle(color: Colors.white),
                 ),
                 child: const Icon(Icons.shopping_cart_outlined),
               ),
             ),
             onTap: () {
-              Navigator.pushNamed(context, '/cart-screen');
+              Get.toNamed('/cartScreenGetx');
             },
           ),
           const SizedBox(
@@ -68,17 +71,13 @@ class _OrderHistoryScreenGetxState extends State<OrderHistoryScreenGetx> {
   Widget AllProduct() {
     // final apiConnectionProvider = Provider.of<ApiConnectionProvider>(context);
 
-    return /*!apiConnectionProvider.showItemBool
-        ? SizedBox(
-        height: MediaQuery.of(context).size.height / 1.3,
-        child: const Center(child: CircularProgressIndicator()))
-        : apiConnectionProvider.confirmOrderList[0].data.isEmpty
+    return orderScreenGetxController.confirmOrderListGetx.data!.isEmpty
         ? Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              height: height / 5,
+              height: 120
             ),
             SizedBox(
               height: 200,
@@ -97,11 +96,11 @@ class _OrderHistoryScreenGetxState extends State<OrderHistoryScreenGetx> {
             ),
             const Text(
               "You didn't place any Order till now !",
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             )
           ],
         ))
-        : */
+        :
       Obx(() => orderScreenGetxController.isLoading.value ? Center(child: CircularProgressIndicator(color:Color.fromRGBO(86,126,239,10),)): ListView.builder(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,

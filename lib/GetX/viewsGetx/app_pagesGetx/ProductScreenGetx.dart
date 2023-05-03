@@ -7,6 +7,7 @@ import 'package:oline_ordering_system/GetX/ControllersGetx/ApiConnection_Getx/Ca
 
 import '../../ControllersGetx/ApiConnection_Getx/ProductScreenGetxController.dart';
 import '../../ControllersGetx/ApiConnection_Getx/WishlistScreenGetxController.dart';
+import '../drawerGetx/DrawerScreenGetx.dart';
 
 class ProductScreenGetx extends StatefulWidget {
   const ProductScreenGetx({Key? key}) : super(key: key);
@@ -22,23 +23,19 @@ class _ProductScreenGetxState extends State<ProductScreenGetx> {
   var productScreenGetxController = Get.put(ProductScreenGetxController());
   var cartScreenGetxController = Get.put(CartScreenGetxController());
   var wishlistScreenGetxController = Get.put(WishlistScreenGetxController());
-  /* List<ProductListGetx> productDataGetx = [];
-  void accessApiGetx(){
-    final ApiConnectionGetxController apiConnectionGetxController = Get.put(ApiConnectionGetxController());
-    productDataGetx = apiConnectionGetxController.productDataListGetx.map((e) => e).toList();
 
-  }*/
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    /*  cartScreenGetxController.getMyCartGetx();
-    productScreenGetxController.getDataGetx();*/
+    productScreenGetxController.getDataGetx();
+    cartScreenGetxController.getMyCartGetx();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        drawer: DrawerScreenGetx(),
         appBar: AppBar(
           backgroundColor: Color.fromRGBO(86, 126, 239, 15),
           title: Text('Ordefy'),
@@ -57,11 +54,12 @@ class _ProductScreenGetxState extends State<ProductScreenGetx> {
             InkWell(
               child: Center(
                 child: Badge.Badge(
-                  badgeContent: Text(
-                    productScreenGetxController.productDataListGetx.totalProduct
-                        .toString(),
+                  badgeContent: Obx(() =>  productScreenGetxController.isLoading.value
+                      ? SizedBox()
+                      : Text(
+                    productScreenGetxController.productDataListGetx.totalProduct.toString(),
                     style: const TextStyle(color: Colors.white),
-                  ),
+                  )),
                   child: const Icon(
                     Icons.shopping_cart_outlined,
                     // color: Colors.blue,
@@ -69,7 +67,7 @@ class _ProductScreenGetxState extends State<ProductScreenGetx> {
                 ),
               ),
               onTap: () {
-                Navigator.pushNamed(context, '/cart-screen');
+                Get.toNamed('/cartScreenGetx');
               },
               onDoubleTap: () {},
               onLongPress: () {},
@@ -136,9 +134,9 @@ class _ProductScreenGetxState extends State<ProductScreenGetx> {
                                 aspectRatio: 2,
                                 viewportFraction: 1,
                                 onPageChanged: (index, reason) {
-                                  /* setState(() {
+                                   setState(() {
                         currentIndex = index;
-                      });*/
+                      });
                                 },
                               ),
                             ),
@@ -286,61 +284,6 @@ class _ProductScreenGetxState extends State<ProductScreenGetx> {
                                                               .getDataGetx();
                                                           await wishlistScreenGetxController
                                                               .getWatchListGetx();
-                                                          /*if (isFavourite ==
-                                true) {
-                                String?
-                                wathListItemId =
-                                getDataProvider
-                                    .productDataList[
-                                0]
-                                    .data![index]
-                                    .watchListItemId;
-                                await getDataProvider
-                                    .removeFromWatchList(
-                                getDataProvider
-                                    .productDataList[
-                                0]
-                                    .data![
-                                index]
-                                    .watchListItemId!);
-                                print(
-                                'wathListItemId: $wathListItemId');
-                                ScaffoldMessenger.of(
-                                context)
-                                    .showSnackBar(
-                                const SnackBar(
-                                content: Text(
-                                'Item removed from WatchList !'),
-                                backgroundColor:
-                                Colors.blue,
-                                duration: Duration(
-                                seconds: 2),
-                                ));
-                                } else {
-                                String productId =
-                                getDataProvider
-                                    .productDataList[
-                                0]
-                                    .data![index]
-                                    .id;
-                                await getDataProvider
-                                    .addToWatchList(
-                                productId);
-                                print(
-                                'Id: ${productId}');
-                                ScaffoldMessenger.of(
-                                context)
-                                    .showSnackBar(const SnackBar(
-                                content: Text(
-                                'Item Added to WatchList !'),
-                                backgroundColor:
-                                Colors
-                                    .blue,
-                                duration: Duration(
-                                seconds:
-                                2)));
-                                }*/
-                                                          // accessApi(context);
                                                         },
                                                         onDoubleTap: () {},
                                                         onLongPress: () {},
@@ -428,6 +371,7 @@ class _ProductScreenGetxState extends State<ProductScreenGetx> {
                                                                       await cartScreenGetxController
                                                                           .addToCartGetx(
                                                                               productId);
+
                                                                       Get.rawSnackbar(
                                                                           message:
                                                                               'Item Added to Cart !',
@@ -438,10 +382,11 @@ class _ProductScreenGetxState extends State<ProductScreenGetx> {
                                                                               10),
                                                                           duration:
                                                                               Duration(seconds: 2));
-                                                                      cartScreenGetxController
-                                                                          .getMyCartGetx();
-                                                                      productScreenGetxController
+                                                                      await productScreenGetxController
                                                                           .getDataGetx();
+                                                                      await cartScreenGetxController
+                                                                          .getMyCartGetx();
+
                                                                     }
                                                                   },
                                                                   onDoubleTap:
@@ -485,6 +430,16 @@ class _ProductScreenGetxState extends State<ProductScreenGetx> {
                                                                             .getDataGetx();
                                                                         cartScreenGetxController
                                                                             .getMyCartGetx();
+                                                                        if(productScreenGetxController
+                                                                            .productDataListGetx.data[index].quantity == 1){
+                                                                          Get.rawSnackbar(message: 'Item removed from Cart !',backgroundColor: Color.fromRGBO(
+                                                                              86,
+                                                                              126,
+                                                                              239,
+                                                                              10),
+                                                                              duration:
+                                                                              Duration(seconds: 2));
+                                                                        }
                                                                       },
                                                                       child:
                                                                           CircleAvatar(

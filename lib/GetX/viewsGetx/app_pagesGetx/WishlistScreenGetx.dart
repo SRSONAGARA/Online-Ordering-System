@@ -55,7 +55,7 @@ class _WishlistScreenGetxState extends State<WishlistScreenGetx> {
                 child: Center(
                   child: Badge.Badge(
                     badgeContent: Text(
-                      '0' /*Text(cartItemCount.toString()*/,
+                      productScreenGetxController.productDataListGetx.totalProduct.toString(),
                       style: const TextStyle(color: Colors.white),
                     ),
                     child: const Icon(
@@ -65,7 +65,7 @@ class _WishlistScreenGetxState extends State<WishlistScreenGetx> {
                   ),
                 ),
                 onTap: () {
-                  Navigator.pushNamed(context, '/cart-screen');
+                  Get.toNamed('/cartScreenGetx');
                 }),
             const SizedBox(
               width: 20,
@@ -78,186 +78,156 @@ class _WishlistScreenGetxState extends State<WishlistScreenGetx> {
   }
 
   Widget AllProduct() {
-    // final apiConnectionProvider = Provider.of<ApiConnectionProvider>(context);
-    return /*!apiConnectionProvider.showItemBool
-        ? SizedBox(
-        height: MediaQuery.of(context).size.height / 1.3,
-        child: const Center(child: CircularProgressIndicator()))
-        : apiConnectionProvider.watchList[0].data.isEmpty
-        ? Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height/ 5,
-            ),
-            SizedBox(
-              height: 200,
-              width: 200,
-              child: Image.asset('assets/wishlistEmptyImage.png'),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            const Text(
-              'Oops...!',
-              style: TextStyle(
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20),
-            ),
-            const Text("You haven't added any products yet",
-                style:
-                TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
-            Row(
+    return wishlistScreenGetxController.watchListGetx.data!.isEmpty? Center(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Text("Click "),
-                Icon(
-                  Icons.favorite,
-                  color: Colors.red,
-                  size: 15,
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height/ 5,
                 ),
-                Text(
-                  " to save products",
+                SizedBox(
+                  height: 200,
+                  width: 200,
+                  child: Image.asset('assets/wishlistEmptyImage.png'),
                 ),
+                const SizedBox(
+                  height: 20,
+                ),
+                const Text(
+                  'Oops...!',
+                  style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
+                ),
+                const Text("You haven't added any products yet",
+                    style:
+                    TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text("Click "),
+                    Icon(
+                      Icons.favorite,
+                      color: Colors.red,
+                      size: 15,
+                    ),
+                    Text(
+                      " to save products",
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+               /* ElevatedButton(
+                  style: ElevatedButton.styleFrom(primary: const Color.fromRGBO(86, 126, 239, 15),),
+                    onPressed: () {
+                    Get.offNamedUntil('/homeScreenGetx', (route) => false);
+                    },
+                    child: const Text('Find items to save')),*/
               ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, "/home-screen");
-                },
-                child: const Text('Find items to save')),
-          ],
-        ))
-        :*/
-        Obx(() => wishlistScreenGetxController.isLoading.value
-            ? Center(
+            ))
+            : Obx(() => wishlistScreenGetxController.isLoading.value
+            ? const Center(
                 child: CircularProgressIndicator(
                 color: Color.fromRGBO(86, 126, 239, 10),
               ))
             : ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  /* bool itemAddedToCart = apiConnectionProvider
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            /* bool itemAddedToCart = apiConnectionProvider
             .productDataList[0].data![index].quantity !=
             0;*/
-                  print('list builder');
-                  return Card(
-                    elevation: 6,
-                    child: Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Column(
-                        children: [
-                          Row(
+            print('list builder');
+            return Card(
+              elevation: 6,
+              child: Padding(
+                padding: const EdgeInsets.all(15),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Column(
                             children: [
-                              Expanded(
-                                flex: 1,
-                                child: Column(
-                                  children: [
-                                    Image(
-                                      image: NetworkImage(
+                              Image(
+                                image: NetworkImage(
+                                    wishlistScreenGetxController
+                                        .watchListGetx
+                                        .data![index]
+                                        .productDetails
+                                        .imageUrl),
+                                height: 120,
+                                // width: 100,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  InkWell(
+                                    onTap: () async {
+                                      await wishlistScreenGetxController
+                                          .removeFromWatchListGetx(
                                           wishlistScreenGetxController
                                               .watchListGetx
                                               .data![index]
-                                              .productDetails
-                                              .imageUrl),
-                                      height: 120,
-                                      // width: 100,
-                                    ),
-                                  ],
+                                              .id
+                                              .toString());
+                                      Get.rawSnackbar(message: 'Item removed from WatchList !',
+                                          backgroundColor: const Color.fromRGBO(
+                                              86,
+                                              126,
+                                              239,
+                                              10),
+                                          duration:
+                                          Duration(seconds: 2));
+                                      await wishlistScreenGetxController.getWatchListGetx();
+                                      await productScreenGetxController.getDataGetx();
+                                    },
+                                    onDoubleTap: () {},
+                                    onLongPress: () {},
+                                    child: const Icon(Icons.favorite,
+                                        color: Colors.red, size: 20),
+                                  )
+                                ],
+                              ),
+                              Text(
+                                wishlistScreenGetxController.watchListGetx
+                                    .data![index].productDetails.title,
+                                maxLines: 1,
+                                style: const TextStyle(
+                                  fontSize: 20,
                                 ),
                               ),
-                              Expanded(
-                                flex: 2,
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        InkWell(
-                                          onTap: () async {
-                                            await wishlistScreenGetxController
-                                                .removeFromWatchListGetx(
-                                                    wishlistScreenGetxController
-                                                        .watchListGetx
-                                                        .data![index]
-                                                        .id
-                                                        .toString());
-                                            Get.rawSnackbar(message: 'Item removed from WatchList !',
-                                                backgroundColor: Color.fromRGBO(
-                                                    86,
-                                                    126,
-                                                    239,
-                                                    10),
-                                                duration:
-                                                Duration(seconds: 2));
-                                            await wishlistScreenGetxController.getWatchListGetx();
-                                            await productScreenGetxController.getDataGetx();
-
-                                            /* String wathListItemId =
-                                      removeFromWatchListProvider
-                                          .watchList[0]
-                                          .data![index]
-                                          .id;
-                                  removeFromWatchListProvider
-                                      .removeFromWatchList(
-                                      wathListItemId);
-                                  print('Id: ${wathListItemId}');
-                                  removeFromWatchListProvider
-                                      .getWatchList(context);
-                                  ScaffoldMessenger.of(
-                                      context)
-                                      .showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                            'Item removed from WatchList !'),
-                                        backgroundColor:
-                                        Colors.blue,
-                                        duration: Duration(
-                                            seconds: 2),
-                                      ));*/
-                                            // accessApi(context);
-                                          },
-                                          onDoubleTap: () {},
-                                          onLongPress: () {},
-                                          child: const Icon(Icons.favorite,
-                                              color: Colors.red, size: 20),
-                                        )
-                                      ],
-                                    ),
-                                    Text(
-                                      wishlistScreenGetxController.watchListGetx
-                                          .data![index].productDetails.title,
-                                      maxLines: 1,
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                    Text(
-                                      wishlistScreenGetxController
-                                          .watchListGetx
-                                          .data![index]
-                                          .productDetails
-                                          .description,
-                                      maxLines: 2,
-                                      style: const TextStyle(
-                                          fontSize: 15, color: Colors.black54),
-                                    ),
-                                    Text(
-                                      '\$${wishlistScreenGetxController.watchListGetx.data![index].productDetails.price}',
-                                      style: const TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    /*Consumer<CartProvider>(
+                              Text(
+                                wishlistScreenGetxController
+                                    .watchListGetx
+                                    .data![index]
+                                    .productDetails
+                                    .description,
+                                maxLines: 2,
+                                style: const TextStyle(
+                                    fontSize: 15, color: Colors.black54),
+                              ),
+                              Text(
+                                '\$${wishlistScreenGetxController.watchListGetx.data![index].productDetails.price}',
+                                style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              /*Consumer<CartProvider>(
                                         builder: (context, value, child) {
                                       return Container(
                                         decoration: BoxDecoration(
@@ -303,18 +273,18 @@ class _WishlistScreenGetxState extends State<WishlistScreenGetx> {
                                         ),
                                       );
                                     }),*/
-                                  ],
-                                ),
-                              ),
                             ],
-                          )
-                        ],
-                      ),
-                    ),
-                  );
-                },
-                itemCount:
-                    wishlistScreenGetxController.watchListGetx.data?.length,
-              ));
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            );
+          },
+          itemCount:
+          wishlistScreenGetxController.watchListGetx.data?.length,
+        ));
   }
 }
