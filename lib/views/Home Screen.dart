@@ -37,7 +37,6 @@ class _HomeScreenState extends State<HomeScreen> {
     print('Home Screen Called ${DateTime.now().toString()}');
     super.initState();
 
-
     FirebaseMessaging.instance.getInitialMessage().then(
       (message) {
         print("FirebaseMessaging.instance.getInitialMessage");

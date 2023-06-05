@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
-import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class FirebaseApiCalling extends ChangeNotifier{
+class FirebaseGetxController extends GetxController {
   Future<void> sendPushNotification(String title, String msg) async {
     final prefs = await SharedPreferences.getInstance();
     String? fcmToken = prefs.getString('fcmToken');
@@ -32,6 +32,5 @@ class FirebaseApiCalling extends ChangeNotifier{
     } catch (e) {
       log('\nsendPushNotificationE: $e');
     }
-    notifyListeners();
   }
 }

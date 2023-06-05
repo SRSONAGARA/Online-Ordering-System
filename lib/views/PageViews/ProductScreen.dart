@@ -30,6 +30,7 @@ class _ProductScreenState extends State<ProductScreen> {
     // await apiConnectionProvider.getMyCart(context);
     apiConnectionProvider.isLoading=false;
     productData = apiConnectionProvider.productDataList.map((e) => e).toList();
+    print('productData:${productData}');
     SearchItems = productData[0].data;
     cartItemCount = productData[0].totalProduct.toString();
     print('cartItemCount: $cartItemCount');

@@ -22,7 +22,16 @@ class _ForgotPswOtpScreenGetxState extends State<ForgotPswOtpScreenGetx> {
     final argument = ModalRoute.of(context)!.settings.arguments as Map<String,dynamic>;
     String userId=argument['id'];
     print('userId: ${userId}');
-    return Scaffold(
+    return Obx(() => authGetxController.isLoading.value
+        ?  Container(
+      decoration: BoxDecoration(color: Colors.white),
+      height: Get.height/1.3,
+      child: const Center(
+          child: CircularProgressIndicator(
+            color: Color.fromRGBO(86, 126, 239, 10),
+          )),
+    )
+        : Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
@@ -40,8 +49,8 @@ class _ForgotPswOtpScreenGetxState extends State<ForgotPswOtpScreenGetx> {
             const SizedBox(
               height: 20,
             ),
-            const Text(
-              'OTP Verification',
+            Text(
+              'OTP Verification'.tr,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(
@@ -50,8 +59,8 @@ class _ForgotPswOtpScreenGetxState extends State<ForgotPswOtpScreenGetx> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  'Enter the OTP sent to - ',
+                Text(
+                  'Enter the OTP sent to - '.tr,
                 ),
                 const Icon(Icons.email_outlined),
                 IconButton(
@@ -85,16 +94,29 @@ class _ForgotPswOtpScreenGetxState extends State<ForgotPswOtpScreenGetx> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text("Didn't Receive the OTP?"),
+                Text("Didn't Receive the OTP?".tr),
                 const SizedBox(
                   width: 5,
                 ),
                 TextButton(
                     onPressed: ()async {
-                      var result1=await authGetxController.resendOtpGetx(userId: userId);
+                      Get.rawSnackbar(
+                          message:
+                          'OTP resent successfully !'.tr,
+                          backgroundColor:
+                          const Color
+                              .fromRGBO(
+                              86,
+                              126,
+                              239,
+                              10),
+                          duration:
+                          const Duration(seconds: 2));
+                      await authGetxController.resendOtpGetx(userId: userId);
+
                     },
-                    child: const Text(
-                      'RESEND OTP',
+                    child:  Text(
+                      'RESEND OTP'.tr,
                       style: TextStyle(color: Colors.pinkAccent),
                     ))
               ],
@@ -118,28 +140,29 @@ class _ForgotPswOtpScreenGetxState extends State<ForgotPswOtpScreenGetx> {
                     print(jsonEncode(result));
 
                     if(result['status']==1){
-                      await Future.delayed(const Duration(seconds: 1));
+                      authGetxController.isLoading.value = false;
                       await Get.offNamedUntil('/loginScreenGetx', (route) => false);
                     }else{
-                      Get.dialog(
-                         AlertDialog(
-                          title: Text('OTP is Invalid'),
-                          content: Text('Please insert correct OTP.'),
-                          actions: [
-                            TextButton(onPressed: (){
-                              Get.back();
-                            }, child: Text('Okey'))
-                          ],
-                        )
+                      authGetxController.isLoading.value = false;
+                    Get.dialog(
+                          AlertDialog(
+                            title: Text('OTP is Invalid'.tr),
+                            content: Text('Please insert correct OTP.'.tr),
+                            actions: [
+                              TextButton(onPressed: (){
+                                Get.back();
+                              }, child: Text('Okay'.tr))
+                            ],
+                          )
                       );
                     }
 
                   },
-                  child: Text('VERIFY & PROCEED')),
+                  child: Text('VERIFY & PROCEED'.tr)),
             ),
           ],
         ),
       ),
-    );
+    ));
   }
 }

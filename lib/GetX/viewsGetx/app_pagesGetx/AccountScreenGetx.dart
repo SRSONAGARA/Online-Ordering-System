@@ -4,6 +4,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../ControllersGetx/ApiConnection_Getx/AccountScreenGetxController.dart';
+import '../../ControllersGetx/SearchGetxController.dart';
 
 class AccountScreenGetx extends StatefulWidget {
   const AccountScreenGetx({Key? key}) : super(key: key);
@@ -14,6 +15,7 @@ class AccountScreenGetx extends StatefulWidget {
 
 class _AccountScreenGetxState extends State<AccountScreenGetx> {
   var accountScreenGetxController = Get.put(AccountScreenGetxController());
+  var searchGetxController = Get.put(SearchGetxController());
 
   TextEditingController UserName = TextEditingController();
   TextEditingController EmailAddress = TextEditingController();
@@ -45,11 +47,11 @@ class _AccountScreenGetxState extends State<AccountScreenGetx> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(child: Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(86, 126, 239, 15),
-        title: Text('Hello!'),
+        title: Text('${'Hello'.tr} ${UserNameValue}'),
         leading: Padding(
           padding: const EdgeInsets.all(12.0),
           child: InkWell(
@@ -82,9 +84,9 @@ class _AccountScreenGetxState extends State<AccountScreenGetx> {
                     child: Image(
                       image: AssetImage('assets/LoginImage.png'),
                     )),
-                const Text(
-                  'Account Details',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                Text(
+                  'Account Details'.tr,
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(
                   height: 40,
@@ -100,9 +102,9 @@ class _AccountScreenGetxState extends State<AccountScreenGetx> {
                           Container(
                               height: 30,
                               decoration: const BoxDecoration(
-                                borderRadius:
-                                BorderRadius.all(Radius.circular(5)),
-                                color:  Colors.black12
+                                  borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                                  color:  Colors.black12
                               ),
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
@@ -112,15 +114,15 @@ class _AccountScreenGetxState extends State<AccountScreenGetx> {
                                   Get.toNamed('/orderHistoryScreenGetx');
                                 },
                                 child: Row(
-                                  children: const [
-                                    Icon(
+                                  children:  [
+                                    const Icon(
                                       Icons.assignment_turned_in_outlined,
                                       color: Colors.black,
                                     ),
-                                    SizedBox(width: 10),
+                                    const SizedBox(width: 10),
                                     Text(
-                                      'My Orders',
-                                      style: TextStyle(color: Colors.black),
+                                      'My Orders'.tr,
+                                      style: const TextStyle(color: Colors.black),
                                     )
                                   ],
                                 ),
@@ -137,9 +139,9 @@ class _AccountScreenGetxState extends State<AccountScreenGetx> {
                           Container(
                               height: 30,
                               decoration: const BoxDecoration(
-                                borderRadius:
-                                BorderRadius.all(Radius.circular(5)),
-                                color:   Colors.black12
+                                  borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                                  color:   Colors.black12
                               ),
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
@@ -149,15 +151,15 @@ class _AccountScreenGetxState extends State<AccountScreenGetx> {
                                   Get.toNamed('/wishlistScreenGetx');
                                 },
                                 child: Row(
-                                  children: const [
-                                    Icon(
+                                  children: [
+                                    const Icon(
                                       Icons.favorite_border_outlined,
                                       color: Colors.black,
                                     ),
-                                    SizedBox(width: 10),
+                                    const SizedBox(width: 10),
                                     Text(
-                                      'Wishlist',
-                                      style: TextStyle(color: Colors.black),
+                                      'Wishlist'.tr,
+                                      style: const TextStyle(color: Colors.black),
                                     )
                                   ],
                                 ),
@@ -184,9 +186,9 @@ class _AccountScreenGetxState extends State<AccountScreenGetx> {
                           Container(
                               height: 30,
                               decoration: const BoxDecoration(
-                                borderRadius:
-                                BorderRadius.all(Radius.circular(5)),
-                                color:   Colors.black12
+                                  borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                                  color:   Colors.black12
                               ),
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
@@ -196,15 +198,15 @@ class _AccountScreenGetxState extends State<AccountScreenGetx> {
                                   Get.toNamed('/cartScreenGetx');
                                 },
                                 child: Row(
-                                  children: const [
-                                    Icon(
+                                  children: [
+                                    const Icon(
                                       Icons.shopping_cart_outlined,
                                       color: Colors.black,
                                     ),
-                                    SizedBox(width: 10),
+                                    const SizedBox(width: 10),
                                     Text(
-                                      'My Cart',
-                                      style: TextStyle(color: Colors.black),
+                                      'My Cart'.tr,
+                                      style: const TextStyle(color: Colors.black),
                                     )
                                   ],
                                 ),
@@ -221,25 +223,28 @@ class _AccountScreenGetxState extends State<AccountScreenGetx> {
                           Container(
                               height: 30,
                               decoration: const BoxDecoration(
-                                borderRadius:
-                                BorderRadius.all(Radius.circular(5)),
-                                color:  Colors.black12
+                                  borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                                  color:  Colors.black12
                               ),
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.transparent,
                                     shadowColor: Colors.transparent),
-                                onPressed: () {},
+                                onPressed: () {
+                                  languageAlertGetx(context);
+
+                                },
                                 child: Row(
-                                  children: const [
-                                    Icon(
+                                  children: [
+                                    const Icon(
                                       Icons.settings_outlined,
                                       color: Colors.black,
                                     ),
-                                    SizedBox(width: 10),
+                                    const SizedBox(width: 10),
                                     Text(
-                                      'Settings',
-                                      style: TextStyle(color: Colors.black),
+                                      'Setting'.tr,
+                                      style: const TextStyle(color: Colors.black),
                                     )
                                   ],
                                 ),
@@ -272,9 +277,9 @@ class _AccountScreenGetxState extends State<AccountScreenGetx> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                'User Name: ',
-                                style: TextStyle(fontSize: 10),
+                              Text(
+                                'User Name:'.tr,
+                                style: const TextStyle(fontSize: 10),
                               ),
                               Text(
                                 UserNameValue,
@@ -304,9 +309,9 @@ class _AccountScreenGetxState extends State<AccountScreenGetx> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                'Email Address: ',
-                                style: TextStyle(fontSize: 10),
+                              Text(
+                                'Email Address:'.tr,
+                                style: const TextStyle(fontSize: 10),
                               ),
                               Text(
                                 EmailAddressValue,
@@ -336,9 +341,9 @@ class _AccountScreenGetxState extends State<AccountScreenGetx> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                'Mobile No.: ',
-                                style: TextStyle(fontSize: 10),
+                              Text(
+                                'Mobile No.:'.tr,
+                                style: const TextStyle(fontSize: 10),
                               ),
                               Text(
                                 MobileNumberValue,
@@ -359,9 +364,9 @@ class _AccountScreenGetxState extends State<AccountScreenGetx> {
                               onPressed: () {
                                 Get.toNamed('/changePswScreenGetx');
                               },
-                              child: const Text(
-                                'Change Password ?',
-                                style: TextStyle(color: Color.fromRGBO(86, 126, 239, 15),),
+                              child: Text(
+                                'Change Password ?'.tr,
+                                style: const TextStyle(color: Color.fromRGBO(86, 126, 239, 15),),
                               )),
                         ],
                       ),
@@ -369,9 +374,9 @@ class _AccountScreenGetxState extends State<AccountScreenGetx> {
                         children: [
                           Expanded(
                             child: TextFormField(
-                              decoration: const InputDecoration(
-                                label: Text('Address of User'),
-                                hintText: 'Enter here',
+                              decoration: InputDecoration(
+                                label: Text('Address of User'.tr),
+                                hintText: 'Enter here'.tr,
                               ),
                               controller: AddressOfUser,
                               keyboardType: TextInputType.text,
@@ -388,23 +393,15 @@ class _AccountScreenGetxState extends State<AccountScreenGetx> {
                 Container(
                   height: 30,
                   decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
-                      color: Color
-                          .fromRGBO(
-                          86,
-                          126,
-                          239,
-                          10),
-                      /*gradient: LinearGradient(colors: [
-                        Color.fromRGBO(143, 148, 251, 1),
-                        Color.fromRGBO(143, 148, 251, .6),
-                      ])*/),
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    color: Color.fromRGBO(86, 126, 239, 15),
+                    ),
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
                           shadowColor: Colors.transparent),
                       onPressed: () {},
-                      child: const Text('Save Data')),
+                      child: Text('Save Data'.tr)),
                 ),
                 const SizedBox(
                   height: 20,
@@ -422,11 +419,11 @@ class _AccountScreenGetxState extends State<AccountScreenGetx> {
                             backgroundColor: Colors.transparent,
                             shadowColor: Colors.transparent),
                         onPressed: () {
-                          alertFuncGetx(context);
+                          logoutAlertGetx(context);
                         },
-                        child: const Text(
-                          'Log Out',
-                          style: TextStyle(color: Colors.black),
+                        child: Text(
+                          'Log Out'.tr,
+                          style: const TextStyle(color: Colors.black),
                         )),
                   ),
                 ),
@@ -435,22 +432,31 @@ class _AccountScreenGetxState extends State<AccountScreenGetx> {
           ),
         ),
       ),
-    );
+    ), onWillPop: ()async{
+      if(searchGetxController.SearchButton == true){
+        searchGetxController.searchButtonUnPress();
+        Get.offNamedUntil('/homeScreenGetx', (route) => false);
+        return true;
+      }else{
+        Get.offNamedUntil('/homeScreenGetx', (route) => false);
+        return false;
+      }
+    });
   }
 }
-void alertFuncGetx(BuildContext context) {
+void logoutAlertGetx(BuildContext context) {
   var alertDialog = AlertDialog(
-    title: const Text(
-      'Log Out',
-      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    title: Text(
+      'Log Out'.tr,
+      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
     ),
-    content: const Text('Are you Sure, you want to Log Out?'),
+    content: Text('Are you Sure, you want to Log Out?'.tr),
     actions: [
       TextButton(
           onPressed: () {
             Get.back();
           },
-          child: const Text('No', style: TextStyle(color: Color
+          child: Text('No'.tr, style: const TextStyle(color: Color
               .fromRGBO(
               86,
               126,
@@ -459,24 +465,57 @@ void alertFuncGetx(BuildContext context) {
       TextButton(
           onPressed: () async {
             Get.rawSnackbar(
-              message: 'Log out successful !',
-              backgroundColor: Color
+              message: 'Log out successful !'.tr,
+              backgroundColor: const Color
                   .fromRGBO(
                   86,
                   126,
                   239,
                   10),
-              duration: Duration(seconds: 2),
+              duration: const Duration(seconds: 2),
             );
             final share = await SharedPreferences.getInstance();
             share.clear();
             Get.offNamedUntil('/loginScreenGetx', (route) => false);
           },
-          child: const Text(
-            'Yes',
-            style: TextStyle(color: Colors.red),
+          child: Text(
+            'Yes'.tr,
+            style: const TextStyle(color: Colors.red),
           ))
     ],
+  );
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alertDialog;
+      });
+}
+ void languageAlertGetx(BuildContext context) {
+  var alertDialog = AlertDialog(
+    title: Row(children: [
+      Icon(Icons.translate, color: Color.fromRGBO(86, 126, 239, 15)),
+      SizedBox(width: 10,),
+      Text('Choose language'.tr)
+    ],),
+    content: SizedBox(
+      height: 120,
+      child: Column(
+        children: [
+          TextButton(onPressed: (){
+            Get.updateLocale(Locale('en', 'US'));
+            SharedPreferences.getInstance().then((prefs) => prefs.setString('lang_code', 'en_US'));
+            Get.back();
+          }, child: Text('English'.tr, style: TextStyle(color:Color.fromRGBO(86, 126, 239, 15)),)),
+          Divider(),
+          TextButton(onPressed: (){
+            Get.updateLocale(Locale('hi', 'IN'));
+            SharedPreferences.getInstance().then((prefs) => prefs.setString('lang_code', 'hi_IN'));
+            Get.back();
+          }, child: Text('Hindi'.tr, style: TextStyle(color: Color.fromRGBO(86, 126, 239, 15)),)),
+
+        ],
+      ),
+    ),
   );
   showDialog(
       context: context,

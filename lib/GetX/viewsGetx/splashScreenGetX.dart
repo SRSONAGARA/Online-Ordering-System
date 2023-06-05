@@ -19,6 +19,12 @@ class _SplashScreenGetXState extends State<SplashScreenGetX> {
      _opacity();
     isLogIn();
   }
+  _opacity() async {
+    Future.delayed(Duration(seconds: 2));
+    setState(() {
+      Opacity1 = !Opacity1;
+    });
+  }
   isLogIn() async {
     final preferences = await SharedPreferences.getInstance();
     logInBool = preferences.getBool('loginBool');
@@ -35,12 +41,7 @@ class _SplashScreenGetXState extends State<SplashScreenGetX> {
     });
   }
 
-  _opacity() async {
-    Future.delayed(Duration(seconds: 2));
-    setState(() {
-      Opacity1 = !Opacity1;
-    });
-  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,10 +52,11 @@ class _SplashScreenGetXState extends State<SplashScreenGetX> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              AnimatedOpacity(
-                  opacity: Opacity1 ? 1 : 0,
-                  duration: Duration(seconds: 5),
-                  child: Image(image: AssetImage('assets/imagesGetx/SplashImageGetx.jpg'))),
+              Image(image: AssetImage('assets/SplashImage.jpg')
+              /*AnimatedOpacity(
+                  opacity: Opacity1 ? 2 : 0,
+                  duration: Duration(seconds: 1),
+                  child: Image(image: AssetImage('assets/SplashImage.jpg'))*/),
             ],
           ),
         ),

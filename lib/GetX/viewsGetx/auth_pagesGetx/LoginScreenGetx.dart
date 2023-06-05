@@ -35,8 +35,8 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body:authGetxController.isLoading.value ? Center(child: CircularProgressIndicator(),): /*authRepoProvider.isLoading? const Center(child: CircularProgressIndicator()): */
-          SingleChildScrollView(
+      body:Obx(() => authGetxController.isLoading.value ? Center(child: CircularProgressIndicator(color: const Color.fromRGBO(86, 126, 239, 15)),): /*authRepoProvider.isLoading? const Center(child: CircularProgressIndicator()): */
+      SingleChildScrollView(
         child: Form(
           key: formkey,
           child: Column(
@@ -44,7 +44,7 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
             children: [
               Container(
                 height: 350,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     image: DecorationImage(
                         image: AssetImage(
                             'assets/imagesGetx/loginImgGetx/background.png'),
@@ -56,7 +56,7 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
                       width: 80,
                       height: 200,
                       child: Container(
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                             image: DecorationImage(
                                 image: AssetImage(
                                     'assets/imagesGetx/loginImgGetx/light-1.png'))),
@@ -67,7 +67,7 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
                       width: 80,
                       height: 150,
                       child: Container(
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                             image: DecorationImage(
                                 image: AssetImage(
                                     'assets/imagesGetx/loginImgGetx/light-2.png'))),
@@ -79,7 +79,7 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
                       width: 80,
                       height: 150,
                       child: Container(
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                             image: DecorationImage(
                                 image: AssetImage(
                                     'assets/imagesGetx/loginImgGetx/clock.png'))),
@@ -90,8 +90,8 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
                         margin: EdgeInsets.only(top: 50),
                         child: Center(
                           child: Text(
-                            "Login",
-                            style: TextStyle(
+                            "Login".tr,
+                            style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 40,
                                 fontWeight: FontWeight.bold),
@@ -108,10 +108,10 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Text(
-                          "Welcome Back",
-                          style: TextStyle(
+                          "Welcome Back".tr,
+                          style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Colors.black54),
@@ -142,25 +142,25 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
                             child: TextFormField(
                               cursorColor: Colors.black54,
                               decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: "Enter your Email",
-                                  hintStyle:
-                                      TextStyle(color: Colors.grey[400]),
-                                  prefixIcon: const Icon(
-                                    Icons.person,
-                                    color: Colors.black54,
-                                  ),
+                                border: InputBorder.none,
+                                hintText: "Enter your Email".tr,
+                                hintStyle:
+                                TextStyle(color: Colors.grey[400]),
+                                prefixIcon: const Icon(
+                                  Icons.person,
+                                  color: Colors.black54,
+                                ),
                                 // labelText: 'Username',
                               ),
 
                               controller: emailController,
                               validator: (value) {
                                 if (value!.isEmpty) {
-                                  return "Username can't empty";
+                                  return "Username can't empty".tr;
                                 } else if (!RegExp(
-                                        r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}')
+                                    r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}')
                                     .hasMatch(value!)) {
-                                  return "Enter Correct email";
+                                  return "Enter Correct email".tr;
                                 } else {
                                   return null;
                                 }
@@ -175,13 +175,13 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
                               controller: passwordController,
                               decoration: InputDecoration(
                                   border: InputBorder.none,
-                                  hintText: "Enter your Password",
+                                  hintText: "Enter your Password".tr,
                                   hintStyle:
-                                      TextStyle(color: Colors.grey[400]),
-                                prefixIcon: const Icon(
-                                  Icons.lock,
-                                  color: Colors.black54,
-                                ),
+                                  TextStyle(color: Colors.grey[400]),
+                                  prefixIcon: const Icon(
+                                    Icons.lock,
+                                    color: Colors.black54,
+                                  ),
                                   suffixIcon: IconButton(
                                     onPressed: () {
                                       setState(() {
@@ -196,9 +196,9 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
                               ),
                               validator: (value) {
                                 if (value!.isEmpty) {
-                                  return "Password can't empty";
+                                  return "Password can't empty".tr;
                                 } else if (value.length < 6) {
-                                  return "Password is not less than 6 letter";
+                                  return "Password is not less than 6 letter".tr;
                                 }
                                 return null;
                               },
@@ -292,8 +292,8 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
                             onPressed: () async {
                               await Get.toNamed('/forgotPswScreenGetx');
                             },
-                            child: const Text(
-                              'Forgot your Password?',
+                            child: Text(
+                              'Forgot your Password?'.tr,
                               style: TextStyle(
                                   color: Color.fromRGBO(143, 148, 251, 1)),
                             )),
@@ -322,24 +322,24 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
                               formkey.currentState!.save();
 
                               var result =
-                                  await authGetxController.userLoginGetx(
-                                      emailId: emailController.text,
-                                      password: passwordController.text
-                                 /* emailId: 'felitej727@larland.com',
+                              await authGetxController.userLoginGetx(
+                                  emailId: emailController.text,
+                                  password: passwordController.text
+                                /* emailId: 'felitej727@larland.com',
                                     password: '123456'*/
-                                  );
+                              );
                               print('status: ${authGetxController.loginModelClassGetx.status}');
                               if (authGetxController
-                                      .loginModelClassGetx.status ==
+                                  .loginModelClassGetx.status ==
                                   1) {
                                 Get.rawSnackbar(
-                                  message: 'Log in successful !',
+                                  message: 'Log in successful !'.tr,
                                   backgroundColor:
-                                      Color.fromRGBO(86, 126, 239, 15),
+                                  Color.fromRGBO(86, 126, 239, 15),
                                 );
 
                                 final prefs =
-                                    await SharedPreferences.getInstance();
+                                await SharedPreferences.getInstance();
                                 await prefs.setString(
                                     'jwtToken',
                                     authGetxController
@@ -358,42 +358,42 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
                                     authGetxController
                                         .loginModelClassGetx.data.mobileNo);
 
-                                await Get.offNamedUntil(
-                                    '/homeScreenGetx', (route) => false);
+                                await Get.offAllNamed(
+                                  '/homeScreenGetx',);
                               } else if (authGetxController
-                                      .loginModelClassGetx.status ==
+                                  .loginModelClassGetx.status ==
                                   0) {
                                 // print('please register in app');
                                 Get.defaultDialog(
-                                  actions: [
-                                    TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Text(
-                                          'okey',
-                                          style: TextStyle(fontSize: 15,
-                                              color: Color.fromRGBO(
-                                                  143, 148, 251, 1)),
-                                        ))
-                                  ],
-                                  title: 'Please Register in App',
-                                  content: Padding(
-                                    padding: const EdgeInsets.only(left: 15.0, right: 15.0),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: const [
-                                        Text(
-                                            'You are not registered with us kindly register first!', style: TextStyle(color: Colors.black54),),
-                                      ],
-                                    ),
-                                  )
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text(
+                                            'Okay'.tr,
+                                            style: const TextStyle(fontSize: 15,
+                                                color: Color.fromRGBO(
+                                                    143, 148, 251, 1)),
+                                          ))
+                                    ],
+                                    title: 'Invalid username or password'.tr,
+                                    content: Padding(
+                                      padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children:  [
+                                          Text(
+                                            'This email id and password is not verified, Please enter correct details!'.tr, style: TextStyle(color: Colors.black54),),
+                                        ],
+                                      ),
+                                    )
                                 );
                               }
-                              // authRepoProvider.isLoading = false;
+                              authGetxController.isLoading.value = false;
                             }
                           },
-                          child: const Text('LOGIN')),
+                          child: Text('Login'.tr)),
                     ),
                     const SizedBox(
                       height: 20,
@@ -401,7 +401,7 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text("Don't have an Account?"),
+                        Text("Don't have an Account?".tr),
                         const SizedBox(
                           width: 10,
                         ),
@@ -409,8 +409,8 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
                             onPressed: () {
                               Get.toNamed('/registrationScreenGetx');
                             },
-                            child: const Text(
-                              'Register',
+                            child:  Text(
+                              'Register'.tr,
                               style: TextStyle(
                                   color: Color.fromRGBO(143, 148, 251, 1)),
                             ))
@@ -422,7 +422,7 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
             ],
           ),
         ),
-      ),
+      ),)
     );
   }
 }

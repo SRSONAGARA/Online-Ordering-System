@@ -39,13 +39,8 @@ class _DrawerScreenGetxState extends State<DrawerScreenGetx> {
         children: [
           DrawerHeader(
               decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                      colors: <Color>[Colors.white, Color
-                          .fromRGBO(
-                          86,
-                          126,
-                          239,
-                          1),])),
+                color: const Color.fromRGBO(86, 126, 239, 15),
+                 ),
               child: Column(
                 children: [
                   Container(
@@ -58,34 +53,35 @@ class _DrawerScreenGetxState extends State<DrawerScreenGetx> {
                   ),
                   Text(
                     UserNameValue,
-                    style: const TextStyle(fontSize: 15),
+                    style: const TextStyle(fontSize: 15,color: Colors.white),
                   ),
                   const SizedBox(height: 5,),
                   Text(
                     EmailAddressValue,
-                    style: const TextStyle(fontSize: 15),
+                    style: const TextStyle(fontSize: 15,color: Colors.white),
                   )
                 ],
               )),
-          CustomListTile(Icons.home_outlined, 'Product Screen',
-                  () => {Get.toNamed('/productScreenGetx')}),
-          CustomListTile(Icons.favorite_border_outlined, 'WishList Screen',
+          CustomListTile(Icons.home_outlined, 'Product Screen'.tr,
+                  () => {Get.back()}),
+          CustomListTile(Icons.favorite_border_outlined, 'WishList Screen'.tr,
                   () => {Get.toNamed('/wishlistScreenGetx')}),
-          CustomListTile(Icons.shopping_cart_outlined, 'Cart Screen',
+          CustomListTile(Icons.shopping_cart_outlined, 'Cart Screen'.tr,
                   () => {Get.toNamed('/cartScreenGetx')}),
-          CustomListTile(Icons.assignment_turned_in_outlined, 'Order History Screen',
+          CustomListTile(Icons.assignment_turned_in_outlined, 'Order History Screen'.tr,
                   () => {Get.toNamed('/orderHistoryScreenGetx')}),
-          CustomListTile(Icons.account_circle_outlined, 'Account Screen',
+          CustomListTile(Icons.account_circle_outlined, 'Account Screen'.tr,
                   () => {Get.toNamed('/accountScreenGetx')}),
           const Divider(
             color: Colors.black54,
           ),
-          CustomListTile(Icons.settings, 'Setting', () => {}),
-          CustomListTile(Icons.info_outlined, 'About',() => {}),
+          CustomListTile(Icons.translate, 'Languages'.tr, () => {languageAlertGetx(context)}),
+          CustomListTile(Icons.settings, 'Setting'.tr, () => {}),
+          CustomListTile(Icons.info_outlined, 'About'.tr,() => {}),
           const Divider(
             color: Colors.black54,
           ),
-          CustomListTile(Icons.logout_outlined, 'LogOut',() => {alertFuncGetx(context)}),
+          CustomListTile(Icons.logout_outlined, 'Log Out'.tr,() => {logoutAlertGetx(context)}),
           const SizedBox(height: 30,),
           const Padding(
             padding: EdgeInsets.only(right: 10.0),
@@ -109,7 +105,7 @@ class CustomListTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 8, left: 10,),
       child: InkWell(
-        splashColor: Color
+        splashColor: const Color
             .fromRGBO(
             86,
             126,

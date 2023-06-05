@@ -7,14 +7,13 @@ import 'package:http/http.dart' as http;
 import '../../../common/ApiConstant.dart';
 
 class AccountScreenGetxController extends GetxController{
+  RxBool isLoading = false.obs;
 
-  void meth(){
-
-  }
-   Future<Map<String, dynamic>> changePasswordGetx(
+  Future<Map<String, dynamic>> changePasswordGetx(
       {required String newPass, required String confirmPass}) async {
     print('newPass: $newPass');
     try {
+      isLoading(true);
       String url = ApiConstant.changePasswordApi;
       var requestBody = {"newPass": newPass, "confirmPass": confirmPass};
       SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -30,6 +29,8 @@ class AccountScreenGetxController extends GetxController{
     } catch (error) {
       print('AuthRepo.changePassword.error: $error');
       return {};
+    }finally{
+      isLoading(false);
     }
   }
 }

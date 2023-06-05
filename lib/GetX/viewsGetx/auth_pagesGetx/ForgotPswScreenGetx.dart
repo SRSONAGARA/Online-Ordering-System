@@ -17,7 +17,7 @@ class _ForgotPswScreenGetxState extends State<ForgotPswScreenGetx> {
 
   final formKey = GlobalKey<FormState>();
 
-  Widget CustomText = Text("Forgot Password");
+  Widget CustomText = Text("Forgot Password".tr);
   TextEditingController emailController = TextEditingController();
   TextEditingController newPassword = TextEditingController();
   TextEditingController confirmPassword = TextEditingController();
@@ -31,10 +31,19 @@ class _ForgotPswScreenGetxState extends State<ForgotPswScreenGetx> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Obx(() => authGetxController.isLoading.value
+        ?  Container(
+      decoration: BoxDecoration(color: Colors.white),
+      height: Get.height/1.3,
+      child: const Center(
+          child: CircularProgressIndicator(
+            color: Color.fromRGBO(86, 126, 239, 10),
+          )),
+    )
+        :  Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.blue,
+        backgroundColor: const Color.fromRGBO(86, 126, 239, 15),
         title: CustomText,
         centerTitle: true,
         leading: Padding(
@@ -71,16 +80,16 @@ class _ForgotPswScreenGetxState extends State<ForgotPswScreenGetx> {
                   Image(
                     height: 200,
                     width: 200,
-                    image: const AssetImage('assets/ForgotPswImage.png'),
+                    image: const AssetImage('assets/imagesGetx/forgetPswImgGetx.png'),
                   ),
                   const SizedBox(
                     height: 20,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Text(
-                        'Forgot Your Password?',
+                        'Forgot your Password?'.tr,
                         style: TextStyle(
                             fontSize: 30, fontWeight: FontWeight.bold),
                       ),
@@ -88,9 +97,9 @@ class _ForgotPswScreenGetxState extends State<ForgotPswScreenGetx> {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       AutoSizeText(
-                        "Please enter the email address you'd like \n  your password reset information sent to",
+                        "Please enter the email address you'd like \n  your password reset information sent to".tr,
                         maxLines: 2,
                       ),
                     ],
@@ -100,17 +109,17 @@ class _ForgotPswScreenGetxState extends State<ForgotPswScreenGetx> {
                   ),
                   TextFormField(
                     controller: emailController,
-                    decoration: const InputDecoration(
+                    decoration:  InputDecoration(
                       icon: Icon(Icons.lock_outline),
-                      labelText: 'Email address',
-                      hintText: 'Enter your email',
+                      labelText: 'Email Address'.tr,
+                      hintText: 'Enter your Email'.tr,
                     ),
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return "Email can't empty";
+                        return "Email can't empty".tr;
                       } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}')
                           .hasMatch(value!)) {
-                        return "Enter Correct email";
+                        return "Enter Correct email".tr;
                       } else {
                         return null;
                       }
@@ -139,34 +148,36 @@ class _ForgotPswScreenGetxState extends State<ForgotPswScreenGetx> {
                             formKey.currentState!.save();
 
                             var result =
-                                await authGetxController.forgotPasswordGetx(
-                                    emailId: emailController.text);
+                            await authGetxController.forgotPasswordGetx(
+                                emailId: emailController.text);
                             // print(jsonEncode(result));
 
                             if (result['status'] == 1) {
                               String userId = result['data']['_id'];
                               print(userId);
-                              await Future.delayed(const Duration(seconds: 1));
+                              // await Future.delayed(const Duration(seconds: 1));
+                              authGetxController.isLoading.value = false;
                               await Get.toNamed('/forgotPswOtpScreenGetx',
                                   arguments: {'id': userId.toString()});
                             } else {
+                              authGetxController.isLoading.value = false;
                               Get.dialog(AlertDialog(
-                                title: Text('Email is not registered'),
+                                title: Text('Email is not registered'.tr),
                                 content: Text(
-                                    'This Email Id is not Registered With us kindly register first!'),
+                                    'This Email Id is not Registered With us kindly register first!'.tr),
                                 actions: [
                                   TextButton(
                                       onPressed: () {
                                         Get.back();
                                       },
-                                      child: const Text('okey'))
+                                      child: Text('okey'.tr))
                                 ],
                               ));
                             }
                             ;
                           }
                         },
-                        child: const Text('Send otp')),
+                        child: Text('Send otp'.tr)),
                   ),
                 ],
               ),
@@ -174,6 +185,6 @@ class _ForgotPswScreenGetxState extends State<ForgotPswScreenGetx> {
           ),
         ),
       ),
-    );
+    ));
   }
 }

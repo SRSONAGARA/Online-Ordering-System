@@ -39,8 +39,7 @@ class ProductScreenGetxController extends GetxController {
       } else if (response.statusCode == 500) {
         SharedPreferences preferences = await SharedPreferences.getInstance();
         preferences.clear();
-
-        // await Navigator.of(context).pushNamedAndRemoveUntil('/login-screen', (route) => false);
+        await Get.offNamedUntil('/loginScreenGetx', (route) => false);
         update();
       }
     } catch (e) {

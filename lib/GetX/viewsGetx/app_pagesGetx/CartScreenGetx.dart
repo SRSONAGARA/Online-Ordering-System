@@ -8,6 +8,8 @@ import '../../ControllersGetx/ApiConnection_Getx/CartScreenGetxController.dart';
 import '../../ControllersGetx/ApiConnection_Getx/OrderScreenGetxController.dart';
 import '../../ControllersGetx/ApiConnection_Getx/ProductScreenGetxController.dart';
 import '../../ControllersGetx/ApiConnection_Getx/WishlistScreenGetxController.dart';
+import '../../ControllersGetx/FIrebaseGetxController.dart';
+import '../../ControllersGetx/SearchGetxController.dart';
 
 class CartScreenGetx extends StatefulWidget {
   const CartScreenGetx({Key? key}) : super(key: key);
@@ -29,33 +31,36 @@ class _CartScreenGetxState extends State<CartScreenGetx> {
   var productScreenGetxController = Get.put(ProductScreenGetxController());
   var wishlistScreenGetxController = Get.put(WishlistScreenGetxController());
   var orderScreenGetxController = Get.put(OrderScreenGetxController());
+  var searchGetxController = Get.put(SearchGetxController());
+  var firebaseGetxController = Get.put(FirebaseGetxController());
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color.fromRGBO(86, 126, 239, 15),
-          title: Text('Cart'),
-          centerTitle: true,
-          leading: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: InkWell(
-                onTap: () {
-                  Get.offAllNamed('/homeScreenGetx');
-                },
-                hoverColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                splashColor: Colors.transparent,
-                child: const CircleAvatar(
-                  backgroundColor: Colors.white,
-                  child: Icon(
-                    Icons.arrow_back_ios_new_sharp,
-                    color: Colors.black,
-                    size: 18,
-                  ),
-                )),
-          ),
-          actions: [
+    return GetBuilder<CartScreenGetxController>(builder: (cartScreenGetxController){
+      return WillPopScope(child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Color.fromRGBO(86, 126, 239, 15),
+            title: Text('Cart'.tr),
+            centerTitle: true,
+            leading: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: InkWell(
+                  onTap: () {
+                    Get.offAllNamed('/homeScreenGetx');
+                  },
+                  hoverColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  splashColor: Colors.transparent,
+                  child: const CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: Icon(
+                      Icons.arrow_back_ios_new_sharp,
+                      color: Colors.black,
+                      size: 18,
+                    ),
+                  )),
+            ),
+            /*actions: [
             InkWell(
               child: Center(
                 child: Badge.Badge(
@@ -75,143 +80,312 @@ class _CartScreenGetxState extends State<CartScreenGetx> {
             const SizedBox(
               width: 20,
             )
-          ],
-        ),
-        body: SingleChildScrollView(child: AllProduct()),
-        bottomNavigationBar: Obx(() => cartScreenGetxController.isLoading.value
-            ? SizedBox()
-            : Container(
-                padding: const EdgeInsets.all(10.0),
-                color: Color.fromRGBO(86, 126, 239, 205),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                        child: Text(
-                      'Total Items: ${cartScreenGetxController.cartGetx.data!.isEmpty ? 0 : cartScreenGetxController.cartGetx.data!.length}',
+          ],*/
+          ),
+          body: SingleChildScrollView(child: AllProduct()),
+          bottomNavigationBar: Obx(() => cartScreenGetxController.isLoading.value
+              ? Container(
+            padding: const EdgeInsets.all(10.0),
+            color: Color.fromRGBO(86, 126, 239, 205),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                    child: Text(
+                      '${'Total Items'.tr}${cartScreenGetxController.cartGetx.data!.isEmpty ? 0 : cartScreenGetxController.cartGetx.data!.length}',
                       style: const TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
                     )),
-                    Expanded(
-                        child: Text(
-                      'Total Price: \$${cartScreenGetxController.cartGetx.data!.isEmpty ? 0 : cartScreenGetxController.cartGetx.cartTotal!.toStringAsFixed(2)}',
+                Expanded(
+                    child: Text(
+                      '${'Total Price'.tr} \$${cartScreenGetxController.cartGetx.data!.isEmpty ? 0 : cartScreenGetxController.cartGetx.cartTotal!.toStringAsFixed(2)}',
                       style: const TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
                     )),
-                    Expanded(
-                      child: InkWell(
-                        onTap: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return cartScreenGetxController
-                                        .cartGetx.data!.isNotEmpty
-                                    ? AlertDialog(
-                                        title: const Text(
-                                            "Confirm to Place Order"),
-                                        content: Text(
-                                            "You added ${cartScreenGetxController.cartGetx.data!.isEmpty ? 0 : cartScreenGetxController.cartGetx.data!.length} Product and Total Price \$${cartScreenGetxController.cartGetx.data!.isEmpty ? 0 : cartScreenGetxController.cartGetx.cartTotal}"),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: const Text('Not Now'),
-                                          ),
-                                          Container(
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: InkWell(
-                                                  onTap: () async {
-                                                    String cartId =
-                                                        cartScreenGetxController
-                                                            .cartGetx
-                                                            .data![0]
-                                                            .cartId
-                                                            .toString();
-                                                    String cartTotal =
-                                                        cartScreenGetxController
-                                                            .cartGetx.cartTotal
-                                                            .toString();
-                                                    print('cartId= $cartId');
-                                                    print('cartTotal= $cartTotal');
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return cartScreenGetxController
+                                .cartGetx.data!.isNotEmpty
+                                ? AlertDialog(
+                              title:  Text(
+                                  "Confirm to Place Order".tr),
+                              content: Text(
+                                  "You added".tr+" ${cartScreenGetxController.cartGetx.data!.isEmpty ? 0 : cartScreenGetxController.cartGetx.data!.length} "+"Product and Total Price".tr+" \$${cartScreenGetxController.cartGetx.data!.isEmpty ? 0 : cartScreenGetxController.cartGetx.cartTotal}"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child:  Text('Not Now'.tr),
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.black12,
+                                      borderRadius: BorderRadius.circular(3)
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: InkWell(
+                                        onTap: () async {
+                                          String cartId =
+                                          cartScreenGetxController
+                                              .cartGetx
+                                              .data![0]
+                                              .cartId
+                                              .toString();
+                                          String cartTotal =
+                                          cartScreenGetxController
+                                              .cartGetx.cartTotal
+                                              .toString();
+                                          print('cartId= $cartId');
+                                          print('cartTotal= $cartTotal');
+                                          Get.back();
+                                          // AlertDialog(content: Container(child: ,),);
+                                          /*Get.rawSnackbar(
+                                              message:
+                                              'Please wait, Your order will be placed !'.tr,
+                                              backgroundColor:
+                                              const Color.fromRGBO(
+                                                  86, 126, 239, 10),
+                                              duration: const Duration(
+                                                  seconds: 2));*/
 
-                                                    await orderScreenGetxController
-                                                        .placeOrderGetx(
-                                                            cartId, cartTotal);
-                                                    Get.back();
-                                                    await cartScreenGetxController
-                                                        .getMyCartGetx();
-                                                    await orderScreenGetxController
-                                                        .getOrderHistoryGetx();
-                                                    await productScreenGetxController
-                                                        .getDataGetx();
-                                                    // firebaseApiProvider.sendPushNotification('Online Ordering System', 'Your order has been placed !');
-                                                  },
+                                          await orderScreenGetxController
+                                              .placeOrderGetx(
+                                              cartId, cartTotal);
+                                          firebaseGetxController.sendPushNotification('Online Ordering System', 'Your order has been placed !');
 
-                                                  onDoubleTap: () {},
-                                                  onLongPress: () {},
-                                                  child: const Text('Place Order', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),)),
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: Colors.black12,
-                                              borderRadius: BorderRadius.circular(3)
-                                            ),
-                                          )
-                                        ],
-                                      )
-                                    : AlertDialog(
-                                        title: const Text(
-                                            "No Items Added in Cart"),
-                                        content: const Text(
-                                            "Please add item in cart"),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: const Text('Not Now'),
-                                          ),
-                                          TextButton(
-                                              child: const Text('Okay'),
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              }),
-                                        ],
-                                      );
-                              });
-                        },
-                        child: Container(
-                          // height: size.height / 15,
-                          padding:
-                              const EdgeInsets.only(left: 10.0, right: 10.0),
-                          height: 30,
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(5)),
-                              color: Colors.red[400]
-                              /*gradient: LinearGradient(colors: [
+                                          await cartScreenGetxController
+                                              .getMyCartGetx();
+                                          await orderScreenGetxController
+                                              .getOrderHistoryGetx();
+                                          await productScreenGetxController
+                                              .getDataGetx();
+                                          setState(() {
+
+                                          });
+
+
+                                        },
+
+                                        onDoubleTap: () {},
+                                        onLongPress: () {},
+                                        child: Text('Place Order'.tr, style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),)),
+                                  ),
+                                )
+                              ],
+                            )
+                                : AlertDialog(
+                              title:  Text(
+                                  "No Items Added in Cart".tr),
+                              content:  Text(
+                                  "Please add item in cart".tr),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child:  Text('Not Now'.tr),
+                                ),
+                                TextButton(
+                                    child:  Text('Okay'.tr),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    }),
+                              ],
+                            );
+                          });
+                    },
+                    child: Container(
+                      // height: size.height / 15,
+                      padding:
+                      const EdgeInsets.only(left: 10.0, right: 10.0),
+                      height: 30,
+                      decoration: BoxDecoration(
+                          borderRadius:
+                          const BorderRadius.all(Radius.circular(5)),
+                          color: Colors.red[400]
+                        /*gradient: LinearGradient(colors: [
                               Colors.redAccent,
                               Colors.redAccent
                             ])*/
-                              ),
-                          child: const Center(
-                              child: Text(
-                            "Place Order ",
-                            style: TextStyle(
+                      ),
+                      child:  Center(
+                          child: Text(
+                            "Place Order".tr,
+                            style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
                           )),
-                        ),
-                      ),
                     ),
-                  ],
+                  ),
                 ),
-              )));
+              ],
+            ),
+          )
+              : Container(
+            padding: const EdgeInsets.all(10.0),
+            color: Color.fromRGBO(86, 126, 239, 205),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                    child: Text(
+                      '${'Total Items'.tr}${cartScreenGetxController.cartGetx.data!.isEmpty ? 0 : cartScreenGetxController.cartGetx.data!.length}',
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )),
+                Expanded(
+                    child: Text(
+                      '${'Total Price'.tr} \$${cartScreenGetxController.cartGetx.data!.isEmpty ? 0 : cartScreenGetxController.cartGetx.cartTotal!.toStringAsFixed(2)}',
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )),
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return cartScreenGetxController
+                                .cartGetx.data!.isNotEmpty
+                                ? AlertDialog(
+                              title:  Text(
+                                  "Confirm to Place Order".tr),
+                              content: Text(
+                                  "You added".tr+" ${cartScreenGetxController.cartGetx.data!.isEmpty ? 0 : cartScreenGetxController.cartGetx.data!.length} "+"Product and Total Price".tr+" \$${cartScreenGetxController.cartGetx.data!.isEmpty ? 0 : cartScreenGetxController.cartGetx.cartTotal}"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child:  Text('Not Now'.tr),
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.black12,
+                                      borderRadius: BorderRadius.circular(3)
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: InkWell(
+                                        onTap: () async {
+
+                                          String cartId =
+                                          cartScreenGetxController
+                                              .cartGetx
+                                              .data![0]
+                                              .cartId
+                                              .toString();
+                                          String cartTotal =
+                                          cartScreenGetxController
+                                              .cartGetx.cartTotal
+                                              .toString();
+                                          print('cartId= $cartId');
+                                          print('cartTotal= $cartTotal');
+                                          Get.back();
+                                          Get.rawSnackbar(
+                                              message:
+                                              'Please wait, Your order will be placed !'.tr,
+                                              backgroundColor:
+                                              const Color.fromRGBO(
+                                                  86, 126, 239, 10),
+                                              duration: const Duration(
+                                                  seconds: 2));
+                                          await orderScreenGetxController
+                                              .placeOrderGetx(
+                                              cartId, cartTotal);
+
+                                          firebaseGetxController.sendPushNotification('Online Ordering System', 'Your order has been placed !');
+                                          await cartScreenGetxController
+                                              .getMyCartGetx();
+                                          await orderScreenGetxController
+                                              .getOrderHistoryGetx();
+                                          await productScreenGetxController
+                                              .getDataGetx();
+                                          setState(() {
+
+                                          });
+                                        },
+
+                                        onDoubleTap: () {},
+                                        onLongPress: () {},
+                                        child: Text('Place Order'.tr, style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),)),
+                                  ),
+                                )
+                              ],
+                            )
+                                : AlertDialog(
+                              title:  Text(
+                                  "No Items Added in Cart".tr),
+                              content:  Text(
+                                  "Please add item in cart".tr),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child:  Text('Not Now'.tr),
+                                ),
+                                TextButton(
+                                    child:  Text('Okay'.tr),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    }),
+                              ],
+                            );
+                          });
+                    },
+                    child: Container(
+                      // height: size.height / 15,
+                      padding:
+                      const EdgeInsets.only(left: 10.0, right: 10.0),
+                      height: 30,
+                      decoration: BoxDecoration(
+                          borderRadius:
+                          const BorderRadius.all(Radius.circular(5)),
+                          color: Colors.red[400]
+                        /*gradient: LinearGradient(colors: [
+                              Colors.redAccent,
+                              Colors.redAccent
+                            ])*/
+                      ),
+                      child:  Center(
+                          child: Text(
+                            "Place Order".tr,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          )),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ))), onWillPop: ()async{
+        if(searchGetxController.SearchButton == true){
+          searchGetxController.searchButtonUnPress();
+          Get.offNamedUntil('/homeScreenGetx', (route) => false);
+          return true;
+        }
+        else{
+          Get.offNamedUntil('/homeScreenGetx', (route) => false);
+          return false;
+        }
+      });
+    });
   }
 
   Widget AllProduct() {
@@ -220,14 +394,14 @@ class _CartScreenGetxState extends State<CartScreenGetx> {
             child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 120),
+              const SizedBox(height: 120),
               Image.asset('assets/cartEmpty.png'),
               const SizedBox(
                 height: 20,
               ),
-              const Text(
-                'Oops...!',
-                style: TextStyle(
+               Text(
+                'Oops...!'.tr,
+                style: const TextStyle(
                     color: Colors.red,
                     fontWeight: FontWeight.bold,
                     fontSize: 20),
@@ -235,8 +409,8 @@ class _CartScreenGetxState extends State<CartScreenGetx> {
               const SizedBox(
                 height: 5,
               ),
-              const Text('Your Cart is empty !',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+              Text('Your Cart is empty !'.tr,
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
               const SizedBox(
                 height: 20,
               ),
@@ -255,10 +429,14 @@ class _CartScreenGetxState extends State<CartScreenGetx> {
             ],
           ))
         : Obx(() => cartScreenGetxController.isLoading.value
-            ? Center(
-                child: CircularProgressIndicator(
-                color: Color.fromRGBO(86, 126, 239, 10),
-              ))
+            ?  Container(
+      height: Get.height/1.3,
+              child:  Center(
+                  child: AlertDialog(
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,content: Row(mainAxisAlignment: MainAxisAlignment.center, children: [CircularProgressIndicator(color: const Color.fromRGBO(86, 126, 239, 15),), SizedBox(width: 20,),Text('Loading...'.tr)],),),
+              ),
+            )
             : ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
@@ -347,9 +525,9 @@ class _CartScreenGetxState extends State<CartScreenGetx> {
                                                 padding: const EdgeInsets.only(
                                                     left: 5.0, right: 10.0),
                                                 child: Row(
-                                                  children: const [
-                                                    Icon(Icons.delete_forever),
-                                                    Text('Remove')
+                                                  children:  [
+                                                    const Icon(Icons.delete_forever),
+                                                    Text('Remove'.tr)
                                                   ],
                                                 ),
                                               ),
@@ -358,7 +536,15 @@ class _CartScreenGetxState extends State<CartScreenGetx> {
                                                     .cartGetx.data!.isEmpty) {
                                                   print('your cart is empty');
                                                 } else {
-                                                  cartScreenGetxController
+                                                  Get.rawSnackbar(
+                                                      message:
+                                                      'Please wait, Item will remove from Cart !'.tr,
+                                                      backgroundColor:
+                                                      const Color.fromRGBO(
+                                                          86, 126, 239, 10),
+                                                      duration: const Duration(
+                                                          seconds: 2));
+                                                 await cartScreenGetxController
                                                       .removeProductFromCartGetx(
                                                           cartScreenGetxController
                                                               .cartGetx
@@ -366,18 +552,12 @@ class _CartScreenGetxState extends State<CartScreenGetx> {
                                                               .id
                                                               .toString());
                                                 }
-                                                await productScreenGetxController
-                                                    .getDataGetx();
-                                                Get.rawSnackbar(
-                                                    message:
-                                                        'Item removed from Cart !',
-                                                    backgroundColor:
-                                                        const Color.fromRGBO(
-                                                            86, 126, 239, 10),
-                                                    duration: const Duration(
-                                                        seconds: 2));
                                                 await cartScreenGetxController
                                                     .getMyCartGetx();
+                                                 await productScreenGetxController
+                                                    .getDataGetx();
+                                                setState(() { });
+
                                               },
                                               onDoubleTap: () {},
                                               onLongPress: () {},
@@ -396,6 +576,30 @@ class _CartScreenGetxState extends State<CartScreenGetx> {
                                                   children: [
                                                     InkWell(
                                                       onTap: () async {
+                                                        if (cartScreenGetxController
+                                                            .cartGetx
+                                                            .data![index]
+                                                            .quantity == 1) {
+                                                          Get.rawSnackbar(
+                                                              message:
+                                                              'Please wait, Item will remove from Cart !'.tr,
+                                                              backgroundColor:
+                                                              const Color.fromRGBO(
+                                                                  86,
+                                                                  126,
+                                                                  239,
+                                                                  10),
+                                                              duration: const Duration(
+                                                                  seconds:2));
+                                                        }else{
+                                                          Get.rawSnackbar(message: 'Please wait, Quantity will be decreased !'.tr,backgroundColor: const Color.fromRGBO(
+                                                              86,
+                                                              126,
+                                                              239,
+                                                              10),
+                                                              duration:
+                                                              Duration(seconds: 2));
+                                                        }
                                                         await cartScreenGetxController
                                                             .decreaseProductQuantityGetx(
                                                                 cartScreenGetxController
@@ -403,33 +607,17 @@ class _CartScreenGetxState extends State<CartScreenGetx> {
                                                                     .data![
                                                                         index]
                                                                     .id);
-                                                        if (cartScreenGetxController
-                                                                .cartGetx
-                                                                .data![index]
-                                                                .quantity ==
-                                                            1) {
-                                                          Get.rawSnackbar(
-                                                              message:
-                                                                  'Item removed from Cart !',
-                                                              backgroundColor:
-                                                                  const Color
-                                                                          .fromRGBO(
-                                                                      86,
-                                                                      126,
-                                                                      239,
-                                                                      10),
-                                                              duration:
-                                                                  const Duration(
-                                                                      seconds:
-                                                                          2));
-                                                        }
+
                                                         await cartScreenGetxController
                                                             .getMyCartGetx();
                                                         await productScreenGetxController
                                                             .getDataGetx();
+                                                        setState(() {
+
+                                                        });
                                                       },
-                                                      onDoubleTap: () {},
-                                                      onLongPress: () {},
+                                                      /*onDoubleTap: () {},
+                                                      onLongPress: () {},*/
                                                       child: CircleAvatar(
                                                         backgroundColor:
                                                             Colors.grey[200],
@@ -460,6 +648,13 @@ class _CartScreenGetxState extends State<CartScreenGetx> {
                                                     ),
                                                     InkWell(
                                                       onTap: () async {
+                                                        Get.rawSnackbar(message: 'Please wait, Quantity will be increased !'.tr,backgroundColor: const Color.fromRGBO(
+                                                            86,
+                                                            126,
+                                                            239,
+                                                            10),
+                                                            duration:
+                                                            Duration(seconds: 2));
                                                         await cartScreenGetxController
                                                             .increaseProductQuantityGetx(
                                                                 cartScreenGetxController
@@ -473,8 +668,8 @@ class _CartScreenGetxState extends State<CartScreenGetx> {
                                                             .getDataGetx();
                                                         // print(cartScreenGetxController.cartGetx.cartTotal!.toStringAsFixed(2));
                                                       },
-                                                      onDoubleTap: () {},
-                                                      onLongPress: () {},
+                                                      /*onDoubleTap: () {},
+                                                      onLongPress: () {},*/
                                                       child: CircleAvatar(
                                                         backgroundColor:
                                                             Colors.grey[200],

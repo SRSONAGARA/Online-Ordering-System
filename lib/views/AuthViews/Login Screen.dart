@@ -182,9 +182,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             final prefs = await SharedPreferences.getInstance();
                             await prefs.setString(
                                 'jwtToken', authRepoProvider.loginData[0].data.jwtToken);
-
                             print('jwttoken: ${prefs.get('jwtToken')}');
-
                             await prefs.setString(
                                 'name', authRepoProvider.loginData[0].data.name);
                             await prefs.setString(
@@ -200,15 +198,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                         )),
                                 (route) => false);
 
-
                           } else if(authRepoProvider.loginData[0].status == 0){
                             showDialog(
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
-                                    title: Text('Please Register in App'),
+                                    title: Text('Invalid username or password'),
                                     content: Text(
-                                        'Your email id is not verified kindly register again with same details and verify your account to use app!'),
+                                        'This email id and password is not verified, Please enter correct details!'),
                                     actions: [
                                       TextButton(
                                           onPressed: () {

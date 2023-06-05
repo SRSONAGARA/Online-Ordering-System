@@ -22,7 +22,8 @@ class _OtpScreenGetxState extends State<OtpScreenGetx> {
     final userId = ModalRoute.of(context)!.settings.arguments as String;
 
     return Scaffold(
-      body: SingleChildScrollView(
+      body: Obx(() => authGetxController.isLoading.value ? Center(child: CircularProgressIndicator(color: const Color.fromRGBO(86, 126, 239, 15)),):
+      SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -38,8 +39,8 @@ class _OtpScreenGetxState extends State<OtpScreenGetx> {
             const SizedBox(
               height: 20,
             ),
-            const Text(
-              'OTP Verification',
+            Text(
+              'OTP Verification'.tr,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(
@@ -48,8 +49,8 @@ class _OtpScreenGetxState extends State<OtpScreenGetx> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  'Enter the OTP sent to - ',
+                Text(
+                  'Enter the OTP sent to - '.tr,
                 ),
                 const Icon(Icons.email_outlined),
                 IconButton(
@@ -83,16 +84,28 @@ class _OtpScreenGetxState extends State<OtpScreenGetx> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text("Didn't Receive the OTP?"),
+                Text("Didn't Receive the OTP?".tr),
                 const SizedBox(
                   width: 5,
                 ),
                 TextButton(
                     onPressed: ()async {
+                      Get.rawSnackbar(
+                          message:
+                          'OTP resent successfully !'.tr,
+                          backgroundColor:
+                          const Color
+                              .fromRGBO(
+                              86,
+                              126,
+                              239,
+                              10),
+                          duration:
+                          const Duration(seconds: 2));
                       await authGetxController.resendOtpGetx(userId: userId);
                     },
-                    child: const Text(
-                      'RESEND OTP',
+                    child:  Text(
+                      'RESEND OTP'.tr,
                       style: TextStyle(color: Colors.pinkAccent),
                     ))
               ],
@@ -116,29 +129,30 @@ class _OtpScreenGetxState extends State<OtpScreenGetx> {
                     print(jsonEncode(result));
 
                     if(result['status']==1){
+                      Get.rawSnackbar(message: 'Account created successfully'.tr,backgroundColor:
+                      Color.fromRGBO(86, 126, 239, 15),);
                       await Future.delayed(const Duration(seconds: 1));
                       await  Get.offNamedUntil('/loginScreenGetx', (route) => false);
-
                     }else{
                       showDialog(context: context, builder: (context){
                         return AlertDialog(
-                          title: Text('OTP is Invalid'),
-                          content: Text('Please insert correct OTP.'),
+                          title: Text('OTP is Invalid'.tr),
+                          content: Text('Please insert correct OTP.'.tr),
                           actions: [
                             TextButton(onPressed: (){
                               Navigator.of(context).pop();
-                            }, child: Text('Okey'))
+                            }, child: Text('Okey'.tr))
                           ],
                         );
                       });
                     }
-
+                    authGetxController.isLoading.value = false;
                   },
-                  child: const Text('VERIFY & PROCEED')),
+                  child: Text('VERIFY & PROCEED'.tr)),
             ),
           ],
         ),
-      ),
+      ),)
     );
   }
 }

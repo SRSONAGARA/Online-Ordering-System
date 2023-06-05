@@ -123,7 +123,7 @@ class ApiConnectionProvider extends ChangeNotifier {
     print('MyWatchlist');
     try{
       isLoading = true;
-      notifyListeners();
+      // notifyListeners();
       SharedPreferences preferences = await SharedPreferences.getInstance();
       String jwtToken = preferences.getString('jwtToken') ?? '';
       const url = ApiConstant.getWatchListApi;
@@ -259,7 +259,7 @@ class ApiConnectionProvider extends ChangeNotifier {
     print('getMyCart');
    try{
      isLoading = true;
-     notifyListeners();
+     // notifyListeners();
      SharedPreferences preferences = await SharedPreferences.getInstance();
      String jwtToken = preferences.getString('jwtToken') ?? '';
      const url = ApiConstant.getMyCartApi;

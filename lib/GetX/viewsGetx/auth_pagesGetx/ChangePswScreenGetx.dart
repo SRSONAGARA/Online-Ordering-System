@@ -15,7 +15,7 @@ class _ChangePswScreenGetxState extends State<ChangePswScreenGetx> {
   final formKey = GlobalKey<FormState>();
 
   bool _isObscure = true;
-  Widget CustomText = const Text("Reset Your Password");
+  Widget CustomText =  Text("Reset Your Password".tr);
   TextEditingController newPassword = TextEditingController();
   TextEditingController confirmPassword = TextEditingController();
 
@@ -28,7 +28,8 @@ class _ChangePswScreenGetxState extends State<ChangePswScreenGetx> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Obx(() => accountScreenGetxController.isLoading.value?Container(child: Center(child: CircularProgressIndicator(color: const Color.fromRGBO(86, 126, 239, 15)),),color: Colors.white,)
+        :Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(86, 126, 239, 15),
@@ -66,13 +67,13 @@ class _ChangePswScreenGetxState extends State<ChangePswScreenGetx> {
                       height: 300,
                       width: 400,
                       child: const Image(
-                        image: AssetImage('assets/ResetPswImage.jpeg'),
+                        image: AssetImage('assets/imagesGetx/resetPswImgGetx.jpeg'),
                       )),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Text(
-                        'Enter a new password',
+                        'Enter a new password'.tr,
                         style: TextStyle(fontSize: 20),
                       )
                     ],
@@ -83,22 +84,22 @@ class _ChangePswScreenGetxState extends State<ChangePswScreenGetx> {
                   TextFormField(
                       obscureText: true,
                       controller: newPassword,
-                      decoration: const InputDecoration(
-                          labelText: 'New Password',
-                          hintText: 'Enter New Password'),
+                      decoration: InputDecoration(
+                          labelText: 'New Password'.tr,
+                          hintText: 'Enter a new password'.tr),
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return "New Password Can't empty";
+                          return "New Password Can't empty".tr;
                         } else if (value.length < 6) {
-                          return "Password is not less than 6 letter";
+                          return "Password is not less than 6 letter".tr;
                         }
                       }),
                   TextFormField(
                       obscureText: _isObscure,
                       controller: confirmPassword,
                       decoration: InputDecoration(
-                          labelText: 'Confirm Password',
-                          hintText: 'Re-Enter your New Password',
+                          labelText: 'Confirm Password'.tr,
+                          hintText: 'Re-Enter your New Password'.tr,
                           suffixIcon: IconButton(
                             onPressed: () {
                               setState(() {
@@ -111,11 +112,11 @@ class _ChangePswScreenGetxState extends State<ChangePswScreenGetx> {
                           )),
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return "Confirm Password Can't empty";
+                          return "Confirm Password Can't empty".tr;
                         } else if (value.length < 6) {
-                          return "Password is not less than 6 letter";
+                          return "Password is not less than 6 letter".tr;
                         } else if (value != newPassword.text) {
-                          return "Password not matched";
+                          return "Password not matched".tr;
                         }
                       }),
                   const SizedBox(
@@ -124,14 +125,14 @@ class _ChangePswScreenGetxState extends State<ChangePswScreenGetx> {
                   Container(
                     height: 30,
                     decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                        color: Color
-                            .fromRGBO(
-                            86,
-                            126,
-                            239,
-                            10),
-                        ),
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                      color: Color
+                          .fromRGBO(
+                          86,
+                          126,
+                          239,
+                          10),
+                    ),
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,
@@ -141,17 +142,17 @@ class _ChangePswScreenGetxState extends State<ChangePswScreenGetx> {
                             formKey.currentState!.save();
                             var result = await accountScreenGetxController
                                 .changePasswordGetx(
-                                    newPass: newPassword.text,
-                                    confirmPass: confirmPassword.text);
+                                newPass: newPassword.text,
+                                confirmPass: confirmPassword.text);
                             if (result['status'] == 1) {
                               Get.dialog(AlertDialog(
-                                title: Text('Your Password has been Updated'),
+                                  title: Text('Your Password has been Updated'.tr),
                                   actions: [
                                     TextButton(
                                         onPressed: () {
                                           Get.offAllNamed('/loginScreenGetx');
                                         },
-                                        child: const Text('Okey',style: TextStyle(color: Color
+                                        child:  Text('Okay'.tr,style: TextStyle(color: Color
                                             .fromRGBO(
                                             86,
                                             126,
@@ -159,7 +160,7 @@ class _ChangePswScreenGetxState extends State<ChangePswScreenGetx> {
                                             10),),))
                                   ]
                               ));
-                             /* Get.defaultDialog(
+                              /* Get.defaultDialog(
                                 title: 'Your Password has been Updated',
                                 actions: [
                                   TextButton(
@@ -190,7 +191,7 @@ class _ChangePswScreenGetxState extends State<ChangePswScreenGetx> {
                             }
                           }
                         },
-                        child: const Text('Save the Password')),
+                        child: Text('Save the Password'.tr)),
                   ),
                 ],
               ),
@@ -198,6 +199,6 @@ class _ChangePswScreenGetxState extends State<ChangePswScreenGetx> {
           ),
         ),
       ),
-    );
+    ));
   }
 }

@@ -37,6 +37,7 @@ class CartScreenGetxController extends GetxController {
       } else if (response.statusCode == 500) {
         SharedPreferences preferences = await SharedPreferences.getInstance();
         preferences.clear();
+        await Get.offNamedUntil('/loginScreenGetx', (route) => false);
         update();
       }
     } catch (e) {

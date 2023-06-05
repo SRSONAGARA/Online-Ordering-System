@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../../ControllersGetx/ApiConnection_Getx/ProductScreenGetxController.dart';
 import '../../ControllersGetx/ApiConnection_Getx/WishlistScreenGetxController.dart';
+import '../../ControllersGetx/SearchGetxController.dart';
 
 class WishlistScreenGetx extends StatefulWidget {
   const WishlistScreenGetx({Key? key}) : super(key: key);
@@ -23,34 +24,37 @@ class _WishlistScreenGetxState extends State<WishlistScreenGetx> {
 
   var wishlistScreenGetxController = Get.put(WishlistScreenGetxController());
   var productScreenGetxController = Get.put(ProductScreenGetxController());
+  var searchGetxController = Get.put(SearchGetxController());
+
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color.fromRGBO(86, 126, 239, 15),
-          title: Text('WislistScreen'),
-          centerTitle: true,
-          leading: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: InkWell(
-                onTap: () {
-                  // Navigator.of(context).canPop();
-                  Get.offAllNamed('/homeScreenGetx');
-                },
-                hoverColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                splashColor: Colors.transparent,
-                child: const CircleAvatar(
-                  backgroundColor: Colors.white,
-                  child: Icon(
-                    Icons.arrow_back_ios_new_sharp,
-                    color: Colors.black,
-                    size: 18,
-                  ),
-                )),
-          ),
-          actions: [
+    return  GetBuilder<WishlistScreenGetxController>(builder: (wishlistScreenGetxController){
+      return WillPopScope(child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Color.fromRGBO(86, 126, 239, 15),
+            title: Text('Wishlist'.tr),
+            centerTitle: true,
+            leading: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: InkWell(
+                  onTap: () {
+                    // Navigator.of(context).canPop();
+                    Get.offAllNamed('/homeScreenGetx');
+                  },
+                  hoverColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  splashColor: Colors.transparent,
+                  child: const CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: Icon(
+                      Icons.arrow_back_ios_new_sharp,
+                      color: Colors.black,
+                      size: 18,
+                    ),
+                  )),
+            ),
+            /*actions: [
             InkWell(
                 child: Center(
                   child: Badge.Badge(
@@ -70,11 +74,22 @@ class _WishlistScreenGetxState extends State<WishlistScreenGetx> {
             const SizedBox(
               width: 20,
             )
-          ],
-        ),
-        body: SingleChildScrollView(
-          child: AllProduct(),
-        ));
+          ],*/
+          ),
+          body: SingleChildScrollView(
+            child: AllProduct(),
+          )), onWillPop: ()async{
+        if(searchGetxController.SearchButton == true){
+          searchGetxController.searchButtonUnPress();
+          Get.offNamedUntil('/homeScreenGetx', (route) => false);
+          return true;
+        }
+        else{
+          Get.offNamedUntil('/homeScreenGetx', (route) => false);
+          return false;
+        }
+      });
+    });
   }
 
   Widget AllProduct() {
@@ -93,27 +108,27 @@ class _WishlistScreenGetxState extends State<WishlistScreenGetx> {
                 const SizedBox(
                   height: 20,
                 ),
-                const Text(
-                  'Oops...!',
-                  style: TextStyle(
+                 Text(
+                  'Oops...!'.tr,
+                  style: const TextStyle(
                       color: Colors.red,
                       fontWeight: FontWeight.bold,
                       fontSize: 20),
                 ),
-                const Text("You haven't added any products yet",
+                 Text("You haven't added any products yet".tr,
                     style:
-                    TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Text("Click "),
-                    Icon(
+                  children:  [
+                    Text("Click ".tr),
+                    const Icon(
                       Icons.favorite,
                       color: Colors.red,
                       size: 15,
                     ),
                     Text(
-                      " to save products",
+                      ' to save products'.tr,
                     ),
                   ],
                 ),
@@ -128,11 +143,15 @@ class _WishlistScreenGetxState extends State<WishlistScreenGetx> {
                     child: const Text('Find items to save')),*/
               ],
             ))
-            : Obx(() => wishlistScreenGetxController.isLoading.value
-            ? const Center(
-                child: CircularProgressIndicator(
-                color: Color.fromRGBO(86, 126, 239, 10),
-              ))
+            : Obx(() => productScreenGetxController.isLoading.value || wishlistScreenGetxController.isLoading.value
+            ?  Container(
+      height: Get.height/1.3,
+              child: Center(
+                  child:  AlertDialog(
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,content: Row(mainAxisAlignment: MainAxisAlignment.center, children: [CircularProgressIndicator(color: const Color.fromRGBO(86, 126, 239, 15),), SizedBox(width: 20,),Text('Loading...'.tr)],),),
+              ),
+            )
             : ListView.builder(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
@@ -178,6 +197,14 @@ class _WishlistScreenGetxState extends State<WishlistScreenGetx> {
                                 children: [
                                   InkWell(
                                     onTap: () async {
+                                      Get.rawSnackbar(message: 'Please wait, Item will remove from WatchList !'.tr,
+                                          backgroundColor: const Color.fromRGBO(
+                                              86,
+                                              126,
+                                              239,
+                                              10),
+                                          duration:
+                                          const Duration(seconds: 2));
                                       await wishlistScreenGetxController
                                           .removeFromWatchListGetx(
                                           wishlistScreenGetxController
@@ -185,15 +212,9 @@ class _WishlistScreenGetxState extends State<WishlistScreenGetx> {
                                               .data![index]
                                               .id
                                               .toString());
-                                      Get.rawSnackbar(message: 'Item removed from WatchList !',
-                                          backgroundColor: const Color.fromRGBO(
-                                              86,
-                                              126,
-                                              239,
-                                              10),
-                                          duration:
-                                          Duration(seconds: 2));
+
                                       await wishlistScreenGetxController.getWatchListGetx();
+                                      setState(() { });
                                       await productScreenGetxController.getDataGetx();
                                     },
                                     onDoubleTap: () {},

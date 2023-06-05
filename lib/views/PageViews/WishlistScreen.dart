@@ -141,13 +141,13 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                                 removeFromWatchListProvider,
                                                 child) {
                                           return InkWell(
-                                            onTap: () {
+                                            onTap: () async {
                                               String wathListItemId =
                                                   removeFromWatchListProvider
                                                       .watchList[0]
                                                       .data![index]
                                                       .id;
-                                              removeFromWatchListProvider
+                                              await removeFromWatchListProvider
                                                   .removeFromWatchList(
                                                       wathListItemId);
                                               print('Id: ${wathListItemId}');

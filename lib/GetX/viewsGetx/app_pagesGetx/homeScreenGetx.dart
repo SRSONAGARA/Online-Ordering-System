@@ -1,14 +1,18 @@
+import 'dart:io';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:oline_ordering_system/GetX/viewsGetx/app_pagesGetx/AccountScreenGetx.dart';
-import 'package:oline_ordering_system/GetX/viewsGetx/app_pagesGetx/CartScreenGetx.dart';
-import 'package:oline_ordering_system/GetX/viewsGetx/app_pagesGetx/OrderHistoryScreenGetx.dart';
-import 'package:oline_ordering_system/GetX/viewsGetx/app_pagesGetx/ProductScreenGetx.dart';
-import 'package:oline_ordering_system/GetX/viewsGetx/app_pagesGetx/WishlistScreenGetx.dart';
 
+import '../../../notificationservice/local_notification_service.dart';
 import '../../ControllersGetx/HomeScreenGetxController.dart';
-
+import '../../ControllersGetx/SearchGetxController.dart';
+import 'AccountScreenGetx.dart';
+import 'CartScreenGetx.dart';
+import 'OrderHistoryScreenGetx.dart';
+import 'ProductScreenGetx.dart';
+import 'WishlistScreenGetx.dart';
 class HomeScreenGetx extends StatefulWidget {
   const HomeScreenGetx({Key? key}) : super(key: key);
 
@@ -17,109 +21,207 @@ class HomeScreenGetx extends StatefulWidget {
 }
 
 class _HomeScreenGetxState extends State<HomeScreenGetx> {
-  var landingPageController = Get.put(LandingPageController(),permanent: false);
-  int currentIndex = 1;
 
-  final TextStyle unselectedLabelStyle = TextStyle(
-      color: Colors.white.withOpacity(0.5),
-      fontWeight: FontWeight.w500,
-      fontSize: 12);
+  List<Widget> screens = [
+    ProductScreenGetx(),
+    WishlistScreenGetx(),
+    CartScreenGetx(),
+    OrderHistoryScreenGetx(),
+    AccountScreenGetx()
+  ];
 
-  final TextStyle selectedLabelStyle =
-  const TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 12);
+  int currentIndex = 0;
+  var searchGetxController = Get.put(SearchGetxController());
+  var landingPageController = Get.put(LandingPageController());
+  @override
+  void initState() {
+    print('Home Screen Called ${DateTime.now().toString()}');
+    super.initState();
 
-  buildBottomNavigationMenu(context, landingPageController) {
-    return Obx(() => MediaQuery(
-        data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-        child: SizedBox(
-          height: 54,
-          child: BottomNavigationBar(
-            showUnselectedLabels: true,
-            showSelectedLabels: true,
-            onTap: landingPageController.changeTabIndex,
-            currentIndex: landingPageController.tabIndex.value,
-            backgroundColor: const Color.fromRGBO(86,126,239,15),
-            unselectedItemColor: Colors.white.withOpacity(0.5),
-            selectedItemColor: Colors.white,
-            unselectedLabelStyle: unselectedLabelStyle,
-            selectedLabelStyle: selectedLabelStyle,
-            items: [
-              BottomNavigationBarItem(
-                icon: Container(
-                  margin: const EdgeInsets.only(bottom: 7),
-                  child: const Icon(
-                    Icons.home,
-                    size: 20.0,
+    FirebaseMessaging.instance.getInitialMessage().then(
+          (message) {
+        print("FirebaseMessaging.instance.getInitialMessage");
+        if (message != null) {
+          print("New Notification");
+          // if (message.data['_id'] != null) {
+          //   Navigator.of(context).push(
+          //     MaterialPageRoute(
+          //       builder: (context) => DemoScreen(
+          //         id: message.data['_id'],
+          //       ),
+          //     ),
+          //   );
+          // }
+        }
+      },
+    );
+
+    // 2. This method only call when App in forground it mean app must be opened
+    FirebaseMessaging.onMessage.listen(
+          (message) {
+        print("FirebaseMessaging.onMessage.listen");
+        if (message.notification != null) {
+          print(message.notification!.title);
+          print(message.notification!.body);
+          print("message.data11 ${message.data}");
+          LocalNotificationService.createanddisplaynotification(message);
+        }
+      },
+    );
+
+    // 3. This method only call when App in background and not terminated(not closed)
+    FirebaseMessaging.onMessageOpenedApp.listen(
+          (message) {
+        print("FirebaseMessaging.onMessageOpenedApp.listen");
+        if (message.notification != null) {
+          print(message.notification!.title);
+          print(message.notification!.body);
+          print("message.data22 ${message.data['_id']}");
+        }
+      },
+    );
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: OfflineBuilder(
+        debounceDuration: Duration.zero,
+        connectivityBuilder: (
+            BuildContext context,
+            ConnectivityResult connectivity,
+            Widget child,
+            ) {
+          if (connectivity == ConnectivityResult.none) {
+            final bool connected = connectivity != ConnectivityResult.none;
+            return Stack(
+              fit: StackFit.expand,
+              children: [
+                //  child,
+                AlertDialog(
+                  title: Column(
+                    children: [
+                      Row(
+                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('No Internet Connection'),
+                          const Spacer(),
+                          InkWell(
+                            onTap: () => exit(0),
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            child: const Icon(Icons.close),
+                          )
+                        ],
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                        child: Center(
+                          child: Icon(
+                            Icons.warning_amber_sharp,
+                            size: 48,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  content: const Text('Please check your internet connection.'),
+                ),
+                Positioned(
+                  left: 0.0,
+                  right: 0.0,
+                  height: 40.0,
+                  bottom: 1,
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      color: connected ? Colors.green : Colors.indigo,
+                      child: connected
+                          ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const <Widget>[
+                          Text(
+                            "YOU ARE OFFLINE",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      )
+                          : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const <Widget>[
+                          Text(
+                            "YOU ARE OFFLINE",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          SizedBox(
+                            width: 8.0,
+                          ),
+                          SizedBox(
+                            width: 12.0,
+                            height: 12.0,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.0,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-                label: 'Home',
-                backgroundColor: const Color.fromRGBO(86,126,239,15),
+              ],
+            );
+          }
+          return child;
+        },
+        child: SafeArea(
+          top: false,
+          child: Stack(
+            children: [
+              Center(
+                  child: screens[currentIndex]
               ),
-              BottomNavigationBarItem(
-                icon: Container(
-                  margin: const EdgeInsets.only(bottom: 7),
-                  child: const Icon(
-                    Icons.favorite_border_outlined,
-                    size: 20.0,
-                  ),
-                ),
-                label: 'Favorite',
-                backgroundColor: const Color.fromRGBO(86,126,239,15),
-              ),
-              BottomNavigationBarItem(
-                icon: Container(
-                  margin: const EdgeInsets.only(bottom: 7),
-                  child: const Icon(
-                    Icons.shopping_cart_outlined,
-                    size: 20.0,
-                  ),
-                ),
-                label: 'Cart',
-                backgroundColor: const Color.fromRGBO(86,126,239,15),
-              ),
-              BottomNavigationBarItem(
-                icon: Container(
-                  margin: const EdgeInsets.only(bottom: 7),
-                  child: const Icon(
-                    Icons.assignment_turned_in_outlined,
-                    size: 20.0,
-                  ),
-                ),
-                label: 'Orders',
-                backgroundColor: const Color.fromRGBO(86,126,239,15),
-              ),
-              BottomNavigationBarItem(
-                icon: Container(
-                  margin: const EdgeInsets.only(bottom: 7),
-                  child: const Icon(
-                    Icons.person,
-                    size: 20.0,
-                  ),
-                ),
-                label: 'Account',
-                backgroundColor: const Color.fromRGBO(86,126,239,15),
+              Container(
+                height: 80,
               ),
             ],
           ),
-        )));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-
-    
-    return SafeArea(child: Scaffold(
-      bottomNavigationBar: buildBottomNavigationMenu(context, landingPageController),
-      body: Obx(()=>IndexedStack(
-        index: landingPageController.tabIndex.value,
-        children:  [
-          ProductScreenGetx(),
-          WishlistScreenGetx(),
-          CartScreenGetx(),
-          OrderHistoryScreenGetx(),
-          AccountScreenGetx()
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: const Color.fromRGBO(86,126,239,15),
+        unselectedItemColor: Colors.black,
+        currentIndex: currentIndex,
+        onTap: (index) {
+          setState(() {
+            currentIndex = index;
+          });
+          searchGetxController.searchButtonPress();
+          searchGetxController.searchController.clear();
+        },
+        items:  [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            label: 'Home'.tr,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite_border_outlined),
+            label: 'Favorite'.tr,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart_outlined),
+            label: 'Cart'.tr,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.assignment_turned_in_outlined),
+            label: 'Orders'.tr,
+          ),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle_outlined), label: 'Account'.tr),
         ],
-      )),
-    ));
+      ),
+    );
   }
 }
