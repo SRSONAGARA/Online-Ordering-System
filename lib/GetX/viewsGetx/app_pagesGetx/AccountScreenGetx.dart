@@ -498,7 +498,7 @@ void logoutAlertGetx(BuildContext context) {
       Text('Choose language'.tr)
     ],),
     content: SizedBox(
-      height: 120,
+      height: 180,
       child: Column(
         children: [
           TextButton(onPressed: (){
@@ -511,7 +511,12 @@ void logoutAlertGetx(BuildContext context) {
             Get.updateLocale(Locale('hi', 'IN'));
             SharedPreferences.getInstance().then((prefs) => prefs.setString('lang_code', 'hi_IN'));
             Get.back();
-          }, child: Text('Hindi'.tr, style: TextStyle(color: Color.fromRGBO(86, 126, 239, 15)),)),
+          }, child: Text('Hindi'.tr, style: TextStyle(color: Color.fromRGBO(86, 126, 239, 15)),)),Divider(),
+          TextButton(onPressed: (){
+            Get.updateLocale(Locale('ar', 'AA'));
+            SharedPreferences.getInstance().then((prefs) => prefs.setString('lang_code', 'ar_AA'));
+            Get.back();
+          }, child: Text('Arabic'.tr, style: TextStyle(color: Color.fromRGBO(86, 126, 239, 15)),)),
 
         ],
       ),

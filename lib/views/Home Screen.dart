@@ -12,9 +12,7 @@ import '../notificationservice/local_notification_service.dart';
 import 'PageViews/WishlistScreen.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key? key, required String from}) : super(key: key) {
-    print('Home Screen from $from');
-  }
+  HomeScreen({Key? key}) : super(key: key) {}
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();

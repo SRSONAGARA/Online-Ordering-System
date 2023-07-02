@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:oline_ordering_system/GetX/locale.dart';
@@ -15,7 +14,6 @@ import 'package:oline_ordering_system/GetX/viewsGetx/auth_pagesGetx/ForgotPswScr
 import 'package:oline_ordering_system/GetX/viewsGetx/auth_pagesGetx/LoginScreenGetx.dart';
 import 'package:oline_ordering_system/GetX/viewsGetx/auth_pagesGetx/OtpScreenGetx.dart';
 import 'package:oline_ordering_system/GetX/viewsGetx/auth_pagesGetx/RegistrationScreenGetx.dart';
-import 'package:oline_ordering_system/GetX/viewsGetx/onBoardingScreens/onBoardingMain.dart';
 import 'package:oline_ordering_system/GetX/viewsGetx/splashScreenGetX.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -41,14 +39,13 @@ class _GetAppState extends State<GetApp> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? langCode = prefs.getString('lang_code');
     if (langCode != null) {
-      // Map<String, dynamic> localeMap = jsonDecode(localeString);
       setState(() {
         _locale = Locale(langCode);
         _isLoading = false;
       });
     }else{
       setState(() {
-        _locale = Locale('en_US');
+        _locale = const Locale('en_US');
         _isLoading = false;
       });
     }
@@ -58,32 +55,28 @@ class _GetAppState extends State<GetApp> {
   @override
   Widget build(BuildContext context) {
     if(_isLoading){
-      return CircularProgressIndicator();
+      return const CircularProgressIndicator();
     }else{
       return  GetMaterialApp(
         translations: LocaleString(),
         locale: _locale,
         debugShowCheckedModeBanner: false,
-        // home: SplashScreenGetX(),
          initialRoute:'/splashScreenGetX',
-         // home: OnBoardingMain(),
-        //  home: LoginScreenGetx(),
         getPages: [
-          GetPage(name: '/splashScreenGetX', page: ()=>SplashScreenGetX(),),
-          GetPage(name: '/loginScreenGetx', page: ()=>LoginScreenGetx(),),
-          GetPage(name: '/registrationScreenGetx', page: ()=>RegistrationScreenGetx(),),
-          GetPage(name: '/otpScreenGetx', page: ()=>OtpScreenGetx(),),
-          GetPage(name: '/forgotPswScreenGetx', page: ()=>ForgotPswScreenGetx(),),
-          GetPage(name: '/forgotPswOtpScreenGetx', page: ()=>ForgotPswOtpScreenGetx(),),
-          GetPage(name: '/changePswScreenGetx', page: ()=>ChangePswScreenGetx(),),
-          GetPage(name: '/homeScreenGetx', page: ()=>HomeScreenGetx(),),
-          GetPage(name: '/productScreenGetx', page: ()=>ProductScreenGetx(),),
-          GetPage(name: '/productDetailScreenGetx', page: ()=>ProductDetailScreenGetx(),),
-          GetPage(name: '/wishlistScreenGetx', page: ()=>WishlistScreenGetx(),),
-          GetPage(name: '/cartScreenGetx', page: ()=>CartScreenGetx(),),
-          GetPage(name: '/orderHistoryScreenGetx', page: ()=>OrderHistoryScreenGetx(),),
-          GetPage(name: '/accountScreenGetx', page: ()=>AccountScreenGetx(),),
-
+          GetPage(name: '/splashScreenGetX', page: ()=>const SplashScreenGetX(),),
+          GetPage(name: '/loginScreenGetx', page: ()=>const LoginScreenGetx(),),
+          GetPage(name: '/registrationScreenGetx', page: ()=>const RegistrationScreenGetx(),),
+          GetPage(name: '/otpScreenGetx', page: ()=>const OtpScreenGetx(),),
+          GetPage(name: '/forgotPswScreenGetx', page: ()=>const ForgotPswScreenGetx(),),
+          GetPage(name: '/forgotPswOtpScreenGetx', page: ()=>const ForgotPswOtpScreenGetx(),),
+          GetPage(name: '/changePswScreenGetx', page: ()=>const ChangePswScreenGetx(),),
+          GetPage(name: '/homeScreenGetx', page: ()=>const HomeScreenGetx(),),
+          GetPage(name: '/productScreenGetx', page: ()=>const ProductScreenGetx(),),
+          GetPage(name: '/productDetailScreenGetx', page: ()=>const ProductDetailScreenGetx(),),
+          GetPage(name: '/wishlistScreenGetx', page: ()=>const WishlistScreenGetx(),),
+          GetPage(name: '/cartScreenGetx', page: ()=>const CartScreenGetx(),),
+          GetPage(name: '/orderHistoryScreenGetx', page: ()=>const OrderHistoryScreenGetx(),),
+          GetPage(name: '/accountScreenGetx', page: ()=>const AccountScreenGetx(),),
         ],
       );
     }

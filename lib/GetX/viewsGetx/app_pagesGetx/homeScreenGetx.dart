@@ -193,6 +193,7 @@ class _HomeScreenGetxState extends State<HomeScreenGetx> {
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: const Color.fromRGBO(86,126,239,15),
         unselectedItemColor: Colors.black,
+        showUnselectedLabels: true,
         currentIndex: currentIndex,
         onTap: (index) {
           setState(() {

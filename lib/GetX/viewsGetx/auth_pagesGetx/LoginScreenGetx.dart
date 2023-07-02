@@ -23,9 +23,7 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
   @override
   void initState() {
     // TODO: implement initState
-    // accessApi(context);
     super.initState();
-    // permission();
     _isObscure;
     authGetxController.isLoading.value=false;
   }
@@ -35,7 +33,7 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body:Obx(() => authGetxController.isLoading.value ? Center(child: CircularProgressIndicator(color: const Color.fromRGBO(86, 126, 239, 15)),): /*authRepoProvider.isLoading? const Center(child: CircularProgressIndicator()): */
+      body:Obx(() => authGetxController.isLoading.value ? const Center(child: CircularProgressIndicator(color: Color.fromRGBO(86, 126, 239, 15)),): /*authRepoProvider.isLoading? const Center(child: CircularProgressIndicator()): */
       SingleChildScrollView(
         child: Form(
           key: formkey,
@@ -122,11 +120,11 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
                       height: 20,
                     ),
                     Container(
-                      padding: EdgeInsets.all(5),
+                      padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(
                                 color: Color.fromRGBO(143, 148, 251, .2),
                                 blurRadius: 20.0,
@@ -135,8 +133,8 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
                       child: Column(
                         children: <Widget>[
                           Container(
-                            padding: EdgeInsets.all(8.0),
-                            decoration: BoxDecoration(
+                            padding: const EdgeInsets.all(8.0),
+                            decoration: const BoxDecoration(
                                 border: Border(
                                     bottom: BorderSide(color: Colors.grey))),
                             child: TextFormField(
@@ -168,7 +166,7 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
                             ),
                           ),
                           Container(
-                            padding: EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(8.0),
                             child: TextFormField(
                               cursorColor: Colors.black54,
                               obscureText: _isObscure,
@@ -208,80 +206,6 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
                         ],
                       ),
                     ),
-                    /*TextFormField(
-                      cursorColor: Colors.white,
-                      controller: emailController,
-                      decoration:  InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                            const BorderSide(color: Colors.white, width: 1.0),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          labelText: 'Username',
-                          labelStyle: TextStyle(color: Colors.white),
-                          hintText: 'Enter your E-mail',
-                          prefixIcon: const Icon(
-                            Icons.person,
-                            color: Colors.white,
-                          )),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Username can't empty";
-                        } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}')
-                            .hasMatch(value!)) {
-                          return "Enter Correct email";
-                        } else {
-                          return null;
-                        }
-                      },
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    TextFormField(
-                      cursorColor: Colors.white,
-                      obscureText: _isObscure,
-                      controller: passwordController,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                            const BorderSide(color: Colors.white, width: 1.0),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          labelText: 'Password',
-                          labelStyle: TextStyle(color: Colors.white),
-                          hintText: 'Enter your Password',
-                          prefixIcon: const Icon(
-                            Icons.lock,
-                            color: Colors.white,
-                          ),
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                _isObscure = !_isObscure;
-                              });
-                            },
-                            icon: Icon(
-                              _isObscure ? Icons.visibility : Icons.visibility_off,
-                              color: Colors.white,
-                            ),
-                          )),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Password can't empty";
-                        } else if (value.length < 6) {
-                          return "Password is not less than 6 letter";
-                        }
-                        return null;
-                      },
-                      onChanged: (value) {},
-                    ),*/
                     const SizedBox(
                       height: 10,
                     ),
@@ -294,7 +218,7 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
                             },
                             child: Text(
                               'Forgot your Password?'.tr,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: Color.fromRGBO(143, 148, 251, 1)),
                             )),
                       ],
@@ -411,7 +335,7 @@ class _LoginScreenGetxState extends State<LoginScreenGetx> {
                             },
                             child:  Text(
                               'Register'.tr,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: Color.fromRGBO(143, 148, 251, 1)),
                             ))
                       ],

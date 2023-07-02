@@ -20,7 +20,7 @@ class _SplashScreenGetXState extends State<SplashScreenGetX> {
     isLogIn();
   }
   _opacity() async {
-    Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 1));
     setState(() {
       Opacity1 = !Opacity1;
     });
@@ -52,11 +52,10 @@ class _SplashScreenGetXState extends State<SplashScreenGetX> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image(image: AssetImage('assets/SplashImage.jpg')
-              /*AnimatedOpacity(
-                  opacity: Opacity1 ? 2 : 0,
-                  duration: Duration(seconds: 1),
-                  child: Image(image: AssetImage('assets/SplashImage.jpg'))*/),
+              AnimatedOpacity(
+                  opacity: Opacity1 ? 1 : 0,
+                  duration: const Duration(seconds: 2),
+                  child: const Image(image: AssetImage('assets/SplashImage.jpg')))
             ],
           ),
         ),

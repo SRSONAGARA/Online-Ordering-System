@@ -598,7 +598,7 @@ class _ProductScreenGetxState extends State<ProductScreenGetx> {
                       child: Center(
                         child: AlertDialog(
                   backgroundColor: Colors.transparent,
-                  elevation: 0,content: Row(mainAxisAlignment: MainAxisAlignment.center, children: [CircularProgressIndicator(color: const Color.fromRGBO(86, 126, 239, 15),), SizedBox(width: 20,),Text('Loading...'.tr)],),),
+                  elevation: 0,content: Row(mainAxisAlignment: MainAxisAlignment.center, children: [const CircularProgressIndicator(color: Color.fromRGBO(86, 126, 239, 15),), SizedBox(width: 20,),Text('Loading...'.tr)],),),
                       ),
                     )
                     : ListView.builder(

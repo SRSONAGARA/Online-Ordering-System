@@ -7,6 +7,6 @@ class RouteClassGetx{
   static String getHomeRouteGetx()=>homeGetx;
 
   static List<GetPage> routes=[
-    GetPage(name: homeGetx, page:()=> const HomeScreenGetx(), transition: Transition.fade, transitionDuration: Duration(seconds: 1))
+    GetPage(name: homeGetx, page:()=> const HomeScreenGetx(), transition: Transition.fade, transitionDuration: const Duration(seconds: 1))
   ];
 }

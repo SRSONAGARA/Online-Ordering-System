@@ -27,6 +27,7 @@ import 'package:oline_ordering_system/provider/search_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'Bloc/mainBloc.dart';
 import 'notificationservice/local_notification_service.dart';
 import 'views/PageViews/ProductDetailsScreen.dart';
 import 'views/PageViews/WishlistScreen.dart';
@@ -56,7 +57,8 @@ void main() async {
   } else {
 
   }
-  runApp(const GetApp());
+  runApp(const BlocApp());
+  // runApp(const GetApp());
   // runApp(const MyApp());
 }
 
@@ -85,7 +87,7 @@ class MyApp extends StatelessWidget {
             '/resetpsw-screen': (context) => ResetPasswordScreen(),
             '/registration-screen': (context) => RegistrationScreen(),
             '/otp-screen': (context) => OtpScreen(),
-            '/home-screen': (context) => HomeScreen(from: 'main.dart'),
+            '/home-screen': (context) => HomeScreen(),
             '/product-screen': (context) => ProductScreen(),
             '/productDetails-screen': (context) => ProductDetailsScreen(),
             '/wishlist-screen': (context) => WishlistScreen(),

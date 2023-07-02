@@ -21,7 +21,7 @@ class _SplashState extends State<Splash> {
   }
 
   _opacity() async {
-    await Future.delayed(Duration(seconds: 2 ));
+    await Future.delayed(const Duration(seconds: 1));
    setState(() {
      Opacity1 = !Opacity1;
    });
@@ -30,35 +30,31 @@ class _SplashState extends State<Splash> {
    isLogIn() async {
      final preferences = await SharedPreferences.getInstance();
      logInBool = preferences.getBool('loginBool');
-
      print(preferences.getBool('loginBool'));
      await Future.delayed(const Duration(seconds: 2), () {
        if (logInBool != null && logInBool == true) {
-
          Navigator.of(context)
              .pushReplacementNamed('/home-screen');
          return;
        }
          Navigator.of(context).pushReplacementNamed('/login-screen');
        return;
-
      });
    }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
         child: Container(
-          padding: EdgeInsets.all(50.0),
+          padding: const EdgeInsets.all(50.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               AnimatedOpacity(
                 opacity: Opacity1 ? 1:0,
-                duration: Duration(seconds: 1),
+                duration: const Duration(seconds: 2),
                 child: const Image(
                   image: AssetImage('assets/SplashImage.jpg'),
                 ),
