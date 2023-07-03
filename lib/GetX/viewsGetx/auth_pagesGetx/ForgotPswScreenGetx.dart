@@ -19,21 +19,12 @@ class _ForgotPswScreenGetxState extends State<ForgotPswScreenGetx> {
 
   Widget CustomText = Text("Forgot Password".tr);
   TextEditingController emailController = TextEditingController();
-  TextEditingController newPassword = TextEditingController();
-  TextEditingController confirmPassword = TextEditingController();
-  var _isObscure;
-
-  @override
-  void initState() {
-    super.initState();
-    _isObscure = true;
-  }
 
   @override
   Widget build(BuildContext context) {
     return Obx(() => authGetxController.isLoading.value
         ?  Container(
-      decoration: BoxDecoration(color: Colors.white),
+      decoration: const BoxDecoration(color: Colors.white),
       height: Get.height/1.3,
       child: const Center(
           child: CircularProgressIndicator(
@@ -77,10 +68,10 @@ class _ForgotPswScreenGetxState extends State<ForgotPswScreenGetx> {
                   const SizedBox(
                     height: 20,
                   ),
-                  Image(
+                  const Image(
                     height: 200,
                     width: 200,
-                    image: const AssetImage('assets/imagesGetx/forgetPswImgGetx.png'),
+                    image: AssetImage('assets/imagesGetx/forgetPswImgGetx.png'),
                   ),
                   const SizedBox(
                     height: 20,
@@ -90,7 +81,7 @@ class _ForgotPswScreenGetxState extends State<ForgotPswScreenGetx> {
                     children: [
                       Text(
                         'Forgot your Password?'.tr,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 30, fontWeight: FontWeight.bold),
                       ),
                     ],
@@ -110,7 +101,7 @@ class _ForgotPswScreenGetxState extends State<ForgotPswScreenGetx> {
                   TextFormField(
                     controller: emailController,
                     decoration:  InputDecoration(
-                      icon: Icon(Icons.lock_outline),
+                      icon: const Icon(Icons.lock_outline),
                       labelText: 'Email Address'.tr,
                       hintText: 'Enter your Email'.tr,
                     ),

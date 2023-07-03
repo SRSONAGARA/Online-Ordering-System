@@ -21,10 +21,10 @@ class _ForgotPswOtpScreenGetxState extends State<ForgotPswOtpScreenGetx> {
   Widget build(BuildContext context) {
     final argument = ModalRoute.of(context)!.settings.arguments as Map<String,dynamic>;
     String userId=argument['id'];
-    print('userId: ${userId}');
+    print('userId: $userId');
     return Obx(() => authGetxController.isLoading.value
         ?  Container(
-      decoration: BoxDecoration(color: Colors.white),
+      decoration: const BoxDecoration(color: Colors.white),
       height: Get.height/1.3,
       child: const Center(
           child: CircularProgressIndicator(
