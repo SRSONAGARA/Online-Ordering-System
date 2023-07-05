@@ -13,6 +13,11 @@ class LoginScreenCubit extends Cubit<LoginScreenState> {
 
   bool isObscure = false;
 
+  void togglePasswordVisibility(){
+    isObscure = !isObscure;
+    emit(PasswordVisibilityChangedState(isObscure));
+  }
+
   LoginModelClassBloc loginModelClassBloc = LoginModelClassBloc(
       status: 0,
       msg: '',
@@ -28,10 +33,6 @@ class LoginScreenCubit extends Cubit<LoginScreenState> {
           updatedAt: '',
           v: 0));
 
-  void togglePasswordVisibility(){
-    isObscure = !isObscure;
-    emit(PasswordVisibilityChangedState(isObscure));
-  }
 
   Future<void> userLoginBloc({
     required String emailId,

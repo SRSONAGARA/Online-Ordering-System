@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oline_ordering_system/Bloc/ViewsBloc/auth_pages/forgot_psw_screen/forgot_psw_screen_cubit.dart';
+import 'package:oline_ordering_system/Bloc/ViewsBloc/auth_pages/registration_otp_screen/registration_otp_screen.dart';
+import 'package:oline_ordering_system/Bloc/ViewsBloc/auth_pages/registration_screen/registration_screen.dart';
+import 'package:oline_ordering_system/Bloc/ViewsBloc/auth_pages/registration_screen/registration_screen_cubit.dart';
 import 'package:oline_ordering_system/Bloc/ViewsBloc/splashScreen/splash_screen_cubit.dart';
 import 'package:oline_ordering_system/Bloc/ViewsBloc/splashScreen/splash_screen.dart';
 
@@ -36,7 +39,15 @@ class RoutesBloc {
         final argument = settings.arguments as Map<String, dynamic>?;
         return MaterialPageRoute(
             builder: (context) =>  ForgotPswOtpScreenBloc());*/
-      case "/homeScreen":
+      case "/registrationScreen":
+        return MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) => RegistrationScreenCubit(),
+              child: const RegistrationScreenBloc(),
+            ));
+     /* case "/registrationOtpScreen":
+        return MaterialPageRoute(builder: (context) => const RegistrationOtpScreenBloc());*/
+        case "/homeScreen":
         return MaterialPageRoute(builder: (context) => const HomeScreenGetx());
     }
   }

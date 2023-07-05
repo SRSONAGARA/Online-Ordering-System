@@ -255,6 +255,7 @@ class _LoginScreenBlocState extends State<LoginScreenBloc> {
                         ),
                         TextButton(
                             onPressed: () {
+                              Navigator.pushNamed(context, '/registrationScreen');
                               // Get.toNamed('/registrationScreenGetx');
                             },
                             child: const Text(

@@ -1,44 +1,42 @@
 import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oline_ordering_system/Bloc/ViewsBloc/auth_pages/forgot_psw_otp_screen/forgot_psw_otp_screen_state.dart';
+import 'package:oline_ordering_system/Bloc/ViewsBloc/auth_pages/registration_otp_screen/registration_otp_screen_state.dart';
 import 'package:http/http.dart' as http;
 import '../../../../common/ApiConstant.dart';
 
-class ForgotPswOtpScreenCubit extends Cubit<ForgotPswOtpScreenState>{
-  ForgotPswOtpScreenCubit(): super(ForgotPswOtpScreenInitialState());
+class RegistrationOtpScreenCubit extends Cubit<RegistrationOtpScreenState>{
+  RegistrationOtpScreenCubit(): super(RegistrationOtpScreenInitialState());
 
-  Future<Map<String, dynamic>> verifyOtpOnForgotPasswordBloc(
-      {required String userId, required String otp}) async {
-    print(userId);
-    print(otp);
+  Future<Map<String, dynamic>> verifyOtpOnRegisterBloc({
+    required String userId,
+    required String otp,
+  }) async {
     try {
-      emit(ForgotPswOtpScreenLoadingState());
-      String url = ApiConstant.verifyOtpOnForgotPasswordApi;
-      var requestBody = {'userId': userId, 'otp': otp};
+      emit(RegistrationOtpScreenLoadingState());
+      String url = ApiConstant.verifyOtpOnRegisterApi;
+      var requestBody = {
+        'userId': userId,
+        'otp': otp,
+      };
+
+      print(otp);
       print(url);
       print(requestBody);
-
       var response = await http.post(Uri.parse(url), body: requestBody);
       String responseBody = response.body;
       print(responseBody);
-      print('response.statusCode: ${response.statusCode}');
       if(response.statusCode == 200){
-        emit(ForgotPswOtpScreenSuccessState(userId, otp));
-        final responseBody =response.body;
-
-        print('responseBody:$responseBody');
+        emit(RegistrationOtpScreenSuccessState(userId, otp));
         return jsonDecode(responseBody) as Map<String, dynamic>;
-
       }else if(response.statusCode == 400){
-        emit(ForgotPswOtpScreenErrorState());
+        emit(RegistrationOtpScreenErrorState());
         return jsonDecode(responseBody) as Map<String, dynamic>;
-
       }
       return jsonDecode(responseBody) as Map<String, dynamic>;
 
     } catch (error) {
-      print('AuthRepo.verifyOtpOnForgotPasswordBloc.error: $error');
+      print('AuthRepo.verifyOtpOnRegisterBloc.error: $error');
       return {};
     }
   }
@@ -59,5 +57,4 @@ class ForgotPswOtpScreenCubit extends Cubit<ForgotPswOtpScreenState>{
       return {};
     }
   }
-
 }
