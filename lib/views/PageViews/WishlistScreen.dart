@@ -70,9 +70,9 @@ class _WishlistScreenState extends State<WishlistScreen> {
                   const Text("You haven't added any products yet",
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Text("Click "),
                       Icon(
                         Icons.favorite,

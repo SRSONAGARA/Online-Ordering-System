@@ -169,9 +169,9 @@ class _CartScreenGetxState extends State<CartScreenGetx> {
                                               .getOrderHistoryGetx();
                                           await productScreenGetxController
                                               .getDataGetx();
-                                          setState(() {
+                                        /*  setState(() {
 
-                                          });
+                                          });*/
 
 
                                         },
@@ -315,9 +315,9 @@ class _CartScreenGetxState extends State<CartScreenGetx> {
                                               .getOrderHistoryGetx();
                                           await productScreenGetxController
                                               .getDataGetx();
-                                          setState(() {
+                                         /* setState(() {
 
-                                          });
+                                          });*/
                                         },
 
                                         onDoubleTap: () {},
@@ -465,7 +465,6 @@ class _CartScreenGetxState extends State<CartScreenGetx> {
                                               .productDetails
                                               .imageUrl),
                                       height: 120,
-                                      // width: 100,
                                     ),
                                   ],
                                 ),
@@ -556,7 +555,7 @@ class _CartScreenGetxState extends State<CartScreenGetx> {
                                                     .getMyCartGetx();
                                                  await productScreenGetxController
                                                     .getDataGetx();
-                                                setState(() { });
+                                            /*    setState(() { });*/
 
                                               },
                                               onDoubleTap: () {},
@@ -612,9 +611,9 @@ class _CartScreenGetxState extends State<CartScreenGetx> {
                                                             .getMyCartGetx();
                                                         await productScreenGetxController
                                                             .getDataGetx();
-                                                        setState(() {
+                                                       /* setState(() {
 
-                                                        });
+                                                        });*/
                                                       },
                                                       /*onDoubleTap: () {},
                                                       onLongPress: () {},*/

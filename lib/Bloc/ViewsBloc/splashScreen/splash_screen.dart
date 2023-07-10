@@ -17,32 +17,32 @@ class SplashScreenBloc extends StatefulWidget {
 
 class _SplashScreenBlocState extends State<SplashScreenBloc> {
   bool? logInBool;
-  late SplashScreenCubit _cubit;
+  late SplashScreenCubit splashScreenCubit;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _cubit = SplashScreenCubit();
-    _cubit.init(context);
+    splashScreenCubit = SplashScreenCubit();
+    splashScreenCubit.init(context);
     isLogIn();
   }
 
   @override
   void dispose() {
-    _cubit.close();
+    splashScreenCubit.close();
     super.dispose();
   }
 
   isLogIn() async {
     final preferences = await SharedPreferences.getInstance();
     logInBool = preferences.getBool('loginBool');
-    print(preferences.getBool('loginBool'));
+    // print(preferences.getBool('loginBool'));
     await Future.delayed(const Duration(seconds: 2), () {
-   /*   if (logInBool != null && logInBool == true) {
+      if (logInBool != null && logInBool == true) {
         Navigator.pushReplacementNamed(context, '/homeScreen');
         return;
-      }*/
+      }
       Navigator.pushReplacementNamed(context, '/loginScreen');
       return;
     });
@@ -51,7 +51,7 @@ class _SplashScreenBlocState extends State<SplashScreenBloc> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SplashScreenCubit, SplashScreenState>(
-        bloc: _cubit,
+        bloc: splashScreenCubit,
         builder: (context, state) {
           return Scaffold(
             backgroundColor: Colors.white,

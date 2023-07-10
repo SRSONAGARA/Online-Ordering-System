@@ -214,7 +214,7 @@ class _WishlistScreenGetxState extends State<WishlistScreenGetx> {
                                               .toString());
 
                                       await wishlistScreenGetxController.getWatchListGetx();
-                                      setState(() { });
+                                      // setState(() { });
                                       await productScreenGetxController.getDataGetx();
                                     },
                                     onDoubleTap: () {},

@@ -94,12 +94,11 @@ class _ForgotPswOtpScreenBlocState extends State<ForgotPswOtpScreenBloc> {
                                 const SnackBar(
                                     content:
                                         Text('OTP resent successfully !')));
-
                             await context
                                 .read<ForgotPswOtpScreenCubit>()
                                 .resendOtpBloc(
                                     userId: widget.userId.toString());
-                            print('otp resend successfully');
+                            // print('otp resend successfully');
                           },
                           child: const Text(
                             'RESEND OTP',

@@ -252,12 +252,8 @@ class _RegistrationScreenBlocState extends State<RegistrationScreenBloc> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (_) => BlocProvider(
-                                          create: (context) =>
-                                              RegistrationOtpScreenCubit(),
-                                          child: RegistrationOtpScreenBloc(
-                                              userId: userId),
-                                        )));
+                                    builder: (_) => RegistrationOtpScreenBloc(
+                                        userId: userId)));
                           }
                         },
                       ),

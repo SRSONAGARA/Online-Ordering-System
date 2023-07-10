@@ -138,18 +138,18 @@ class _HomeScreenGetxState extends State<HomeScreenGetx> {
                       duration: const Duration(milliseconds: 300),
                       color: connected ? Colors.green : Colors.indigo,
                       child: connected
-                          ? Row(
+                          ? const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const <Widget>[
+                        children: <Widget>[
                           Text(
                             "YOU ARE OFFLINE",
                             style: TextStyle(color: Colors.white),
                           ),
                         ],
                       )
-                          : Row(
+                          : const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const <Widget>[
+                        children: <Widget>[
                           Text(
                             "YOU ARE OFFLINE",
                             style: TextStyle(color: Colors.white),

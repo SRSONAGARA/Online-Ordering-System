@@ -3,9 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oline_ordering_system/Bloc/ViewsBloc/auth_pages/login_screen/login_screen_cubit.dart';
 import 'package:oline_ordering_system/Bloc/ViewsBloc/auth_pages/login_screen/login_screen_state.dart';
 
-import '../../../../GetX/viewsGetx/app_pagesGetx/homeScreenGetx.dart';
-import '../forgot_psw_screen/forgot_psw_screen.dart';
-
 class LoginScreenBloc extends StatefulWidget {
   const LoginScreenBloc({Key? key}) : super(key: key);
 
@@ -256,7 +253,6 @@ class _LoginScreenBlocState extends State<LoginScreenBloc> {
                         TextButton(
                             onPressed: () {
                               Navigator.pushNamed(context, '/registrationScreen');
-                              // Get.toNamed('/registrationScreenGetx');
                             },
                             child: const Text(
                               'Register',
