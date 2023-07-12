@@ -14,16 +14,14 @@ class WishlistScreenCubit extends Cubit<WishlistScreenState>{
 
   Future<void> getWishListBloc()async{
     print('getWishListBloc');
-    try{
       emit(WishlistScreenLoadingState());
+    try{
       SharedPreferences preferences = await SharedPreferences.getInstance();
       String jwtToken = preferences.getString('jwtToken') ?? '';
       const url = ApiConstant.getWatchListApi;
       final header = {"Authorization" : 'Bearer $jwtToken'};
       final response = await http.get(Uri.parse(url), headers: header);
-      print(jsonDecode(response.body));
       if(response.statusCode == 200){
-        print('hello favorite');
         emit(WishlistScreenSuccessState());
         getWishList = GetWishList.fromJson(jsonDecode(response.body));
         print(getWishList);
@@ -33,7 +31,6 @@ class WishlistScreenCubit extends Cubit<WishlistScreenState>{
       }else if(response.statusCode == 500){
         SharedPreferences preferences = await SharedPreferences.getInstance();
         preferences.clear();
-        // await Get.offNamedUntil('/loginScreenGetx', (route) => false);
         emit(WishlistScreenErrorState());
       }
     }catch(e){
@@ -51,16 +48,16 @@ class WishlistScreenCubit extends Cubit<WishlistScreenState>{
       print(jsonDecode(response.body));
       if(response.statusCode == 200){
         print('hello favorite');
-        // emit(WishlistScreenSuccessState());
         getWishList = GetWishList.fromJson(jsonDecode(response.body));
+        emit(WishlistScreenSuccessState());
         print(getWishList);
         if(getWishList.data!.isEmpty){
           emit(WishlistEmptyState());
         }
       }else if(response.statusCode == 500){
+        print('status : 500');
         SharedPreferences preferences = await SharedPreferences.getInstance();
         preferences.clear();
-        // await Get.offNamedUntil('/loginScreenGetx', (route) => false);
         emit(WishlistScreenErrorState());
       }
     }catch(e){

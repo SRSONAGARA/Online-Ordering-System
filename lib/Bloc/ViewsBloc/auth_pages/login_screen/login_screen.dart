@@ -142,8 +142,8 @@ class _LoginScreenBlocState extends State<LoginScreenBloc> {
                               context.read<LoginScreenCubit>().togglePasswordVisibility();
                             },
                             icon: Icon(context.select((LoginScreenCubit cubit) => cubit.isObscure)
-                                ? Icons.visibility
-                                : Icons.visibility_off),
+                                ? Icons.visibility_off
+                                : Icons.visibility),
                           )),
                       validator: (value) {
                         if (value!.isEmpty) {

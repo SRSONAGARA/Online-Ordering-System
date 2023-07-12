@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:oline_ordering_system/GetX/mainGetX.dart';
 import 'package:oline_ordering_system/firebase_options.dart';
 import 'package:oline_ordering_system/provider/ApiConnection/ApiConnection_Provider.dart';
@@ -57,6 +58,7 @@ void main() async {
   } else {
 
   }
+
   runApp(const BlocApp());
   // runApp(const GetApp());
   // runApp(const MyApp());

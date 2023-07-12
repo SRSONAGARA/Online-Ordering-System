@@ -315,9 +315,6 @@ class _CartScreenGetxState extends State<CartScreenGetx> {
                                               .getOrderHistoryGetx();
                                           await productScreenGetxController
                                               .getDataGetx();
-                                         /* setState(() {
-
-                                          });*/
                                         },
 
                                         onDoubleTap: () {},

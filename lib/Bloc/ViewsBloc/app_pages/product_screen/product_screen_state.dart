@@ -8,10 +8,10 @@ class ProductScreenSuccessState extends ProductScreenState {}
 
 class ProductScreenErrorState extends ProductScreenState {}
 
-class ProductScreenWatchListBtnLoadingState extends ProductScreenState {
-  final int index;
+class WatchListBtnLoadingState extends ProductScreenState {}
 
-  ProductScreenWatchListBtnLoadingState(this.index);
-}
+class WatchListBtnSuccessState extends ProductScreenState {}
 
-class ProductScreenWatchListBtnSuccessState extends ProductScreenState {}
+class CartListBtnLoadingState extends ProductScreenState {}
+
+class CartListBtnSuccessState extends ProductScreenState {}

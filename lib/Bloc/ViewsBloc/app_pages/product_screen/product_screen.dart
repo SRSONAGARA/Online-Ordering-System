@@ -118,7 +118,7 @@ class _ProductScreenBlocState extends State<ProductScreenBloc> {
             InkWell(
               child: Center(
                 child: Badge.Badge(
-                  badgeContent: Text(''),
+                  badgeContent:Text(productListCubit!.productDataListBloc.totalProduct.toString()),
                   /*Obx(() => productScreenGetxController
                       .isLoading.value
                       ? SizedBox()
@@ -245,379 +245,374 @@ class _ProductScreenBlocState extends State<ProductScreenBloc> {
             ),
           ),
           BlocConsumer<ProductListCubit, ProductScreenState>(
-            builder: (context, state) {
-              ProductListCubit productListCubit =
-                  BlocProvider.of<ProductListCubit>(context);
-              if (state is ProductScreenLoadingState) {
-                return SizedBox(
-                  height: MediaQuery.of(context).size.height / 1.7,
-                  child: const Center(
-                    child: AlertDialog(
-                      backgroundColor: Colors.transparent,
-                      elevation: 0,
-                      content: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircularProgressIndicator(
-                            color: Color.fromRGBO(86, 126, 239, 15),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Text('Loading...')
-                        ],
-                      ),
+            listener: (context, state) {
+              if(state is ProductScreenErrorState){
+                Navigator.pushNamedAndRemoveUntil(context, '/loginScreen', (route) => false);
+              }
+            },
+            builder: (context, state)  {
+            ProductListCubit productListCubit =
+            BlocProvider.of<ProductListCubit>(context);
+            if (state is ProductScreenLoadingState) {
+              return SizedBox(
+                height: MediaQuery.of(context).size.height / 1.7,
+                child: const Center(
+                  child: AlertDialog(
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    content: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(
+                          color: Color.fromRGBO(86, 126, 239, 15),
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Text('Loading...')
+                      ],
                     ),
                   ),
-                );
-              }
-              return ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    bool isFavourite = productListCubit
-                            .productDataListBloc.data![index].watchListItemId !=
-                        '';
-                    bool itemAddedToCart = productListCubit
-                            .productDataListBloc.data[index].quantity !=
-                        0;
+                ),
+              );
+            }
+            return ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  bool isFavourite = productListCubit
+                      .productDataListBloc.data![index].watchListItemId !=
+                      '';
+                  bool itemAddedToCart = productListCubit
+                      .productDataListBloc.data![index].quantity !=
+                      0;
 
-                    return InkWell(
-                      onTap: () {
-                        /*Get.toNamed('/productDetailScreenGetx', arguments: {
+                  return InkWell(
+                    onTap: () {
+                      /*Get.toNamed('/productDetailScreenGetx', arguments: {
                       'Price': productScreenGetxController.productDataListGetx.data[index].price,
                       'Name': productScreenGetxController.productDataListGetx.data[index].title,
                       'ImageURL': productScreenGetxController.productDataListGetx.data[index].imageUrl,
                       'ShortDescription': productScreenGetxController.productDataListGetx.data[index].description,
                       'Index': index,
                     } );*/
-                      },
-                      child: Card(
-                        elevation: 6,
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(15),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        flex: 1,
-                                        child: Column(
-                                          children: [
-                                            Image(
-                                              image: NetworkImage(
-                                                productListCubit!
-                                                    .productDataListBloc
-                                                    .data![index]
-                                                    .imageUrl,
-                                              ),
-                                              height: 120,
-                                              // width: 100,
+                    },
+                    child: Card(
+                      elevation: 6,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
+                                      child: Column(
+                                        children: [
+                                          Image(
+                                            image: NetworkImage(
+                                              productListCubit!
+                                                  .productDataListBloc
+                                                  .data![index]
+                                                  .imageUrl,
                                             ),
-                                          ],
-                                        ),
+                                            height: 120,
+                                            // width: 100,
+                                          ),
+                                        ],
                                       ),
-                                      Expanded(
-                                        flex: 2,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                BlocConsumer<ProductListCubit,
-                                                    ProductScreenState>(
-                                                  builder: (context, state) {
-                                                    ProductListCubit
-                                                        productListCubit =
-                                                        BlocProvider.of(
-                                                            context);
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                            children: [
+                                              BlocBuilder<ProductListCubit,
+                                                  ProductScreenState>(
+                                                builder: (context, state) {
+                                                  ProductListCubit
+                                                  productListCubit =
+                                                  BlocProvider.of(
+                                                      context);
+                                                  if (state is WatchListBtnLoadingState || state is CartListBtnLoadingState) {
                                                     if (productListCubit
-                                                        .isLoadingList[index]) {
+                                                        .isLoadingList[
+                                                    index]) {
                                                       return const SizedBox(
                                                         height: 20,
                                                         width: 20,
                                                         child:
-                                                            CircularProgressIndicator(
-                                                          color: Color.fromRGBO(
-                                                              86, 126, 239, 15),
+                                                        CircularProgressIndicator(
+                                                          color:
+                                                          Color.fromRGBO(
+                                                              86,
+                                                              126,
+                                                              239,
+                                                              15),
                                                         ),
                                                       );
-                                                    } else {
-                                                      return InkWell(
-                                                        onTap: () async {
-                                                          if (isFavourite ==
-                                                              true) {
-                                                            productListCubit
-                                                                .updateButtonState(
-                                                                    index);
-                                                            ScaffoldMessenger
-                                                                    .of(context)
-                                                                .showSnackBar(const SnackBar(
-                                                                    content: Text(
-                                                                        'Please wait, Item will remove from WatchList !'),
-                                                                    duration: Duration(
-                                                                        seconds:
-                                                                            2)));
-
-                                                            await productListCubit.removeFromWatchListBloc(
-                                                                wathListItemId: productListCubit
-                                                                    .productDataListBloc
-                                                                    .data![
-                                                                        index]
-                                                                    .watchListItemId
-                                                                    .toString(),
-                                                                index: index);
-                                                            productListCubit
-                                                                .updateButtonDisableState(
-                                                                    index);
-                                                          } else {
-                                                            productListCubit
-                                                                .updateButtonState(
-                                                                    index);
-                                                            ScaffoldMessenger
-                                                                    .of(context)
-                                                                .showSnackBar(const SnackBar(
-                                                                    content: Text(
-                                                                        'Please wait, Item will be Added to WatchList !'),
-                                                                    duration: Duration(
-                                                                        seconds:
-                                                                            2)));
-
-                                                            await productListCubit
-                                                                .addToWatchListBloc(
-                                                                    productId: productListCubit
-                                                                        .productDataListBloc
-                                                                        .data[
-                                                                            index]
-                                                                        .id
-                                                                        .toString(),
-                                                                    index:
-                                                                        index);
-                                                            productListCubit
-                                                                .updateButtonDisableState(
-                                                                    index);
-                                                          }
-                                                        },
-                                                        child: isFavourite
-                                                            ? const Icon(
-                                                                Icons.favorite,
-                                                                color:
-                                                                    Colors.red,
-                                                                size: 20,
-                                                              )
-                                                            : const Icon(
-                                                                Icons
-                                                                    .favorite_outline,
-                                                                size: 20),
-                                                      );
                                                     }
-                                                  },
-                                                  listener: (context, state) {},
-                                                )
-                                              ],
+                                                  }
+                                                  return InkWell(
+                                                    onTap: () async {
+                                                      if (isFavourite ==
+                                                          true) {
+                                                        productListCubit
+                                                            .updateFavButtonState(
+                                                            index);
+                                                        ScaffoldMessenger.of(
+                                                            context)
+                                                            .showSnackBar(const SnackBar(
+                                                            content: Text(
+                                                                'Please wait, Item will remove from WatchList !'),
+                                                            duration: Duration(
+                                                                seconds:
+                                                                2)));
+
+                                                        await productListCubit
+                                                            .removeFromWatchListBloc(
+                                                            wathListItemId: productListCubit
+                                                                .productDataListBloc
+                                                                .data![
+                                                            index]
+                                                                .watchListItemId
+                                                                .toString());
+                                                        productListCubit
+                                                            .updateFavButtonDisableState(
+                                                            index);
+                                                      } else {
+                                                        productListCubit
+                                                            .updateFavButtonState(
+                                                            index);
+                                                        ScaffoldMessenger.of(
+                                                            context)
+                                                            .showSnackBar(const SnackBar(
+                                                            content: Text(
+                                                                'Please wait, Item will be Added to WatchList !'),
+                                                            duration: Duration(
+                                                                seconds:
+                                                                2)));
+
+                                                        await productListCubit
+                                                            .addToWatchListBloc(
+                                                            productId: productListCubit
+                                                                .productDataListBloc
+                                                                .data[
+                                                            index]
+                                                                .id
+                                                                .toString());
+                                                        productListCubit
+                                                            .updateFavButtonDisableState(
+                                                            index);
+                                                      }
+                                                    },
+                                                    child: isFavourite
+                                                        ? const Icon(
+                                                      Icons.favorite,
+                                                      color: Colors.red,
+                                                      size: 20,
+                                                    )
+                                                        : const Icon(
+                                                        Icons
+                                                            .favorite_outline,
+                                                        size: 20),
+                                                  );
+                                                },
+                                              )
+                                            ],
+                                          ),
+                                          Text(
+                                            productListCubit!
+                                                .productDataListBloc
+                                                .data[index]
+                                                .title,
+                                            maxLines: 1,
+                                            style: const TextStyle(
+                                              fontSize: 20,
                                             ),
-                                            Text(
-                                              productListCubit!
-                                                  .productDataListBloc
-                                                  .data[index]
-                                                  .title,
-                                              maxLines: 1,
-                                              style: const TextStyle(
+                                          ),
+                                          Text(
+                                            productListCubit!
+                                                .productDataListBloc
+                                                .data[index]
+                                                .description,
+                                            maxLines: 2,
+                                            style: const TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.black54),
+                                          ),
+                                          Text(
+                                            '\$${productListCubit!.productDataListBloc.data[index].price}',
+                                            style: const TextStyle(
                                                 fontSize: 20,
-                                              ),
-                                            ),
-                                            Text(
-                                              productListCubit!
-                                                  .productDataListBloc
-                                                  .data[index]
-                                                  .description,
-                                              maxLines: 2,
-                                              style: const TextStyle(
-                                                  fontSize: 15,
-                                                  color: Colors.black54),
-                                            ),
-                                            Text(
-                                              '\$${productListCubit!.productDataListBloc.data[index].price}',
-                                              style: const TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          BlocBuilder<ProductListCubit,
+                                              ProductScreenState>(builder: (context, state) {
+                                            ProductListCubit productListCubit = BlocProvider.of(context);
+                                            if (state is CartListBtnLoadingState || state is WatchListBtnLoadingState) {
+                                              if (productListCubit
+                                                  .isLoadingList1[index]) {
+                                                return const Row(
+                                                  mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .spaceBetween,
+                                                      .center,
+                                                  children: [
+                                                    SizedBox(
+                                                      height: 20,
+                                                      width: 20,
+                                                      child:
+                                                      CircularProgressIndicator(
+                                                        color:
+                                                        Color.fromRGBO(
+                                                            86,
+                                                            126,
+                                                            239,
+                                                            15),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                );
+                                              }
+                                            }
+                                            return Row(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
                                               children: [
                                                 Column(
                                                   children: [
                                                     Container(
-                                                      decoration: BoxDecoration(
+                                                      decoration:
+                                                      BoxDecoration(
                                                         borderRadius:
-                                                            const BorderRadius
-                                                                    .all(
-                                                                Radius.circular(
-                                                                    3)),
-                                                        color: /*cartButtonDisabledList[
-                                                    index]
-                                                        ? Colors.red[200]
-                                                        : itemAddedToCart
-                                                        ? Colors
-                                                        .red[200]
-                                                        : */
-                                                            const Color
-                                                                    .fromRGBO(
-                                                                86,
-                                                                126,
-                                                                239,
-                                                                10),
+                                                        const BorderRadius
+                                                            .all(
+                                                            Radius
+                                                                .circular(
+                                                                3)),
+                                                        color: itemAddedToCart
+                                                            ? Colors
+                                                            .red[200]
+                                                            : const Color
+                                                            .fromRGBO(
+                                                            86,
+                                                            126,
+                                                            239,
+                                                            10),
                                                       ),
                                                       child: Padding(
                                                         padding:
-                                                            const EdgeInsets
-                                                                .all(8.0),
+                                                        const EdgeInsets
+                                                            .all(8.0),
                                                         child: InkWell(
-                                                            onTap: /*cartButtonDisabledList[index]
-                                                            ?() async {
-
-                                                        }  :*/
+                                                            onTap:
                                                                 () async {
-                                                              /*  setState(() {
-                                                            cartButtonDisabledList[
-                                                            index] =
-                                                            true;
-                                                          });*/
-                                                              /* if (itemAddedToCart !=
-                                                              true) {
-                                                            Get.rawSnackbar(
-                                                                message: 'Please wait, Item will be Added to Cart !',
-                                                                backgroundColor: const Color.fromRGBO(
-                                                                    86,
-                                                                    126,
-                                                                    239,
-                                                                    10),
-                                                                duration:
-                                                                const Duration(seconds: 2));
-                                                            String productId = productScreenGetxController
-                                                                .productDataListGetx
-                                                                .data[
-                                                            index]
-                                                                .id;
-
-                                                            await cartScreenGetxController
-                                                                .addToCartGetx(
-                                                                productId);
-
-                                                            await cartScreenGetxController
-                                                                .getMyCartGetx();
-                                                            await productScreenGetxController
-                                                                .getDataGetx();
-                                                            setState(
-                                                                    () {
-                                                                  cartButtonDisabledList[index] =
-                                                                  false;
-                                                                  productScreenGetxController
-                                                                      .getDataGetx();
-                                                                });
-                                                          }
-                                                          Get.rawSnackbar(
-                                                              message: 'Added successfully !',
-                                                              backgroundColor: const Color.fromRGBO(
-                                                                  86,
-                                                                  126,
-                                                                  239,
-                                                                  10),
-                                                              duration:
-                                                              const Duration(seconds: 2));*/
+                                                              if (itemAddedToCart !=
+                                                                  true) {
+                                                                productListCubit
+                                                                    .updateCartButtonState(
+                                                                    index);
+                                                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                                    content:
+                                                                    Text(
+                                                                        'Please wait, Item will be Added to Cart !'),
+                                                                    duration:
+                                                                    Duration(seconds: 2)));
+                                                                await productListCubit.addToCartBloc(
+                                                                    productId: productListCubit
+                                                                        .productDataListBloc
+                                                                        .data[
+                                                                    index]
+                                                                        .id
+                                                                        .toString(),
+                                                                    index:
+                                                                    index);
+                                                                productListCubit
+                                                                    .updateCartButtonDisableState(
+                                                                    index);
+                                                              }
                                                             },
-                                                            onDoubleTap: () {},
-                                                            onLongPress: () {},
-                                                            child: /*cartButtonDisabledList[
-                                                        index]
-                                                            ? Text(
-                                                          'Added',
-                                                          style: const TextStyle(
-                                                              color:
-                                                              Colors.white),
-                                                        )
-                                                            : itemAddedToCart
-                                                            ? Text(
-                                                          'Added',
-                                                          style:
-                                                          const TextStyle(color: Colors.white),
-                                                        )
-                                                            : */
-                                                                Text(
+                                                            child: itemAddedToCart
+                                                                ? const Text(
+                                                              'Added',
+                                                              style: TextStyle(
+                                                                  color:
+                                                                  Colors.white),
+                                                            )
+                                                                : const Text(
                                                               'Add To Cart',
-                                                              style: const TextStyle(
-                                                                  color: Colors
-                                                                      .white),
+                                                              style: TextStyle(
+                                                                  color:
+                                                                  Colors.white),
                                                             )),
                                                       ),
                                                     ),
                                                   ],
                                                 ),
-                                                /* !itemAddedToCart
-                                                ? SizedBox()
-                                                :
-                                                Column(
+                                                !itemAddedToCart
+                                                    ? const SizedBox()
+                                                    : Column(
                                                   children: [
                                                     Row(
                                                       children: [
                                                         InkWell(
-                                                          onTap: () async {
-                                                            /* if (productScreenGetxController
-                                                            .productDataListGetx
-                                                            .data[index]
-                                                            .quantity ==
-                                                            1) {
-                                                          Get.rawSnackbar(
-                                                              message: 'Please wait, Item will remove from Cart !',
-                                                              backgroundColor: const Color.fromRGBO(
-                                                                  86,
-                                                                  126,
-                                                                  239,
-                                                                  10),
-                                                              duration:
-                                                              Duration(seconds: 2));
-                                                        } else {
-                                                          Get.rawSnackbar(
-                                                              message: 'Please wait, Quantity will be decreased !',
-                                                              backgroundColor: const Color.fromRGBO(
-                                                                  86,
-                                                                  126,
-                                                                  239,
-                                                                  10),
-                                                              duration:
-                                                              Duration(seconds: 2));
-                                                        }
-                                                        await cartScreenGetxController.decreaseProductQuantityGetx(productScreenGetxController
-                                                            .productDataListGetx
-                                                            .data[
-                                                        index]
-                                                            .cartItemId
-                                                            .toString());
-                                                        productScreenGetxController
-                                                            .getDataGetx();
+                                                          onTap:
+                                                              () async {
+                                                            productListCubit
+                                                                .updateCartButtonState(
+                                                                index);
+                                                            if (productListCubit
+                                                                .productDataListBloc
+                                                                .data[index]
+                                                                .quantity ==
+                                                                1) {
+                                                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                                  content:
+                                                                  Text('Please wait, Item will remove from Cart !'),
+                                                                  duration: Duration(seconds: 2)));
+                                                            } else {
+                                                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                                  content:
+                                                                  Text('Please wait, Quantity will be decreased !'),
+                                                                  duration: Duration(seconds: 2)));
+                                                            }
 
-                                                        cartScreenGetxController
-                                                            .getMyCartGetx();*/
+                                                            await productListCubit.decreaseProductQuantityBloc(
+                                                                cartItemId: productListCubit
+                                                                    .productDataListBloc
+                                                                    .data[index]
+                                                                    .cartItemId
+                                                                    .toString());
+
+                                                            productListCubit
+                                                                .updateCartButtonDisableState(
+                                                                index);
                                                           },
-                                                          child: CircleAvatar(
+                                                          child:
+                                                          CircleAvatar(
                                                             backgroundColor:
-                                                                Colors
-                                                                    .grey[200],
-                                                            radius: 14,
-                                                            child: const Center(
-                                                              child: Icon(
-                                                                Icons.remove,
-                                                                color: Colors
-                                                                    .black,
+                                                            Colors
+                                                                .grey[200],
+                                                            radius:
+                                                            14,
+                                                            child:
+                                                            const Center(
+                                                              child:
+                                                              Icon(
+                                                                Icons
+                                                                    .remove,
+                                                                color:
+                                                                Colors.black,
                                                               ),
                                                             ),
                                                           ),
@@ -626,54 +621,56 @@ class _ProductScreenBlocState extends State<ProductScreenBloc> {
                                                           width: 10,
                                                         ),
                                                         Text(
-                                                            '1' /*productScreenGetxController
-                                                          .productDataListGetx
-                                                          .data[
-                                                      index]
-                                                          .quantity
-                                                          .toString(),
-                                                      style: const TextStyle(
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .bold),*/
-                                                            ),
+                                                          productListCubit
+                                                              .productDataListBloc
+                                                              .data[
+                                                          index]
+                                                              .quantity
+                                                              .toString(),
+                                                          style: const TextStyle(
+                                                              fontWeight:
+                                                              FontWeight.bold),
+                                                        ),
                                                         const SizedBox(
                                                           width: 10,
                                                         ),
                                                         InkWell(
-                                                          onTap: () async {
-                                                            /*   Get.rawSnackbar(
-                                                            message:
-                                                            'Please wait, Quantity will be increased !',
-                                                            backgroundColor: const Color.fromRGBO(
-                                                                86,
-                                                                126,
-                                                                239,
-                                                                10),
-                                                            duration:
-                                                            Duration(seconds: 2));
-                                                        await cartScreenGetxController.increaseProductQuantityGetx(productScreenGetxController
-                                                            .productDataListGetx
-                                                            .data[
-                                                        index]
-                                                            .cartItemId
-                                                            .toString());
+                                                          onTap:
+                                                              () async {
+                                                            productListCubit
+                                                                .updateCartButtonState(
+                                                                index);
+                                                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                                content: Text(
+                                                                    'Please wait, Quantity will be increased !'),
+                                                                duration:
+                                                                Duration(seconds: 2)));
+                                                            await productListCubit.increaseProductQuantityBloc(
+                                                                cartItemId: productListCubit
+                                                                    .productDataListBloc
+                                                                    .data[index]
+                                                                    .cartItemId
+                                                                    .toString());
 
-                                                        await productScreenGetxController
-                                                            .getDataGetx();
-                                                        await cartScreenGetxController
-                                                            .getMyCartGetx();*/
+                                                            productListCubit
+                                                                .updateCartButtonDisableState(
+                                                                index);
                                                           },
-                                                          child: CircleAvatar(
+                                                          child:
+                                                          CircleAvatar(
                                                             backgroundColor:
-                                                                Colors
-                                                                    .grey[200],
-                                                            radius: 14,
-                                                            child: const Center(
-                                                              child: Icon(
-                                                                Icons.add,
-                                                                color: Colors
-                                                                    .black,
+                                                            Colors
+                                                                .grey[200],
+                                                            radius:
+                                                            14,
+                                                            child:
+                                                            const Center(
+                                                              child:
+                                                              Icon(
+                                                                Icons
+                                                                    .add,
+                                                                color:
+                                                                Colors.black,
                                                               ),
                                                             ),
                                                           ),
@@ -681,27 +678,25 @@ class _ProductScreenBlocState extends State<ProductScreenBloc> {
                                                       ],
                                                     )
                                                   ],
-                                                )*/
+                                                )
                                               ],
-                                            )
-                                          ],
-                                        ),
+                                            );
+                                          },)
+                                        ],
                                       ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          )
+                        ],
                       ),
-                    );
-                  },
-                  itemCount:
-                      productListCubit!.productDataListBloc.data.length);
-            },
-            listener: (context, state) {},
-          ),
+                    ),
+                  );
+                },
+                itemCount: productListCubit!.productDataListBloc.data.length);
+          },)
         ],
       ),
     );

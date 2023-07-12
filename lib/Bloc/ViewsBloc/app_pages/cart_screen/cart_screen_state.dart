@@ -9,3 +9,8 @@ class CartScreenSuccessState extends CartScreenState {}
 class CartEmptyState extends CartScreenState {}
 
 class CartScreenErrorState extends CartScreenState {}
+
+class CartBtnInCartScreenLoadingState extends CartScreenState {}
+
+class CartBtnInCartScreenSuccessState extends CartScreenState {}
+

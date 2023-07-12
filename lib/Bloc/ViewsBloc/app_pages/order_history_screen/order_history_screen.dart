@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oline_ordering_system/Bloc/ViewsBloc/app_pages/order_history_screen/order_history_screen_cubit.dart';
 import 'package:oline_ordering_system/Bloc/ViewsBloc/app_pages/order_history_screen/order_history_screen_state.dart';
+import 'package:oline_ordering_system/Bloc/ViewsBloc/app_pages/wishlist_screen/wishlist_screen_state.dart';
 
 class OrderHistoryScreenBloc extends StatefulWidget {
   const OrderHistoryScreenBloc({Key? key}) : super(key: key);
@@ -126,102 +127,101 @@ class _OrderHistoryScreenBlocState extends State<OrderHistoryScreenBloc> {
                   elevation: 0,content: Row(mainAxisAlignment: MainAxisAlignment.center, children: [CircularProgressIndicator(color: Color.fromRGBO(86, 126, 239, 15),), SizedBox(width: 20,),Text('Loading...')],),),
               ));
         }
-        if(state is OrderScreenSuccessState){
-          return ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
+        return ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
 /*              bool itemAddedToCart = cartProvider.CartItems.any((element) =>
                   element.productName.contains(
                       placeOrderProvider.PlaceOrderItmes[index].productName));*/
-                // bool itemAddedToCart = confirmOrderList[0].data![index].quantity != 0;
-                return Card(
-                  elevation: 6,
-                  child: Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: Column(
-                                children: [
-                                  Image(
-                                    image: NetworkImage(
-                                        orderHistoryScreenCubit.getOrderHistory
-                                            .data![index]
-                                            .imageUrl),
-                                    height: 120,
-                                  ),
-                                ],
-                              ),
+              // bool itemAddedToCart = confirmOrderList[0].data![index].quantity != 0;
+              return Card(
+                elevation: 6,
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: Column(
+                              children: [
+                                Image(
+                                  image: NetworkImage(
+                                      orderHistoryScreenCubit.getOrderHistory
+                                          .data![index]
+                                          .imageUrl),
+                                  height: 120,
+                                ),
+                              ],
                             ),
-                            Expanded(
-                              flex: 2,
-                              child: Column(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Expanded(
-                                        child: Align(
-                                          alignment: Alignment.topRight,
-                                          child: AutoSizeText(
-                                            'Order Place Date:-' +
-                                                ' ${orderHistoryScreenCubit.getOrderHistory.data![index].updatedAt}',
-                                            style:
-                                            const TextStyle(fontSize: 10),
-                                            maxLines: 1,
-                                          ),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Column(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Expanded(
+                                      child: Align(
+                                        alignment: Alignment.topRight,
+                                        child: AutoSizeText(
+                                          'Order Place Date:-' +
+                                              ' ${orderHistoryScreenCubit.getOrderHistory.data![index].updatedAt}',
+                                          style:
+                                          const TextStyle(fontSize: 10),
+                                          maxLines: 1,
                                         ),
-                                      )
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                Text(
+                                  orderHistoryScreenCubit.getOrderHistory
+                                      .data![index]
+                                      .title,
+                                  maxLines: 1,
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                Text(
+                                  orderHistoryScreenCubit.getOrderHistory
+                                      .data![index]
+                                      .description,
+                                  maxLines: 2,
+                                  style: const TextStyle(
+                                      fontSize: 15, color: Colors.black54),
+                                ),
+                                Padding(
+                                  padding:
+                                  const EdgeInsets.only(right: 10.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '\$${orderHistoryScreenCubit.getOrderHistory.data![index].productTotalAmount}',
+                                        style: const TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        'Total quantity:' +
+                                            ' ${orderHistoryScreenCubit.getOrderHistory.data![index].quantity}',
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                        ),
+                                      ),
                                     ],
                                   ),
-                                  Text(
-                                    orderHistoryScreenCubit.getOrderHistory
-                                        .data![index]
-                                        .title,
-                                    maxLines: 1,
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                  Text(
-                                    orderHistoryScreenCubit.getOrderHistory
-                                        .data![index]
-                                        .description,
-                                    maxLines: 2,
-                                    style: const TextStyle(
-                                        fontSize: 15, color: Colors.black54),
-                                  ),
-                                  Padding(
-                                    padding:
-                                    const EdgeInsets.only(right: 10.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          '\$${orderHistoryScreenCubit.getOrderHistory.data![index].productTotalAmount}',
-                                          style: const TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(
-                                          'Total quantity:' +
-                                              ' ${orderHistoryScreenCubit.getOrderHistory.data![index].quantity}',
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  /* Consumer<CartProvider>(
+                                ),
+                                /* Consumer<CartProvider>(
                                         builder: (context, value, child) {
                                       return ElevatedButton(
                                           onPressed: () {
@@ -251,27 +251,28 @@ class _OrderHistoryScreenBlocState extends State<OrderHistoryScreenBloc> {
                                           :*/ /*
                                               const Text('Re Order'));
                                     })*/
-                                ],
-                              ),
+                              ],
                             ),
-                          ],
-                        )
-                      ],
-                    ),
+                          ),
+                        ],
+                      )
+                    ],
                   ),
-                );
-              },
-              itemCount: orderHistoryScreenCubit.getOrderHistory.data.length);
-        }
-        return SizedBox(
+                ),
+              );
+            },
+            itemCount: orderHistoryScreenCubit.getOrderHistory.data.length);
+   /*     return SizedBox(
             height: MediaQuery.of(context).size.height / 1.3,
             child: const Center(
               child:AlertDialog(
                 backgroundColor: Colors.transparent,
                 elevation: 0,content: Row(mainAxisAlignment: MainAxisAlignment.center, children: [CircularProgressIndicator(color: Color.fromRGBO(86, 126, 239, 15),), SizedBox(width: 20,),Text('Loading...')],),),
-            ));
+            ));*/
       }, listener: (context, state) {
-
+        if(state is OrderScreenErrorState){
+          Navigator.pushNamedAndRemoveUntil(context, '/loginScreen', (route) => false);
+        }
       },);
   }
 }

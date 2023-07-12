@@ -39,8 +39,6 @@ class _WishlistScreenBlocState extends State<WishlistScreenBloc> {
             child: InkWell(
                 onTap: () {
                   Navigator.pushNamedAndRemoveUntil(context, '/homeScreen', (route) => false);
-                  // Navigator.of(context).canPop();
-                  // Get.offAllNamed('/homeScreenGetx');
                 },
                 hoverColor: Colors.transparent,
                 highlightColor: Colors.transparent,
@@ -160,7 +158,7 @@ class _WishlistScreenBlocState extends State<WishlistScreenBloc> {
             ],
           ));
         }
-        if (state is WishlistScreenSuccessState) {
+        if(state is WishlistScreenSuccessState){
           return ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
@@ -202,81 +200,53 @@ class _WishlistScreenBlocState extends State<WishlistScreenBloc> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    BlocConsumer<ProductListCubit,
-                                        ProductScreenState>(
-                                      builder: (context, state) {
+                                    BlocBuilder<WishlistScreenCubit,WishlistScreenState>(builder: (context, state) {
+                                      return BlocBuilder<ProductListCubit,
+                                          ProductScreenState>(builder: (context, state) {
                                         ProductListCubit productListCubit =
-                                            BlocProvider.of(context);
-                                        if (productListCubit
-                                            .isLoadingList[index]) {
-                                          return const SizedBox(
-                                            height: 20,
-                                            width: 20,
-                                            child: CircularProgressIndicator(
-                                              color: Color.fromRGBO(
-                                                  86, 126, 239, 15),
-                                            ),
-                                          );
-                                        } else {
-                                          return InkWell(
-                                            onTap: () async {
-                                              productListCubit
-                                                  .updateButtonState(index);
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(const SnackBar(
-                                                      content: Text(
-                                                          'Please wait, Item will remove from WatchList !'),
-                                                      duration: Duration(
-                                                          seconds: 2)));
-
-                                              await productListCubit
-                                                  .removeFromWatchListBloc(
-                                                      wathListItemId:
-                                                          wishlistScreenCubit
-                                                              .getWishList
-                                                              .data![index]
-                                                              .id
-                                                              .toString(),
-                                                      index: index);
-                                              await context
-                                                  .read<WishlistScreenCubit>()
-                                                  .updateWishListBloc();
-                                              productListCubit
-                                                  .updateButtonDisableState(
-                                                      index);
-                                            },
-                                            child: const Icon(Icons.favorite,
-                                                color: Colors.red, size: 20),
-                                          );
+                                        BlocProvider.of(context);
+                                        if(state is WatchListBtnLoadingState){
+                                          if (productListCubit
+                                              .isLoadingList[index]) {
+                                            return const SizedBox(
+                                              height: 20,
+                                              width: 20,
+                                              child: CircularProgressIndicator(
+                                                color: Color.fromRGBO(
+                                                    86, 126, 239, 15),
+                                              ),
+                                            );
+                                          }
                                         }
-                                      },
-                                      listener: (context, state) {},
-                                    ),
-                                    /* InkWell(
-                                      onTap: () async {
-                                        */ /* Get.rawSnackbar(message: 'Please wait, Item will remove from WatchList !',
-                                      backgroundColor: const Color.fromRGBO(
-                                          86,
-                                          126,
-                                          239,
-                                          10),
-                                      duration:
-                                      const Duration(seconds: 2));
-                                  await wishlistScreenGetxController
-                                      .removeFromWatchListGetx(
-                                      wishlistScreenGetxController
-                                          .watchListGetx
-                                          .data![index]
-                                          .id
-                                          .toString());
+                                        return InkWell(
+                                          onTap: () async {
+                                            productListCubit
+                                                .updateFavButtonState(index);
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(const SnackBar(
+                                                content: Text(
+                                                    'Please wait, Item will remove from WatchList !'),
+                                                duration: Duration(
+                                                    seconds: 2)));
 
-                                  await wishlistScreenGetxController.getWatchListGetx();
-                                  setState(() { });
-                                  await productScreenGetxController.getDataGetx();*/ /*
-                                      },
-                                      child: const Icon(Icons.favorite,
-                                          color: Colors.red, size: 20),
-                                    )*/
+                                            await productListCubit
+                                                .removeFromWatchListBloc(
+                                                wathListItemId:
+                                                wishlistScreenCubit
+                                                    .getWishList
+                                                    .data![index]
+                                                    .id
+                                                    .toString());
+                                            await wishlistScreenCubit.updateWishListBloc();
+                                            productListCubit
+                                                .updateFavButtonDisableState(
+                                                index);
+                                          },
+                                          child: const Icon(Icons.favorite,
+                                              color: Colors.red, size: 20),
+                                        );
+                                      },);
+                                    },)
                                   ],
                                 ),
                                 Text(
@@ -381,7 +351,11 @@ class _WishlistScreenBlocState extends State<WishlistScreenBloc> {
           ),
         );
       },
-      listener: (context, state) {},
+      listener:(context, state) {
+        if(state is WishlistScreenErrorState){
+          Navigator.pushNamedAndRemoveUntil(context, '/loginScreen', (route) => false);
+        }
+      },
     );
   }
 }

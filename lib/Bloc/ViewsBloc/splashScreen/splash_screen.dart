@@ -37,7 +37,6 @@ class _SplashScreenBlocState extends State<SplashScreenBloc> {
   isLogIn() async {
     final preferences = await SharedPreferences.getInstance();
     logInBool = preferences.getBool('loginBool');
-    // print(preferences.getBool('loginBool'));
     await Future.delayed(const Duration(seconds: 2), () {
       if (logInBool != null && logInBool == true) {
         Navigator.pushReplacementNamed(context, '/homeScreen');

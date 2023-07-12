@@ -187,7 +187,7 @@ class _AccountScreenBlocState extends State<AccountScreenBloc> {
                                     backgroundColor: Colors.transparent,
                                     shadowColor: Colors.transparent),
                                 onPressed: () {
-                                  Navigator.pushNamed(context, 'cartScreen');
+                                  Navigator.pushNamed(context, '/cartScreen');
                                 },
                                 child: const Row(
                                   children: [
@@ -448,19 +448,15 @@ void logoutAlertBloc(BuildContext context) {
               10),),)),
       TextButton(
           onPressed: () async {
-            /*Get.rawSnackbar(
-              message: 'Log out successful !',
-              backgroundColor: const Color
-                  .fromRGBO(
-                  86,
-                  126,
-                  239,
-                  10),
-              duration: const Duration(seconds: 2),
-            );
+            ScaffoldMessenger.of(context)
+                .showSnackBar(const SnackBar(
+                content: Text(
+                    'Log out successful !'),
+                duration: Duration(
+                    seconds: 2)));
             final share = await SharedPreferences.getInstance();
             share.clear();
-            Get.offNamedUntil('/loginScreenGetx', (route) => false);*/
+            Navigator.pushNamedAndRemoveUntil(context, '/loginScreen', (route) => false);
           },
           child: const Text(
             'Yes',
