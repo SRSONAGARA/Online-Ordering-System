@@ -26,6 +26,9 @@ class OrderHistoryScreenCubit extends Cubit<OrderScreenState>{
         emit(OrderScreenSuccessState());
         getOrderHistory = GetOrderHistory.fromJson(jsonDecode(response.body));
         print(getOrderHistory);
+        if(getOrderHistory.data!.isEmpty){
+          emit(OrderEmptyState());
+        }
       } else if (response.statusCode == 500) {
         SharedPreferences preferences = await SharedPreferences.getInstance();
         preferences.clear();

@@ -104,19 +104,21 @@ class _AccountScreenBlocState extends State<AccountScreenBloc> {
                                     shadowColor: Colors.transparent),
                                 onPressed: () {
                                   Navigator.pushNamed(context, '/orderHistoryScreen');
-                                  },
-                                child: const Row(
-                                  children:  [
-                                    Icon(
-                                      Icons.assignment_turned_in_outlined,
-                                      color: Colors.black,
-                                    ),
-                                    SizedBox(width: 10),
-                                    Text(
-                                      'My Orders',
-                                      style: TextStyle(color: Colors.black),
-                                    )
-                                  ],
+                                },
+                                child: const FittedBox(
+                                  child: Row(
+                                    children:  [
+                                      Icon(
+                                        Icons.assignment_turned_in_outlined,
+                                        color: Colors.black,
+                                      ),
+                                      SizedBox(width: 10),
+                                      Text(
+                                        'My Orders',
+                                        style: TextStyle(color: Colors.black),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ))
                         ],
@@ -142,18 +144,20 @@ class _AccountScreenBlocState extends State<AccountScreenBloc> {
                                 onPressed: () {
                                   Navigator.pushNamed(context, '/wishlistScreen');
                                 },
-                                child: const Row(
-                                  children: [
-                                    Icon(
-                                      Icons.favorite_border_outlined,
-                                      color: Colors.black,
-                                    ),
-                                    SizedBox(width: 10),
-                                    Text(
-                                      'Wishlist',
-                                      style: TextStyle(color: Colors.black),
-                                    )
-                                  ],
+                                child: const FittedBox(
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.favorite_border_outlined,
+                                        color: Colors.black,
+                                      ),
+                                      SizedBox(width: 10),
+                                      Text(
+                                        'Wishlist',
+                                        style: TextStyle(color: Colors.black),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ))
                         ],
@@ -189,18 +193,20 @@ class _AccountScreenBlocState extends State<AccountScreenBloc> {
                                 onPressed: () {
                                   Navigator.pushNamed(context, '/cartScreen');
                                 },
-                                child: const Row(
-                                  children: [
-                                    Icon(
-                                      Icons.shopping_cart_outlined,
-                                      color: Colors.black,
-                                    ),
-                                    SizedBox(width: 10),
-                                    Text(
-                                      'My Cart',
-                                      style: TextStyle(color: Colors.black),
-                                    )
-                                  ],
+                                child: const FittedBox(
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.shopping_cart_outlined,
+                                        color: Colors.black,
+                                      ),
+                                      SizedBox(width: 10),
+                                      Text(
+                                        'My Cart',
+                                        style: TextStyle(color: Colors.black),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ))
                         ],
@@ -227,18 +233,20 @@ class _AccountScreenBlocState extends State<AccountScreenBloc> {
                                   // languageAlertGetx(context);
 
                                 },
-                                child: const Row(
-                                  children: [
-                                    Icon(
-                                      Icons.settings_outlined,
-                                      color: Colors.black,
-                                    ),
-                                    SizedBox(width: 10),
-                                    Text(
-                                      'Setting',
-                                      style: TextStyle(color: Colors.black),
-                                    )
-                                  ],
+                                child: const FittedBox(
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.settings_outlined,
+                                        color: Colors.black,
+                                      ),
+                                      SizedBox(width: 10),
+                                      Text(
+                                        'Setting',
+                                        style: TextStyle(color: Colors.black),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ))
                         ],

@@ -59,7 +59,6 @@ class _ProductScreenGetxState extends State<ProductScreenGetx> {
               onWillPop: () async {
                 if (searchGetxController.SearchButton == true) {
                   searchGetxController.searchButtonPress();
-                  //searchGetxController.SearchButton = false;
                   Get.back();
                   return false;
                 } else {

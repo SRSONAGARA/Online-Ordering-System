@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:oline_ordering_system/Bloc/ViewsBloc/auth_pages/change_psw_screen/change_psw_screen_cubit.dart';
+import 'package:oline_ordering_system/Bloc/ViewsBloc/auth_pages/change_psw_screen/change_psw_screen_state.dart';
 
-import '../../ControllersGetx/ApiConnection_Getx/AccountScreenGetxController.dart';
-
-class ChangePswScreenGetx extends StatefulWidget {
-  const ChangePswScreenGetx({Key? key}) : super(key: key);
+class ChangePswScreenBloc extends StatefulWidget {
+  const ChangePswScreenBloc({Key? key}) : super(key: key);
 
   @override
-  State<ChangePswScreenGetx> createState() => _ChangePswScreenGetxState();
+  State<ChangePswScreenBloc> createState() => _ChangePswScreenBlocState();
 }
 
-class _ChangePswScreenGetxState extends State<ChangePswScreenGetx> {
-  var accountScreenGetxController = Get.put(AccountScreenGetxController());
+class _ChangePswScreenBlocState extends State<ChangePswScreenBloc> {
   final formKey = GlobalKey<FormState>();
 
   bool _isObscure = true;
-  Widget CustomText =  Text("Reset Your Password".tr);
+  Widget CustomText =  const Text("Reset Your Password");
   TextEditingController newPassword = TextEditingController();
   TextEditingController confirmPassword = TextEditingController();
 
@@ -28,8 +27,7 @@ class _ChangePswScreenGetxState extends State<ChangePswScreenGetx> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => accountScreenGetxController.isLoading.value?Container(child: Center(child: CircularProgressIndicator(color: const Color.fromRGBO(86, 126, 239, 15)),),color: Colors.white,)
-        :Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(86, 126, 239, 15),
@@ -63,17 +61,17 @@ class _ChangePswScreenGetxState extends State<ChangePswScreenGetx> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
+                  const SizedBox(
                       height: 300,
                       width: 400,
-                      child: const Image(
+                      child: Image(
                         image: AssetImage('assets/imagesGetx/resetPswImgGetx.jpeg'),
                       )),
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Enter a new password'.tr,
+                        'Enter a new password',
                         style: TextStyle(fontSize: 20),
                       )
                     ],
@@ -84,22 +82,22 @@ class _ChangePswScreenGetxState extends State<ChangePswScreenGetx> {
                   TextFormField(
                       obscureText: true,
                       controller: newPassword,
-                      decoration: InputDecoration(
-                          labelText: 'New Password'.tr,
-                          hintText: 'Enter a new password'.tr),
+                      decoration: const InputDecoration(
+                          labelText: 'New Password',
+                          hintText: 'Enter a new password'),
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return "New Password Can't empty".tr;
+                          return "New Password Can't empty";
                         } else if (value.length < 6) {
-                          return "Password is not less than 6 letter".tr;
+                          return "Password is not less than 6 letter";
                         }
                       }),
                   TextFormField(
                       obscureText: _isObscure,
                       controller: confirmPassword,
                       decoration: InputDecoration(
-                          labelText: 'Confirm Password'.tr,
-                          hintText: 'Re-Enter your New Password'.tr,
+                          labelText: 'Confirm Password',
+                          hintText: 'Re-Enter your New Password',
                           suffixIcon: IconButton(
                             onPressed: () {
                               setState(() {
@@ -112,17 +110,25 @@ class _ChangePswScreenGetxState extends State<ChangePswScreenGetx> {
                           )),
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return "Confirm Password Can't empty".tr;
+                          return "Confirm Password Can't empty";
                         } else if (value.length < 6) {
-                          return "Password is not less than 6 letter".tr;
+                          return "Password is not less than 6 letter";
                         } else if (value != newPassword.text) {
-                          return "Password not matched".tr;
+                          return "Password not matched";
                         }
                       }),
                   const SizedBox(
                     height: 40,
                   ),
-                  Container(
+                  BlocConsumer<ChangePswScreenCubit, ChangePswScreenState>(builder: (context, state) {
+                    ChangePswScreenCubit changePswScreenCubit = BlocProvider.of<ChangePswScreenCubit>(context);
+                    if(state is ChangePswScreenLoadingState){
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: Color.fromRGBO(86, 126, 239, 15),
+                        ),
+                      );
+                    }return Container(
                     height: 30,
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -140,65 +146,46 @@ class _ChangePswScreenGetxState extends State<ChangePswScreenGetx> {
                         onPressed: () async {
                           if (formKey.currentState!.validate()) {
                             formKey.currentState!.save();
-                            var result = await accountScreenGetxController
-                                .changePasswordGetx(
+                            var result = await changePswScreenCubit
+                                .changePasswordBloc(
                                 newPass: newPassword.text,
                                 confirmPass: confirmPassword.text);
-                            if (result['status'] == 1) {
-                              Get.dialog(AlertDialog(
-                                  title: Text('Your Password has been Updated'.tr),
-                                  actions: [
-                                    TextButton(
-                                        onPressed: () {
-                                          Get.offAllNamed('/loginScreenGetx');
-                                        },
-                                        child:  Text('Okay'.tr,style: const TextStyle(color: Color
-                                            .fromRGBO(
-                                            86,
-                                            126,
-                                            239,
-                                            10),),))
-                                  ]
-                              ));
-                              /* Get.defaultDialog(
-                                title: 'Your Password has been Updated',
-                                actions: [
-                                  TextButton(
-                                      onPressed: () {
-                                        Get.offAllNamed('/loginScreenGetx');
-                                      },
-                                      child: const Text('Okey'))
-                                ]
-                              );*/
-                              /*showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      title: const Text(
-                                          'Your Password has been Updated'),
-                                      actions: [
-                                        TextButton(
-                                            onPressed: () {
-                                              Navigator.pushNamedAndRemoveUntil(
-                                                  context,
-                                                  '/login-screen',
-                                                  (route) => false);
-                                            },
-                                            child: const Text('Okey'))
-                                      ],
-                                    );
-                                  });*/
-                            }
                           }
                         },
-                        child: Text('Save the Password'.tr)),
-                  ),
+                        child: const Text('Save the Password')),
+                  );
+                  }, listener: (context, state) {
+                    if(state is ChangePswScreenSuccessState){
+                      showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: const Text('Your Password has been Updated'),
+                            content: const Text(
+                              'Your password has been changed successfully,Please login again!',
+                              style: TextStyle(color: Colors.black54),
+                            ),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.pushNamedAndRemoveUntil(context, '/loginScreen', (route) => false);
+                                  },
+                                  child: const Text(
+                                    'Okay',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: Color.fromRGBO(86, 126, 239, 15),
+                                    ),
+                                  ))
+                            ],
+                          ));
+                    }
+                  },)
                 ],
               ),
             ),
           ),
         ),
       ),
-    ));
+    );
   }
 }

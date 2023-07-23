@@ -86,7 +86,7 @@ class _CartScreenBlocState extends State<CartScreenBloc> {
                   children: [
                     Expanded(
                         child: Text(
-                      '${'Total Items'}${cartScreenCubit.getMyCart.data!.isEmpty ? 0 : cartScreenCubit.getMyCart.data!.length}',
+                      '${'Total Items:'}${cartScreenCubit.getMyCart.data!.isEmpty ? 0 : cartScreenCubit.getMyCart.data!.length}',
                       style: const TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -94,7 +94,7 @@ class _CartScreenBlocState extends State<CartScreenBloc> {
                     )),
                     Expanded(
                         child: Text(
-                      '${'Total Price'} \$${cartScreenCubit.getMyCart.data!.isEmpty ? 0 : cartScreenCubit.getMyCart.cartTotal!.toStringAsFixed(2)}',
+                      '${'Total Price:'} \$${cartScreenCubit.getMyCart.data!.isEmpty ? 0 : cartScreenCubit.getMyCart.cartTotal!.toStringAsFixed(2)}',
                       style: const TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -192,12 +192,14 @@ class _CartScreenBlocState extends State<CartScreenBloc> {
                                   const BorderRadius.all(Radius.circular(5)),
                               color: Colors.red[400]),
                           child: const Center(
-                              child: Text(
+                              child: FittedBox(
+                                child: Text(
                             "Place Order",
                             style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          )),
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                          ),
+                              )),
                         ),
                       ),
                     ),
@@ -213,7 +215,7 @@ class _CartScreenBlocState extends State<CartScreenBloc> {
                 children: [
                   Expanded(
                       child: Text(
-                    '${'Total Items'}${cartScreenCubit.getMyCart.data!.isEmpty ? 0 : cartScreenCubit.getMyCart.data!.length}',
+                    '${'Total Items:'}${cartScreenCubit.getMyCart.data!.isEmpty ? 0 : cartScreenCubit.getMyCart.data!.length}',
                     style: const TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -221,7 +223,7 @@ class _CartScreenBlocState extends State<CartScreenBloc> {
                   )),
                   Expanded(
                       child: Text(
-                    '${'Total Price'} \$${cartScreenCubit.getMyCart.data!.isEmpty ? 0 : cartScreenCubit.getMyCart.cartTotal!.toStringAsFixed(2)}',
+                    '${'Total Price:'} \$${cartScreenCubit.getMyCart.data!.isEmpty ? 0 : cartScreenCubit.getMyCart.cartTotal!.toStringAsFixed(2)}',
                     style: const TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -304,7 +306,6 @@ class _CartScreenBlocState extends State<CartScreenBloc> {
                             });
                       },
                       child: Container(
-                        // height: size.height / 15,
                         padding: const EdgeInsets.only(left: 10.0, right: 10.0),
                         height: 30,
                         decoration: BoxDecoration(
@@ -312,11 +313,13 @@ class _CartScreenBlocState extends State<CartScreenBloc> {
                                 const BorderRadius.all(Radius.circular(5)),
                             color: Colors.red[400]),
                         child: const Center(
-                            child: Text(
+                            child: FittedBox(
+                              child: Text(
                           "Place Order",
                           style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                        )),
+                                color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                            )),
                       ),
                     ),
                   ),
@@ -477,184 +480,190 @@ class _CartScreenBlocState extends State<CartScreenBloc> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Column(
-                                          children: [
-                                            InkWell(
-                                              child: Container(
-                                                decoration: const BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(3)),
-                                                  color: Colors.grey,
-                                                ),
-                                                padding: const EdgeInsets.only(
-                                                    left: 5.0, right: 10.0),
-                                                child: const Row(
-                                                  children: [
-                                                    Icon(Icons.delete_forever),
-                                                    Text('Remove')
-                                                  ],
-                                                ),
-                                              ),
-                                              onTap: () async {
-                                                if (cartScreenCubit
-                                                    .getMyCart.data!.isEmpty) {
-                                                  print('your cart is empty');
-                                                } else {
-                                                  cartScreenCubit
-                                                      .updateCartButtonState(
-                                                          index);
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(const SnackBar(
-                                                          content: Text(
-                                                              'Please wait, Item will remove from Cart !'),
-                                                          duration: Duration(
-                                                              seconds: 2)));
-                                                  await cartScreenCubit
-                                                      .removeProductFromCartBloc(
-                                                          cartItemId:
-                                                              cartScreenCubit
-                                                                  .getMyCart
-                                                                  .data![index]
-                                                                  .id
-                                                                  .toString());
-                                                  cartScreenCubit
-                                                      .updateCartButtonDisableState(
-                                                          index);
-                                                  if (cartScreenCubit.getMyCart
-                                                      .data!.isEmpty) {
-                                                    await cartScreenCubit
-                                                        .getMyCartBloc();
-                                                  }
-                                                }
-                                              },
-                                            )
-                                          ],
-                                        ),
-                                        Column(
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                InkWell(
-                                                  onTap: () async {
-                                                    cartScreenCubit
-                                                        .updateCartButtonState(
-                                                            index);
-                                                    if (cartScreenCubit
-                                                            .getMyCart
-                                                            .data![index]
-                                                            .quantity ==
-                                                        1) {
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(const SnackBar(
-                                                              content: Text(
-                                                                  'Please wait, Item will remove from Cart !'),
-                                                              duration:
-                                                                  Duration(
-                                                                      seconds:
-                                                                          2)));
-                                                    } else {
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(const SnackBar(
-                                                              content: Text(
-                                                                  'Please wait, Quantity will be decreased !'),
-                                                              duration:
-                                                                  Duration(
-                                                                      seconds:
-                                                                          2)));
-                                                    }
-
-                                                    await cartScreenCubit
-                                                        .decreaseProductQuantityBloc(
-                                                            cartItemId:
-                                                                cartScreenCubit
-                                                                    .getMyCart
-                                                                    .data![
-                                                                        index]
-                                                                    .id
-                                                                    .toString());
-                                                    cartScreenCubit
-                                                        .updateCartButtonDisableState(
-                                                            index);
-
-                                                    if (cartScreenCubit
-                                                        .getMyCart
-                                                        .data!
-                                                        .isEmpty) {
-                                                      await cartScreenCubit
-                                                          .getMyCartBloc();
-                                                    }
-                                                  },
-                                                  child: CircleAvatar(
-                                                    backgroundColor:
-                                                        Colors.grey[200],
-                                                    radius: 14,
-                                                    child: const Center(
-                                                      child: Icon(
-                                                        Icons.remove,
-                                                        color: Colors.black,
-                                                      ),
+                                        Expanded(
+                                          child: Column(
+                                            children: [
+                                              InkWell(
+                                                child: Container(
+                                                  decoration: const BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(3)),
+                                                    color: Colors.grey,
+                                                  ),
+                                                  padding: const EdgeInsets.only(
+                                                      left: 5.0, right: 10.0),
+                                                  child: const FittedBox(
+                                                    child: Row(
+                                                      children: [
+                                                        Icon(Icons.delete_forever),
+                                                        Text('Remove')
+                                                      ],
                                                     ),
                                                   ),
                                                 ),
-                                                const SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Text(
-                                                  cartScreenCubit.getMyCart
-                                                      .data![index].quantity
-                                                      .toString(),
-                                                  style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                const SizedBox(
-                                                  width: 10,
-                                                ),
-                                                InkWell(
-                                                  onTap: () async {
+                                                onTap: () async {
+                                                  if (cartScreenCubit
+                                                      .getMyCart.data!.isEmpty) {
+                                                    print('your cart is empty');
+                                                  } else {
                                                     cartScreenCubit
                                                         .updateCartButtonState(
                                                             index);
-                                                    ScaffoldMessenger.of(
-                                                            context)
+                                                    ScaffoldMessenger.of(context)
                                                         .showSnackBar(const SnackBar(
                                                             content: Text(
-                                                                'Please wait, Quantity will be increased !'),
+                                                                'Please wait, Item will remove from Cart !'),
                                                             duration: Duration(
                                                                 seconds: 2)));
                                                     await cartScreenCubit
-                                                        .increaseProductQuantityBloc(
+                                                        .removeProductFromCartBloc(
                                                             cartItemId:
                                                                 cartScreenCubit
                                                                     .getMyCart
-                                                                    .data![
-                                                                        index]
+                                                                    .data![index]
                                                                     .id
                                                                     .toString());
                                                     cartScreenCubit
                                                         .updateCartButtonDisableState(
                                                             index);
-                                                  },
-                                                  child: CircleAvatar(
-                                                    backgroundColor:
-                                                        Colors.grey[200],
-                                                    radius: 14,
-                                                    child: const Center(
-                                                      child: Icon(
-                                                        Icons.add,
-                                                        color: Colors.black,
+                                                    if (cartScreenCubit.getMyCart
+                                                        .data!.isEmpty) {
+                                                      await cartScreenCubit
+                                                          .getMyCartBloc();
+                                                    }
+                                                  }
+                                                },
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.spaceEvenly,
+                                                children: [
+                                                  InkWell(
+                                                    onTap: () async {
+                                                      cartScreenCubit
+                                                          .updateCartButtonState(
+                                                              index);
+                                                      if (cartScreenCubit
+                                                              .getMyCart
+                                                              .data![index]
+                                                              .quantity ==
+                                                          1) {
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(const SnackBar(
+                                                                content: Text(
+                                                                    'Please wait, Item will remove from Cart !'),
+                                                                duration:
+                                                                    Duration(
+                                                                        seconds:
+                                                                            2)));
+                                                      } else {
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(const SnackBar(
+                                                                content: Text(
+                                                                    'Please wait, Quantity will be decreased !'),
+                                                                duration:
+                                                                    Duration(
+                                                                        seconds:
+                                                                            2)));
+                                                      }
+
+                                                      await cartScreenCubit
+                                                          .decreaseProductQuantityBloc(
+                                                              cartItemId:
+                                                                  cartScreenCubit
+                                                                      .getMyCart
+                                                                      .data![
+                                                                          index]
+                                                                      .id
+                                                                      .toString());
+                                                      cartScreenCubit
+                                                          .updateCartButtonDisableState(
+                                                              index);
+
+                                                      if (cartScreenCubit
+                                                          .getMyCart
+                                                          .data!
+                                                          .isEmpty) {
+                                                        await cartScreenCubit
+                                                            .getMyCartBloc();
+                                                      }
+                                                    },
+                                                    child: CircleAvatar(
+                                                      backgroundColor:
+                                                          Colors.grey[200],
+                                                      radius: 14,
+                                                      child: const Center(
+                                                        child: Icon(
+                                                          Icons.remove,
+                                                          color: Colors.black,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-                                              ],
-                                            )
-                                          ],
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Text(
+                                                    cartScreenCubit.getMyCart
+                                                        .data![index].quantity
+                                                        .toString(),
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  InkWell(
+                                                    onTap: () async {
+                                                      cartScreenCubit
+                                                          .updateCartButtonState(
+                                                              index);
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(const SnackBar(
+                                                              content: Text(
+                                                                  'Please wait, Quantity will be increased !'),
+                                                              duration: Duration(
+                                                                  seconds: 2)));
+                                                      await cartScreenCubit
+                                                          .increaseProductQuantityBloc(
+                                                              cartItemId:
+                                                                  cartScreenCubit
+                                                                      .getMyCart
+                                                                      .data![
+                                                                          index]
+                                                                      .id
+                                                                      .toString());
+                                                      cartScreenCubit
+                                                          .updateCartButtonDisableState(
+                                                              index);
+                                                    },
+                                                    child: CircleAvatar(
+                                                      backgroundColor:
+                                                          Colors.grey[200],
+                                                      radius: 14,
+                                                      child: const Center(
+                                                        child: Icon(
+                                                          Icons.add,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          ),
                                         )
                                       ],
                                     );

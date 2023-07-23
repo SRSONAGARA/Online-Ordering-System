@@ -8,6 +8,7 @@ import 'package:oline_ordering_system/Bloc/ViewsBloc/app_pages/account_screen/ac
 import 'package:oline_ordering_system/Bloc/ViewsBloc/app_pages/cart_screen/cart_screen.dart';
 import 'package:oline_ordering_system/Bloc/ViewsBloc/app_pages/home_screen/home_screen_cubit.dart';
 import 'package:oline_ordering_system/Bloc/ViewsBloc/app_pages/product_screen/product_screen.dart';
+import 'package:oline_ordering_system/Bloc/ViewsBloc/app_pages/product_screen/search_cubit.dart';
 import 'package:oline_ordering_system/Bloc/ViewsBloc/app_pages/wishlist_screen/wishlist_screen.dart';
 
 import '../../../../notificationservice/local_notification_service.dart';
@@ -198,8 +199,9 @@ class _HomeScreenBlocState extends State<HomeScreenBloc> {
               currentIndex: currentIndex,
               onTap: (index) {
                 homeScreenCubit.updateIndex(index);
-                /*searchGetxController.searchButtonPress();
-          searchGetxController.searchController.clear();*/
+                SearchCubit searchCubit =BlocProvider.of<SearchCubit>(context);
+                searchCubit.searchButtonUnPress();
+                searchCubit.searchController.clear();
               },
               items: const [
                 BottomNavigationBarItem(

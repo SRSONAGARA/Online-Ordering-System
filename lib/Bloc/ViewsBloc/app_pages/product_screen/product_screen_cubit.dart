@@ -57,6 +57,7 @@ class ProductListCubit extends Cubit<ProductScreenState> {
   }
 
   Future<void> updateDataBloc() async {
+    print('updateDataBloc');
     try {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       String jwtToken = preferences.getString('jwtToken') ?? '';

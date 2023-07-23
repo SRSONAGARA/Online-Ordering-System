@@ -131,6 +131,7 @@ class _WishlistScreenBlocState extends State<WishlistScreenBloc> {
                     fontSize: 20),
               ),
               const Text("You haven't added any products yet",
+                  textAlign: TextAlign.center,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
               const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -166,7 +167,6 @@ class _WishlistScreenBlocState extends State<WishlistScreenBloc> {
               /* bool itemAddedToCart = apiConnectionProvider
             .productDataList[0].data![index].quantity !=
             0;*/
-              print('list builder');
               return Card(
                 elevation: 6,
                 child: Padding(

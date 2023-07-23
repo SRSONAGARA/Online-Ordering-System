@@ -38,7 +38,8 @@ class _OrderHistoryScreenBlocState extends State<OrderHistoryScreenBloc> {
           padding: const EdgeInsets.all(12.0),
           child: InkWell(
               onTap: () {
-                Navigator.pushNamedAndRemoveUntil(context, '/homeScreen', (route) => false);
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/homeScreen', (route) => false);
                 // Get.offAllNamed('/homeScreenGetx');
               },
               hoverColor: Colors.transparent,
@@ -77,55 +78,60 @@ class _OrderHistoryScreenBlocState extends State<OrderHistoryScreenBloc> {
   }
 
   Widget AllProduct() {
-    // final apiConnectionProvider = Provider.of<ApiConnectionProvider>(context);
-
-    return /*orderScreenGetxController.confirmOrderListGetx.data!.isEmpty
-        ? Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(height: 140),
-            SizedBox(
-              height: 200,
-              width: 200,
-              child: Image.asset('assets/OrderEmptyImage.png'),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            const Text(
-              'Oops...!',
-              style: TextStyle(
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20),
-            ),
-            const Text(
-              "You didn't place any Order till now !",
-              style:
-              TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            )
-          ],
-        ))
-        : Obx(() => orderScreenGetxController.isLoading.value
-        ? Container(
-        height: MediaQuery.of(context).size.height / 1.3,
-        child: Center(
-          child:AlertDialog(
-            backgroundColor: Colors.transparent,
-            elevation: 0,content: Row(mainAxisAlignment: MainAxisAlignment.center, children: [CircularProgressIndicator(color: const Color.fromRGBO(86, 126, 239, 15),), SizedBox(width: 20,),Text('Loading...'.tr)],),),
-        ))
-        : */
-      BlocConsumer<OrderHistoryScreenCubit, OrderScreenState>(builder: (context, state) {
-        OrderHistoryScreenCubit orderHistoryScreenCubit = BlocProvider.of<OrderHistoryScreenCubit>(context);
-        if(state is OrderScreenLoadingState){
+    return
+        BlocConsumer<OrderHistoryScreenCubit, OrderScreenState>(
+      builder: (context, state) {
+        OrderHistoryScreenCubit orderHistoryScreenCubit =
+            BlocProvider.of<OrderHistoryScreenCubit>(context);
+        if (state is OrderScreenLoadingState) {
           return SizedBox(
               height: MediaQuery.of(context).size.height / 1.3,
               child: const Center(
-                child:AlertDialog(
+                child: AlertDialog(
                   backgroundColor: Colors.transparent,
-                  elevation: 0,content: Row(mainAxisAlignment: MainAxisAlignment.center, children: [CircularProgressIndicator(color: Color.fromRGBO(86, 126, 239, 15),), SizedBox(width: 20,),Text('Loading...')],),),
+                  elevation: 0,
+                  content: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(
+                        color: Color.fromRGBO(86, 126, 239, 15),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Text('Loading...')
+                    ],
+                  ),
+                ),
               ));
+        }
+        if (state is OrderEmptyState) {
+          return Center(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(height: 140),
+              SizedBox(
+                height: 200,
+                width: 200,
+                child: Image.asset('assets/OrderEmptyImage.png'),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              const Text(
+                'Oops...!',
+                style: TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20),
+              ),
+              const Text(
+                "You didn't place any Order till now !",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              )
+            ],
+          ));
         }
         return ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
@@ -148,10 +154,8 @@ class _OrderHistoryScreenBlocState extends State<OrderHistoryScreenBloc> {
                             child: Column(
                               children: [
                                 Image(
-                                  image: NetworkImage(
-                                      orderHistoryScreenCubit.getOrderHistory
-                                          .data![index]
-                                          .imageUrl),
+                                  image: NetworkImage(orderHistoryScreenCubit
+                                      .getOrderHistory.data![index].imageUrl),
                                   height: 120,
                                 ),
                               ],
@@ -160,8 +164,7 @@ class _OrderHistoryScreenBlocState extends State<OrderHistoryScreenBloc> {
                           Expanded(
                             flex: 2,
                             child: Column(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
@@ -173,8 +176,7 @@ class _OrderHistoryScreenBlocState extends State<OrderHistoryScreenBloc> {
                                         child: AutoSizeText(
                                           'Order Place Date:-' +
                                               ' ${orderHistoryScreenCubit.getOrderHistory.data![index].updatedAt}',
-                                          style:
-                                          const TextStyle(fontSize: 10),
+                                          style: const TextStyle(fontSize: 10),
                                           maxLines: 1,
                                         ),
                                       ),
@@ -182,40 +184,41 @@ class _OrderHistoryScreenBlocState extends State<OrderHistoryScreenBloc> {
                                   ],
                                 ),
                                 Text(
-                                  orderHistoryScreenCubit.getOrderHistory
-                                      .data![index]
-                                      .title,
+                                  orderHistoryScreenCubit
+                                      .getOrderHistory.data![index].title,
                                   maxLines: 1,
                                   style: const TextStyle(
                                     fontSize: 20,
                                   ),
                                 ),
                                 Text(
-                                  orderHistoryScreenCubit.getOrderHistory
-                                      .data![index]
-                                      .description,
+                                  orderHistoryScreenCubit
+                                      .getOrderHistory.data![index].description,
                                   maxLines: 2,
                                   style: const TextStyle(
                                       fontSize: 15, color: Colors.black54),
                                 ),
                                 Padding(
-                                  padding:
-                                  const EdgeInsets.only(right: 10.0),
+                                  padding: const EdgeInsets.only(right: 10.0),
                                   child: Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
-                                        '\$${orderHistoryScreenCubit.getOrderHistory.data![index].productTotalAmount}',
-                                        style: const TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
+                                      Expanded(
+                                        child: Text(
+                                          '\$${orderHistoryScreenCubit.getOrderHistory.data![index].productTotalAmount}',
+                                          style: const TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold),
+                                        ),
                                       ),
-                                      Text(
-                                        'Total quantity:' +
-                                            ' ${orderHistoryScreenCubit.getOrderHistory.data![index].quantity}',
-                                        style: const TextStyle(
-                                          fontSize: 12,
+                                      Expanded(
+                                        child: Text(
+                                          'Total quantity:'
+                                          ' ${orderHistoryScreenCubit.getOrderHistory.data![index].quantity}',
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -262,17 +265,13 @@ class _OrderHistoryScreenBlocState extends State<OrderHistoryScreenBloc> {
               );
             },
             itemCount: orderHistoryScreenCubit.getOrderHistory.data.length);
-   /*     return SizedBox(
-            height: MediaQuery.of(context).size.height / 1.3,
-            child: const Center(
-              child:AlertDialog(
-                backgroundColor: Colors.transparent,
-                elevation: 0,content: Row(mainAxisAlignment: MainAxisAlignment.center, children: [CircularProgressIndicator(color: Color.fromRGBO(86, 126, 239, 15),), SizedBox(width: 20,),Text('Loading...')],),),
-            ));*/
-      }, listener: (context, state) {
-        if(state is OrderScreenErrorState){
-          Navigator.pushNamedAndRemoveUntil(context, '/loginScreen', (route) => false);
+      },
+      listener: (context, state) {
+        if (state is OrderScreenErrorState) {
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/loginScreen', (route) => false);
         }
-      },);
+      },
+    );
   }
 }
