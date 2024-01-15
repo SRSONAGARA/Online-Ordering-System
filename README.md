@@ -1,33 +1,44 @@
+<h1 align="center">Flutter Map App</h1>
 
-# **ONLINE ORDERING SYSTEM** -Flutter project
+<p align="center">
+  The Online Ordering System App is a Flutter application that allows users to perform various actions related to online shopping, including user authentication, browsing a list of items, adding items to watch and cart lists, placing orders, and viewing order history.
+</p>
 
-The project is an online ordering system that allows customers to browse products, add items to their cart, and complete orders online. It includes features such as wishlist functionality, order history, and account management. Customers can view their previous orders and reorder items from past orders. The system includes a user authentication process by cross verifying OTP sent on a registered email. It also includes notification panel which shows notifications after placing an order.
+<p align="center">
+  <img src="assets/readme_images/dashboard.jpg" alt="App Preview" width="20%">
+  <img src="assets/readme_images/fav.jpg" alt="App Preview" width="20%">
+  <img src="assets/readme_images/cart.jpg" alt="App Preview" width="20%">
+  <img src="assets/readme_images/order.jpg" alt="App Preview" width="20%">
+  <img src="assets/readme_images/account.jpg" alt="App Preview" width="20%">
+</p>
 
-## Acknowledgements
+## Features
 
-- [Flutter](https://flutter.dev/)
-- [Stackoverflow](https://stackoverflow.com/)
-- [Youtube](https://www.youtube.com/watch?v=jqxz7QvdWk8&list=PLjVLYmrlmjGfGLShoW0vVX_tcyT8u1Y3E)
+- **User Authentication**
+    - Users can register and log in using their Gmail accounts.
+    - Account verification is done through OTP sent to the registered email.
 
+- **Item Listing**
+    - Fetches a list of items from the API.
+    - Users can browse through available items.
 
-## API Reference
+- **Watch List**
+    - Users can add items to their watch list for future reference.
 
-https://shopping-app-backend-t4ay.onrender.com/api-doc/document
+- **Cart Management**
+    - Users can add items to their shopping cart.
+    - Cart shows a summary of selected items with the option to adjust quantities.
 
+- **Order Placement**
+    - Users can place an order with items from their cart.
+    - Notification is sent to the user after a successful order placement.
 
-## 🚀 About Me
-I'm a Flutter developer...
+- **Order History**
+    - Users can view their order history with details of past orders.
 
+## Note:
 
-## 🔗 Links
-
-[![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/sagar-sonagara-428883215/)
-[![twitter](https://img.shields.io/badge/github-1DA1F2?style=for-the-badge&logo=github&logoColor=white)](https://github.com/SRSONAGARA/)
-
-
-## Contributing
-
-Contributions are always welcome!
-
-Please adhere to this project's `code of conduct`.
-
+ Here i created this app using different state management.
+  - provider
+  - GetX
+  - Bloc-cubit

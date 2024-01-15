@@ -91,6 +91,7 @@ flutter:
     - assets/sliderImages/
     - assets/imagesGetx/
     - assets/imagesGetx/loginImgGetx/
+    - assets/readme_images/
     - assets/
     - animations/
 #    - assets/icon.jpg
