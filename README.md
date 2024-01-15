@@ -1,4 +1,4 @@
-<h1 align="center">Flutter Map App</h1>
+<h1 align="center">Online Ordering System App</h1>
 
 <p align="center">
   The Online Ordering System App is a Flutter application that allows users to perform various actions related to online shopping, including user authentication, browsing a list of items, adding items to watch and cart lists, placing orders, and viewing order history.
