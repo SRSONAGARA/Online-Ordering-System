@@ -5,6 +5,8 @@
 </p>
 
 <p align="center">
+  <img src="assets/readme_images/login.jpg" alt="App Preview" width="20%">
+  <img src="assets/readme_images/register.jpg" alt="App Preview" width="20%">
   <img src="assets/readme_images/dashboard.jpg" alt="App Preview" width="20%">
   <img src="assets/readme_images/fav.jpg" alt="App Preview" width="20%">
   <img src="assets/readme_images/cart.jpg" alt="App Preview" width="20%">
